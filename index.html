@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#010308">
-  <title>NEXUS-X // QUANTUM CORE v9.4</title>
+  <title>NEXUS-X // QUANTUM CORE v9.5</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
 if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}
@@ -420,7 +420,7 @@ async function discoverPDFs(){
 }
 async function indexAllPdfs(){let ok=0;$('#sysState').textContent=`Indexando 0/${repositoryFiles.length}...`;for(let i=0;i<repositoryFiles.length;i++){const file=repositoryFiles[i];$('#sysState').textContent=`Indexando ${i+1}/${repositoryFiles.length}...`;try{const pdf=await pdfjsLib.getDocument({url:file.download_url,disableAutoFetch:false,disableStream:false}).promise;const original=[],normalized=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();const text=content.items.map(x=>x.str||'').join(' ').replace(/\s+/g,' ').trim();original.push(text);normalized.push(normalizeStr(text));}repositoryTexts[file.path]={original,normalized,numPages:pdf.numPages};ok++;}catch(e){console.warn('No se pudo indexar',file.path,e);repositoryTexts[file.path]={original:[],normalized:[],numPages:0,error:true};}}$('#sysState').textContent='Construyendo matriz...';
   try{ buildKnowledgeMatrix(); }catch(e){ console.warn('Matriz:',e); }
-  $('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;const folderCount={};for(const f of repositoryFiles){const parts=f.path.split('/');const folder=parts.length>1?parts[0]:'raiz';folderCount[folder]=(folderCount[folder]||0)+1;}const folders=Object.entries(folderCount).map(([k,v])=>`${k}: ${v}`).join(' · ');addMsg('#mainChatBox',`>> NEXUS-X v9.4 listo.\n>> ${ok}/${repositoryFiles.length} PDFs indexados.\n>> Carpetas detectadas: ${folders||'raíz'}\n>> Podés buscar conceptos, fórmulas, protocolos o materiales.`,'system');}
+  $('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;const folderCount={};for(const f of repositoryFiles){const parts=f.path.split('/');const folder=parts.length>1?parts[0]:'raiz';folderCount[folder]=(folderCount[folder]||0)+1;}const folders=Object.entries(folderCount).map(([k,v])=>`${k}: ${v}`).join(' · ');addMsg('#mainChatBox',`>> NEXUS-X v9.5 listo.\n>> ${ok}/${repositoryFiles.length} PDFs indexados.\n>> Carpetas detectadas: ${folders||'raíz'}\n>> Podés buscar conceptos, fórmulas, protocolos o materiales.`,'system');}
 
 
 
@@ -666,7 +666,7 @@ function pageFor(file, query){
 
 
 /* =========================================================
-   NEXUS-X v9.4 // RELACIONES REALES
+   NEXUS-X v9.5 // RELACIONES REALES
    IMPORTANTE:
    - La carpeta NO crea una conexión por sí sola.
    - El tipo de documento NO crea una conexión por sí solo.
@@ -698,114 +698,138 @@ function kgTokenFrequency(text){
   return m;
 }
 
+
+/* =========================================================
+ NEXUS-X v9.5 // MOTOR DE SIMILITUD ESTRICTA
+ Las carpetas solo clasifican. JAMÁS crean vínculos.
+========================================================= */
+const KG_STOP_STRICT = new Set([
+  "para","como","este","esta","estos","estas","desde","entre","sobre","donde",
+  "cuando","porque","puede","debe","tambien","también","segun","según","los",
+  "las","una","uno","unos","unas","del","por","con","sin","que","sus","son",
+  "fue","han","hay","cada","muy","mas","más","esto","otro","otra","otros",
+  "otras","todo","toda","todos","todas","tener","tiene","tienen","hacer",
+  "hace","realizar","realiza","ser","sea","se","su","al","lo","la","el","un",
+  "y","o","a","en","es","de","que","cual","cuales","forma","parte","tipo",
+  "mediante","seguridad","material","materiales","protocolo","procedimiento",
+  "manual","pagina","página","unidad","tema","contenido","documento"
+]);
+
+function kgTerms(text){
+  return getQueryTokens(text||"").filter(t=>t.length>=4&&!KG_STOP_STRICT.has(t));
+}
+function kgFreq(text){
+  const m=new Map();
+  for(const t of kgTerms(text))m.set(t,(m.get(t)||0)+1);
+  return m;
+}
+function kgCosine(a,b,idf){
+  const A=kgFreq(a), B=kgFreq(b);
+  let dot=0,na=0,nb=0;
+  for(const [t,c] of A){
+    const w=c*(idf.get(t)||1);
+    na+=w*w;
+    if(B.has(t))dot+=w*(B.get(t)*(idf.get(t)||1));
+  }
+  for(const [t,c] of B){
+    const w=c*(idf.get(t)||1); nb+=w*w;
+  }
+  return na&&nb ? dot/(Math.sqrt(na)*Math.sqrt(nb)) : 0;
+}
+function kgDistinctiveShared(a,b,idf){
+  const A=new Set(kgTerms(a)),B=new Set(kgTerms(b));
+  return [...A].filter(t=>B.has(t))
+    .map(t=>({t,w:idf.get(t)||1}))
+    .sort((x,y)=>y.w-x.w);
+}
+function kgFormulaKey(f){
+  return normalizeStr(f).replace(/\s+/g,"").replace(/[.,;:]/g,"");
+}
+
 function buildKnowledgeMatrix(){
-  const docs = repositoryFiles.map(file=>{
-    const pages = repositoryTexts[file.path]?.original || [];
-    const content = pages.join(" ");
-    const normalizedContent = normalizeStr(content);
-    const formulas = extractFormulaHints(content);
+  const docs=repositoryFiles.map(file=>{
+    const pages=repositoryTexts[file.path]?.original||[];
+    const content=pages.join(" ");
+    const norm=normalizeStr(content);
+    const formulas=extractFormulaHints(content)
+      .map(String).map(s=>s.trim()).filter(s=>s.length>=6);
     return {
       file,
-      type: detectDocType(file),
-      content: normalizedContent,
-      tokens: kgContentTokens(content),
-      tokenSet: new Set(kgContentTokens(content)),
+      type:detectDocType(file),
+      content:norm,
+      terms:new Set(kgTerms(content)),
       formulas,
-      formulasNorm: formulas.map(normalizeStr)
+      formulaKeys:new Set(formulas.map(kgFormulaKey))
     };
   });
 
-  // IDF: un término común a casi todos los documentos vale mucho menos.
-  const df = new Map();
-  for(const d of docs){
-    for(const token of d.tokenSet) df.set(token,(df.get(token)||0)+1);
-  }
+  // IDF: conceptos que aparecen en muchos documentos pesan poco.
+  const df=new Map();
+  docs.forEach(d=>d.terms.forEach(t=>df.set(t,(df.get(t)||0)+1)));
+  const idf=new Map();
+  docs.forEach(d=>d.terms.forEach(t=>{
+    idf.set(t,Math.log((docs.length+1)/((df.get(t)||0)+1))+1);
+  }));
 
   const edges=[];
-
   for(let i=0;i<docs.length;i++){
     for(let j=i+1;j<docs.length;j++){
-      const a=docs[i], b=docs[j];
+      const a=docs[i],b=docs[j];
+      const shared=kgDistinctiveShared(a.content,b.content,idf);
 
-      const shared=[...a.tokenSet].filter(t=>b.tokenSet.has(t));
-      if(!shared.length) continue;
+      // Solo aceptamos conceptos realmente distintivos.
+      const distinctive=shared.filter(x=>
+        x.w>=1.25 && (df.get(x.t)||docs.length)<=Math.max(3,Math.ceil(docs.length*.35))
+      ).slice(0,20);
 
-      // Pesamos los conceptos según qué tan raros son en TODO el repositorio.
-      const weightedShared=shared.map(token=>{
-        const frequency=df.get(token)||docs.length;
-        const rarity=Math.log((docs.length+1)/(frequency+1))+1;
-        return {token,weight:rarity};
-      }).sort((x,y)=>y.weight-x.weight);
+      const formulas=[...a.formulaKeys]
+        .filter(k=>k.length>=6 && b.formulaKeys.has(k));
 
-      const meaningful=weightedShared.filter(x=>x.weight>=1.15).slice(0,18);
-
-      // Fórmula idéntica: conexión muy fuerte.
-      const sharedFormulas=a.formulas.filter(f=>
-        f.length>=4 && b.content.includes(normalizeStr(f))
-      ).slice(0,8);
-
-      // Mismo concepto dentro de los nombres/rutas: sólo evidencia secundaria.
-      const aNameTokens=kgContentTokens(a.file.name);
-      const bPath=normalizeStr(b.file.path);
-      const pathShared=aNameTokens.filter(t=>bPath.includes(t)).slice(0,5);
-
-      let score=0;
-
-      // Contenido compartido: base principal.
-      score += meaningful.slice(0,8).reduce((s,x)=>s+x.weight*2.2,0);
-
-      // Fórmulas exactas tienen mucho peso.
-      score += sharedFormulas.length*12;
-
-      // Mismo término relevante repetido en varias páginas: pequeño refuerzo.
-      const pageA=repositoryTexts[a.file.path]?.normalized||[];
-      const pageB=repositoryTexts[b.file.path]?.normalized||[];
-      const repeated=meaningful.filter(x=>{
-        const pa=pageA.filter(p=>p.includes(x.token)).length;
-        const pb=pageB.filter(p=>p.includes(x.token)).length;
-        return pa>=1 && pb>=1;
-      }).length;
-      score += Math.min(repeated,6)*1.5;
-
-      // La ruta puede desempatar, pero NUNCA crear una conexión.
-      score += Math.min(pathShared.length,2)*0.5;
+      const cosine=kgCosine(a.content,b.content,idf);
 
       /*
-       * Umbral deliberadamente alto:
-       *  - 1 palabra genérica no conecta documentos.
-       *  - estar en "protocolos" o "materiales" no conecta documentos.
-       *  - compartir varios conceptos reales sí.
-       *  - una fórmula exacta sí puede generar una conexión fuerte.
+       * Umbral estricto:
+       * A) 2 conceptos distintivos + similitud semántica suficiente
+       * B) 3 conceptos distintivos, aunque el documento sea corto
+       * C) 1 fórmula exacta + 1 concepto distintivo
+       *
+       * La carpeta/nombre/tipo NO participa del score.
        */
-      const strongByFormula=sharedFormulas.length>=1;
-      const strongByConcepts=meaningful.length>=3 && score>=8;
-      const strongByDenseContent=meaningful.length>=5 && score>=10;
+      const conceptCount=distinctive.length;
+      const formulaStrong=formulas.length>=1 && conceptCount>=1;
+      const conceptStrong=conceptCount>=2 && cosine>=0.055;
+      const denseStrong=conceptCount>=3 && cosine>=0.035;
 
-      if(strongByFormula || strongByConcepts || strongByDenseContent){
+      if(formulaStrong||conceptStrong||denseStrong){
+        const score=
+          cosine*100+
+          distinctive.slice(0,8).reduce((s,x)=>s+(x.w*3),0)+
+          formulas.length*18;
+
         edges.push({
           a:a.file.path,
           b:b.file.path,
           score,
-          concepts:meaningful.map(x=>x.token),
-          formulas:sharedFormulas,
-          pathShared,
-          reason: strongByFormula
-            ? "fórmula compartida"
-            : `${meaningful.length} conceptos relevantes compartidos`
+          cosine,
+          concepts:distinctive.map(x=>x.t),
+          formulas,
+          pathShared:[],
+          reason:formulas.length
+            ?"fórmula + conceptos compartidos"
+            :`${conceptCount} conceptos distintivos compartidos`
         });
       }
     }
   }
 
   const byPath=new Map(docs.map(d=>[d.file.path,d]));
-  window.NEXUS_KNOWLEDGE={docs,edges,byPath,df};
+  window.NEXUS_KNOWLEDGE={docs,edges,byPath,df,idf};
   return window.NEXUS_KNOWLEDGE;
 }
 
-function relatedDocs(file, query="", limit=6){
+function relatedDocs(file,query="",limit=4){
   const kg=window.NEXUS_KNOWLEDGE;
   if(!kg)return [];
-
   const source=kg.byPath.get(file.path);
   if(!source)return [];
 
@@ -819,22 +843,14 @@ function relatedDocs(file, query="", limit=6){
         (e.a===source.file.path&&e.b===d.file.path) ||
         (e.b===source.file.path&&e.a===d.file.path)
       );
-
-      // Sin arista real, el documento NO entra al mapa.
       if(!edge)return null;
 
+      // La consulta SOLO ordena relaciones que ya existen.
       let score=edge.score;
-
-      // La consulta puede ordenar las conexiones ya existentes,
-      // pero NO puede inventar una conexión entre documentos sin similitud.
-      if(q && d.content.includes(q))score+=8;
+      if(q&&d.content.includes(q))score+=3;
       for(const w of words){
-        if(d.tokenSet.has(w))score+=Math.min(
-          Math.log((kg.docs.length+1)/((kg.df.get(w)||kg.docs.length)+1))+1,
-          2.5
-        )*2;
+        if(d.terms.has(w))score+=1;
       }
-
       return {doc:d,edge,score};
     })
     .filter(Boolean)
@@ -880,7 +896,7 @@ function appendKnowledgeMatrix(container, file, query=""){
       const reasons=[];
       if(r.edge?.formulas?.length) reasons.push("fórmula compartida");
       if(r.edge?.concepts?.length) reasons.push(`${r.edge.concepts.length} conceptos`);
-      if(r.edge?.pathShared?.length) reasons.push("ruta/contenido relacionado");
+      if(r.edge?.cosine) reasons.push(`similitud ${Math.round(r.edge.cosine*100)}%`);
       const meta=document.createElement("span");
       meta.className="km-meta";
       meta.textContent=`Página ${page}${reasons.length?" · "+reasons.join(" · "):""}`;
