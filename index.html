@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#010308">
-  <title>NEXUS-X // QUANTUM CORE v9.0</title>
+  <title>NEXUS-X // QUANTUM CORE v9.1</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
 if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}
@@ -392,8 +392,24 @@ async function fetchGitHubPath(path=''){const suffix=path?`/${path.split('/').ma
 async function discoverPDFs(path='',out=[]){const data=await fetchGitHubPath(path);if(!Array.isArray(data))return out;for(const item of data){if(item.type==='file'&&item.name.toLowerCase().endsWith('.pdf'))out.push({name:item.name,path:item.path,download_url:item.download_url});else if(item.type==='dir'&&item.path.split('/').length<=5){try{await discoverPDFs(item.path,out);}catch(e){console.warn('No se pudo explorar',item.path,e);}}}return out;}
 async function indexAllPdfs(){let ok=0;$('#sysState').textContent=`Indexando 0/${repositoryFiles.length}...`;for(let i=0;i<repositoryFiles.length;i++){const file=repositoryFiles[i];$('#sysState').textContent=`Indexando ${i+1}/${repositoryFiles.length}...`;try{const pdf=await pdfjsLib.getDocument({url:file.download_url,disableAutoFetch:false,disableStream:false}).promise;const original=[],normalized=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();const text=content.items.map(x=>x.str||'').join(' ').replace(/\s+/g,' ').trim();original.push(text);normalized.push(normalizeStr(text));}repositoryTexts[file.path]={original,normalized,numPages:pdf.numPages};ok++;}catch(e){console.warn('No se pudo indexar',file.path,e);repositoryTexts[file.path]={original:[],normalized:[],numPages:0,error:true};}}$('#sysState').textContent='Construyendo matriz...';
   try{ buildKnowledgeMatrix(); }catch(e){ console.warn('Matriz:',e); }
-  $('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;addMsg('#mainChatBox',`>> NEXUS-X v9.0 listo.\n>> ${ok}/${repositoryFiles.length} manuales indexados.\n>> Podés buscar conceptos, fórmulas o palabras clave.`,'system');}
+  $('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;addMsg('#mainChatBox',`>> NEXUS-X v9.1 listo.\n>> ${ok}/${repositoryFiles.length} manuales indexados.\n>> Podés buscar conceptos, fórmulas o palabras clave.`,'system');}
 
+
+
+/* v9.1 HOTFIX: página relevante segura para el mapa */
+function findBestPageForQuery(pages, query=""){
+  if(!Array.isArray(pages) || !pages.length) return 1;
+  if(!query || !String(query).trim()) return 1;
+  let bestPage=1, bestScore=-1;
+  for(let i=0;i<pages.length;i++){
+    const score=scorePage(pages[i],query);
+    if(score>bestScore){
+      bestScore=score;
+      bestPage=i+1;
+    }
+  }
+  return bestPage;
+}
 
 /* =========================================================
    NEXUS-X v9 // INTERACTIVE KNOWLEDGE GRAPH
@@ -759,7 +775,7 @@ async function callGeminiAPI(prompt,key){if(!key)throw new Error('No hay API Key
 function searchRepository(query){const results=[];for(const file of repositoryFiles){const data=repositoryTexts[file.path];if(!data)continue;for(let i=0;i<data.normalized.length;i++){const score=scorePage(data.original[i],query);if(score>0)results.push({file,page:i+1,score,text:data.original[i]});}}results.sort((a,b)=>b.score-a.score);return results;}
 async function loadPdfInModal(file,targetPage=1){activeFileName=file.path;activePagesCache=repositoryTexts[file.path]?.original||[];$('#modalDocTitle').textContent=`📄 ${file.path}`;modal.style.display='flex';$('#modalChatHistory').innerHTML='';addViewerMessage(`Manual "${file.name}" cargado.\nPáginas: ${activePagesCache.length}\n\nConsultame sobre cualquier parte del manual.`,'bot');
   appendKnowledgeMatrix($('#modalChatHistory'),file,"");
-  kgRenderGraph($('#modalChatHistory'),file,);try{activePdfDoc=await pdfjsLib.getDocument({url:file.download_url}).promise;activePageNum=Math.min(Math.max(1,targetPage),activePdfDoc.numPages);await renderCurrentPage();}catch(e){addViewerMessage(`⚠️ No se pudo cargar el PDF.\n${e.message}`,'bot');}}
+  kgRenderGraph($('#modalChatHistory'),file,"");try{activePdfDoc=await pdfjsLib.getDocument({url:file.download_url}).promise;activePageNum=Math.min(Math.max(1,targetPage),activePdfDoc.numPages);await renderCurrentPage();}catch(e){addViewerMessage(`⚠️ No se pudo cargar el PDF.\n${e.message}`,'bot');}}
 async function renderCurrentPage(){if(!activePdfDoc)return;const id=++renderRequestId;try{$('#pageIndicator').textContent=`Pág. ${activePageNum} / ${activePdfDoc.numPages}`;$('#prevPageBtn').disabled=activePageNum<=1;$('#nextPageBtn').disabled=activePageNum>=activePdfDoc.numPages;const page=await activePdfDoc.getPage(activePageNum);if(id!==renderRequestId)return;const canvas=$('#pdfCanvas'),ctx=canvas.getContext('2d'),container=document.querySelector('.canvas-container'),base=page.getViewport({scale:1}),width=Math.max(250,(container.clientWidth||700)-24),scale=Math.max(.5,Math.min(2.5,width/base.width)),vp=page.getViewport({scale});canvas.width=Math.ceil(vp.width);canvas.height=Math.ceil(vp.height);await page.render({canvasContext:ctx,viewport:vp}).promise;}catch(e){console.error(e);}}
 function addViewerMessage(text,type){const h=$('#modalChatHistory'),d=document.createElement('div');d.className=`v-msg ${type}`;d.textContent=text;h.appendChild(d);h.scrollTop=h.scrollHeight;return d;}
 async function handleModalAIQuery(){if(aiBusy)return;const value=modalQueryInput.value.trim();if(!value)return;const key=localStorage.getItem('nexus_gemini_key')||globalApiKey;addViewerMessage(value,'user');modalQueryInput.value='';const bot=addViewerMessage('Analizando el manual...','bot');if(!key){bot.textContent='⚠️ Primero guardá tu API Key.';return;}aiBusy=true;modalSendBtn.disabled=true;try{const ranked=[];for(let i=0;i<activePagesCache.length;i++){const score=scorePage(activePagesCache[i],value);if(score>0)ranked.push({page:i+1,score,text:activePagesCache[i]});}ranked.sort((a,b)=>b.score-a.score);const selected=ranked.slice(0,8);let context=selected.length?selected.map(x=>`--- PÁGINA ${x.page} ---\n${x.text.slice(0,7000)}`).join('\n\n'):activePagesCache.slice(0,3).map((x,i)=>`--- PÁGINA ${i+1} ---\n${x.slice(0,5000)}`).join('\n\n');const prompt=`Sos el asistente académico de NEXUS-X. Respondé en español claro, natural y directo.\n\nMANUAL: ${activeFileName}\n\nCONSULTA: ${value}\n\nCONTEXTO RELEVANTE:\n${context}\n\nREGLAS:\n- Basate principalmente en el contenido proporcionado.\n- No inventes información que contradiga el manual.\n- Indicá las páginas cuando puedas.\n- Si la información no aparece claramente, decilo.\n- Explicá como un buen tutor.\n- No uses LaTeX ni símbolos $.\n- Para fórmulas químicas escribí H2O, CO2, SO2, etc.`;const response=await callGeminiAPI(prompt,key);bot.innerHTML=formatAIText(response);}catch(e){bot.textContent=`⚠️ Error al consultar Gemini:\n${e.message}`;}finally{aiBusy=false;modalSendBtn.disabled=false;}}
