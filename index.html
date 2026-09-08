@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#010308">
-  <title>NEXUS-X // QUANTUM CORE v9.2</title>
+  <title>NEXUS-X // QUANTUM CORE v9.3</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
 if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}
@@ -386,7 +386,7 @@ header{padding:16px 28px;border-bottom:1px solid var(--stroke);background:var(--
 (()=>{
 'use strict';
 
-const GITHUB_CONFIG={owner:'miqueas80',repo:'laboratorio-escolar-tecnico',branch:'main'};
+const GITHUB_CONFIG={owner:'miqueas80',repo:'laboratorio-escolar',branch:'main'};
 const MODEL_PREFERENCE=['gemini-3.8-flash','gemini-3.7-flash','gemini-3.6-flash','gemini-3.5-flash','gemini-3.5-flash-lite','gemini-3.1-flash-lite'];
 const API_BASE='https://generativelanguage.googleapis.com/v1beta';
 let globalApiKey=localStorage.getItem('nexus_gemini_key')||'';
@@ -407,10 +407,20 @@ function formatAIText(text){return escapeHtml(text).replace(/\*\*(.*?)\*\*/g,'<s
 function getQueryTokens(q){return [...new Set(normalizeStr(q).split(/\s+/).filter(w=>w.length>=3))];}
 function scorePage(pageText,query){const p=normalizeStr(pageText),q=normalizeStr(query),words=getQueryTokens(query);if(!p||!words.length)return 0;let score=p.includes(q)?100:0;for(const w of words){if(p.includes(w))score+=10;const n=p.split(w).length-1;if(n>1)score+=Math.min(n*2,10);}return score;}
 async function fetchGitHubPath(path=''){const suffix=path?`/${path.split('/').map(encodeURIComponent).join('/')}`:'';const url=`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents${suffix}`;const res=await fetch(url,{headers:{Accept:'application/vnd.github+json'}});if(!res.ok){let msg=`GitHub HTTP ${res.status}`;try{const d=await res.json();if(d.message)msg+=`: ${d.message}`;}catch{}throw new Error(msg);}return res.json();}
-async function discoverPDFs(path='',out=[]){const data=await fetchGitHubPath(path);if(!Array.isArray(data))return out;for(const item of data){if(item.type==='file'&&item.name.toLowerCase().endsWith('.pdf'))out.push({name:item.name,path:item.path,download_url:item.download_url});else if(item.type==='dir'&&item.path.split('/').length<=5){try{await discoverPDFs(item.path,out);}catch(e){console.warn('No se pudo explorar',item.path,e);}}}return out;}
+async function discoverPDFs(){
+  const url=`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/git/trees/${encodeURIComponent(GITHUB_CONFIG.branch)}?recursive=1&_=${Date.now()}`;
+  const res=await fetch(url,{cache:'no-store',headers:{Accept:'application/vnd.github+json'}});
+  if(!res.ok){let msg=`GitHub HTTP ${res.status}`;try{const d=await res.json();if(d.message)msg+=`: ${d.message}`;}catch{}throw new Error(msg);}
+  const data=await res.json();
+  if(!Array.isArray(data.tree)) throw new Error('GitHub no devolvió el árbol del repositorio.');
+  return data.tree.filter(x=>x.type==='blob'&&/\.pdf$/i.test(x.path)).map(x=>({
+    name:x.path.split('/').pop(),path:x.path,
+    download_url:`https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${encodeURIComponent(GITHUB_CONFIG.branch)}/${x.path.split('/').map(encodeURIComponent).join('/')}`
+  }));
+}
 async function indexAllPdfs(){let ok=0;$('#sysState').textContent=`Indexando 0/${repositoryFiles.length}...`;for(let i=0;i<repositoryFiles.length;i++){const file=repositoryFiles[i];$('#sysState').textContent=`Indexando ${i+1}/${repositoryFiles.length}...`;try{const pdf=await pdfjsLib.getDocument({url:file.download_url,disableAutoFetch:false,disableStream:false}).promise;const original=[],normalized=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();const text=content.items.map(x=>x.str||'').join(' ').replace(/\s+/g,' ').trim();original.push(text);normalized.push(normalizeStr(text));}repositoryTexts[file.path]={original,normalized,numPages:pdf.numPages};ok++;}catch(e){console.warn('No se pudo indexar',file.path,e);repositoryTexts[file.path]={original:[],normalized:[],numPages:0,error:true};}}$('#sysState').textContent='Construyendo matriz...';
   try{ buildKnowledgeMatrix(); }catch(e){ console.warn('Matriz:',e); }
-  $('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;addMsg('#mainChatBox',`>> NEXUS-X v9.2 listo.\n>> ${ok}/${repositoryFiles.length} manuales indexados.\n>> Podés buscar conceptos, fórmulas o palabras clave.`,'system');}
+  $('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;const folderCount={};for(const f of repositoryFiles){const parts=f.path.split('/');const folder=parts.length>1?parts[0]:'raiz';folderCount[folder]=(folderCount[folder]||0)+1;}const folders=Object.entries(folderCount).map(([k,v])=>`${k}: ${v}`).join(' · ');addMsg('#mainChatBox',`>> NEXUS-X v9.3 listo.\n>> ${ok}/${repositoryFiles.length} PDFs indexados.\n>> Carpetas detectadas: ${folders||'raíz'}\n>> Podés buscar conceptos, fórmulas, protocolos o materiales.`,'system');}
 
 
 
@@ -784,13 +794,13 @@ function appendKnowledgeMatrix(container, file, query=""){
   container.appendChild(box);
 }
 
-async function fetchFiles(){try{$('#sysState').textContent='Conectando con GitHub...';repositoryFiles=await discoverPDFs();if(!repositoryFiles.length){$('#sysState').textContent='Sin manuales';addMsg('#mainChatBox','>> No se encontraron archivos PDF en el repositorio.','error');return;}await indexAllPdfs();}catch(e){console.error(e);$('#sysState').textContent='Error de conexión';addMsg('#mainChatBox',`>> No se pudo sincronizar GitHub.\n${e.message}`,'error');}}
+async function fetchFiles(){try{$('#sysState').textContent='Conectando con GitHub...';repositoryFiles=await discoverPDFs();repositoryFiles.sort((a,b)=>a.path.localeCompare(b.path,'es'));if(!repositoryFiles.length){$('#sysState').textContent='Sin manuales';addMsg('#mainChatBox','>> No se encontraron archivos PDF en el repositorio.','error');return;}await indexAllPdfs();}catch(e){console.error(e);$('#sysState').textContent='Error de conexión';addMsg('#mainChatBox',`>> No se pudo sincronizar GitHub.\n${e.message}`,'error');}}
 
 /* Detecta automáticamente un modelo que la API Key realmente pueda usar. */
 async function listAvailableModels(key){const res=await fetch(`${API_BASE}/models?pageSize=1000`,{headers:{'x-goog-api-key':key}});let data={};try{data=await res.json();}catch{}if(!res.ok)throw new Error(data.error?.message||`No se pudo consultar la lista de modelos (HTTP ${res.status}).`);return Array.isArray(data.models)?data.models:[];}
 async function initGemini(){const key=localStorage.getItem('nexus_gemini_key')||globalApiKey;if(!key){activeModel='';return false;}try{const models=await listAvailableModels(key);const usable=new Map();for(const m of models){const name=String(m.name||'').replace(/^models\//,'');const methods=m.supportedGenerationMethods||[];if(methods.includes('generateContent'))usable.set(name,m);}activeModel=MODEL_PREFERENCE.find(n=>usable.has(n))||[...usable.keys()].find(n=>/^gemini-.*flash/i.test(n))||'';if(!activeModel)throw new Error('La API Key funciona, pero no encontré un modelo Gemini compatible con generateContent.');$('#sysState').textContent=`IA: ${activeModel}`;return true;}catch(e){console.error(e);$('#sysState').textContent='API no disponible';addMsg('#mainChatBox',`>> API Gemini: ${e.message}`,'error');return false;}}
 async function callGeminiAPI(prompt,key){if(!key)throw new Error('No hay API Key configurada.');if(!activeModel){await initGemini();}if(!activeModel)throw new Error('No hay un modelo Gemini disponible para esta API Key.');const url=`${API_BASE}/models/${encodeURIComponent(activeModel)}:generateContent`;const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}]})});let data={};try{data=await res.json();}catch{}if(!res.ok){if(res.status===400)throw new Error(data.error?.message||'Solicitud inválida.');if(res.status===401||res.status===403)throw new Error('La API Key no es válida o no tiene permisos.');if(res.status===404){activeModel='';throw new Error('El modelo dejó de estar disponible. Guardá nuevamente la API Key o reintentá para seleccionar otro modelo.');}if(res.status===429)throw new Error('Se alcanzó el límite de solicitudes. Esperá unos segundos.');throw new Error(data.error?.message||`Error HTTP ${res.status}`);}const text=data.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('').trim();if(!text)throw new Error('Gemini no devolvió texto.');return text;}
-function searchRepository(query){const results=[];for(const file of repositoryFiles){const data=repositoryTexts[file.path];if(!data)continue;for(let i=0;i<data.normalized.length;i++){const score=scorePage(data.original[i],query);if(score>0)results.push({file,page:i+1,score,text:data.original[i]});}}results.sort((a,b)=>b.score-a.score);return results;}
+function searchRepository(query){const results=[];const nq=normalizeStr(query);for(const file of repositoryFiles){const data=repositoryTexts[file.path];if(!data)continue;const pathNorm=normalizeStr(file.path);const pathBonus=pathNorm.includes(nq)?80:0;for(let i=0;i<data.normalized.length;i++){const score=scorePage(data.original[i],query)+pathBonus;if(score>0)results.push({file,page:i+1,score,text:data.original[i]});}}results.sort((a,b)=>b.score-a.score);return results;}
 async function loadPdfInModal(file,targetPage=1){activeFileName=file.path;activePagesCache=repositoryTexts[file.path]?.original||[];$('#modalDocTitle').textContent=`📄 ${file.path}`;modal.style.display='flex';$('#modalChatHistory').innerHTML='';addViewerMessage(`Manual "${file.name}" cargado.\nPáginas: ${activePagesCache.length}\n\nConsultame sobre cualquier parte del manual.`,'bot');
   appendKnowledgeMatrix($('#modalChatHistory'),file,"");
   kgRenderGraph($('#modalChatHistory'),file,"");try{activePdfDoc=await pdfjsLib.getDocument({url:file.download_url}).promise;activePageNum=Math.min(Math.max(1,targetPage),activePdfDoc.numPages);await renderCurrentPage();}catch(e){addViewerMessage(`⚠️ No se pudo cargar el PDF.\n${e.message}`,'bot');}}
