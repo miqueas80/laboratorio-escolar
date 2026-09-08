@@ -1,293 +1,234 @@
 <!doctype html>
 <html lang="es">
  <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>NEXUS-X // OMEGA ∞ TITAN</title>
+  <meta name="theme-color" content="#010308">
+  <title>NEXUS-X // QUANTUM CORE v6.1</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}
+</script>
   <style>
-:root{--bg:#020508;--p:#061016;--p2:#09161d;--line:#12313b;--cyan:#00e5ff;--green:#00ff9d;--amber:#ffbd45;--red:#ff4567;--violet:#b77dff;--txt:#d9f7fb;--muted:#628792}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--txt);font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-body{overflow:hidden}button,input,textarea,select{font:inherit}button{background:#07151c;color:var(--cyan);border:1px solid #17404b;padding:8px 11px;cursor:pointer}button:hover{border-color:var(--cyan);box-shadow:0 0 18px #00e5ff22}button.green{color:var(--green)}button.amber{color:var(--amber)}button.danger{color:var(--red)}button.violet{color:var(--violet)}
-input,textarea,select{width:100%;background:#02090d;color:var(--txt);border:1px solid var(--line);padding:8px;outline:0}input:focus,textarea:focus,select:focus{border-color:var(--cyan)}
-header{height:64px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 16px;background:linear-gradient(90deg,#03090c,#07171d,#03090c)}
-.logo{font-size:18px;font-weight:900;letter-spacing:3px;color:var(--cyan)}.logo small{font-size:9px;color:var(--green)}
-.status{display:flex;gap:15px;color:var(--muted);font-size:10px;align-items:center}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 12px var(--green)}
-.layout{height:calc(100vh - 64px);display:grid;grid-template-columns:265px 1fr 330px}
-aside{overflow:auto;background:var(--p);padding:11px;border-right:1px solid var(--line)}.right{border-right:0;border-left:1px solid var(--line)}main{overflow:auto;padding:14px;background:radial-gradient(circle at 50% 0,#00e5ff0b,transparent 45%)}
-.title{font-size:10px;color:var(--green);letter-spacing:2px;border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:8px}.sec{margin-bottom:13px}.row{display:flex;gap:6px;margin-bottom:6px}.row>*{flex:1}.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.metric{border:1px solid var(--line);background:#051016cc;padding:9px;min-height:59px}.metric b{display:block;color:var(--cyan);font-size:19px}.metric span{font-size:8px;color:var(--muted)}
-.hero{border:1px solid #15505b;background:linear-gradient(135deg,#00e5ff0a,#00ff9d06,#b77dff06);padding:14px;margin-bottom:10px}.hero h1{margin:0 0 4px;color:#fff;font-size:22px}.hero p{color:var(--muted);line-height:1.6;font-size:10px}
-.query{display:grid;grid-template-columns:1fr 135px;gap:7px}.query textarea{height:78px;resize:vertical}.query button{height:100%}
-.tabs{display:flex;gap:4px;margin:10px 0;overflow:auto}.tab.active{background:#0d2931;border-color:var(--cyan)}section.panel{min-height:250px}.hidden{display:none!important}
-.answer{white-space:pre-wrap;border:1px solid var(--line);background:#030a0e;padding:13px;min-height:170px;line-height:1.65}.label{color:var(--green);font-size:9px;letter-spacing:2px}
-.cards{display:grid;gap:7px;margin-top:8px}.card{border:1px solid var(--line);background:#061117cc;padding:10px}.card:hover{border-color:#21616e}.head{display:flex;justify-content:space-between;gap:8px}.cyan{color:var(--cyan)}.green{color:var(--green)}.amber{color:var(--amber)}.red{color:var(--red)}.violet{color:var(--violet)}.muted{color:var(--muted)}.body{color:#9bc3ca;line-height:1.6;margin-top:6px}.badge{display:inline-block;padding:2px 5px;border:1px solid #23434b;color:var(--muted);font-size:8px;margin:2px}.good{color:var(--green);border-color:#155d49}.warn{color:var(--amber);border-color:#604a1c}.bad{color:var(--red);border-color:#642338}
-pre{white-space:pre-wrap;word-break:break-word;color:#9bc8d0;font-size:9px}.grid{width:100%;height:330px;border:1px solid var(--line);background:#020609}.log{height:205px;overflow:auto;background:#020608;border:1px solid var(--line);padding:8px;font-size:8px}.log div{margin-bottom:4px}
-.progress{height:4px;background:#0b1c23;margin:4px 0 7px}.progress i{display:block;height:100%;width:0;background:var(--cyan);transition:.2s}
-.table{width:100%;border-collapse:collapse;font-size:9px}.table th,.table td{border:1px solid var(--line);padding:6px;text-align:left}.table th{color:var(--green)}
-.timeline{border-left:1px solid var(--cyan);margin:8px 0;padding-left:12px}.event{position:relative;margin:0 0 10px}.event:before{content:"";position:absolute;left:-17px;top:4px;width:7px;height:7px;border-radius:50%;background:var(--cyan)}
-footer{color:#45656d;text-align:center;font-size:8px;padding:8px}
-@media(max-width:1100px){.layout{grid-template-columns:225px 1fr}.right{display:none}}@media(max-width:700px){body{overflow:auto}.layout{height:auto;display:block}aside{border-bottom:1px solid var(--line);border-right:0}main{min-height:900px}.query{grid-template-columns:1fr}}
+:root{--bg:#010308;--panel:rgba(5,10,20,.9);--stroke:rgba(0,242,254,.2);--text:#f1f5f9;--muted:#64748b;--accent:#00f2fe;--accent-glow:rgba(0,242,254,.3);--success:#10b981;--danger:#f43f5e;--mono:ui-monospace,SFMono-Regular,Menlo,Monaco,monospace}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}body{font-family:var(--mono);color:var(--text);background:var(--bg);background-image:radial-gradient(circle at 50% 0%,#0a192f 0%,#010308 75%);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}button,input{font-family:inherit}
+header{padding:16px 28px;border-bottom:1px solid var(--stroke);background:var(--panel);display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(12px);flex-wrap:wrap;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.logo{font-size:13px;font-weight:bold;letter-spacing:3px;color:var(--accent);text-shadow:0 0 12px var(--accent-glow);display:flex;align-items:center;gap:8px}.logo:before{content:"";display:block;width:8px;height:8px;background:var(--accent);border-radius:50%;box-shadow:0 0 10px var(--accent)}
+.header-controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.api-config-bar{display:flex;align-items:center;gap:6px;font-size:11px;background:rgba(0,0,0,.4);border:1px solid var(--stroke);padding:4px 10px;border-radius:6px}.api-config-bar input{background:transparent;border:none;color:var(--text);font-size:11px;width:150px;outline:none}.api-config-bar button{background:rgba(0,242,254,.1);border:1px solid var(--accent);color:var(--accent);padding:4px 8px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold}.api-config-bar button:hover{background:var(--accent);color:#000}
+.status-pill{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.02);padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.05)}.pulse{width:6px;height:6px;background:var(--success);border-radius:50%;box-shadow:0 0 8px var(--success);animation:blink 2s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.workspace{max-width:900px;width:95vw;margin:20px auto;flex:1;display:flex;flex-direction:column;gap:20px}.main-panel{background:var(--panel);border:1px solid var(--stroke);border-radius:12px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.8);min-height:650px}.chat-scroll{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;max-height:68vh;scrollbar-width:thin;scrollbar-color:var(--accent) rgba(0,0,0,.5)}
+.msg{padding:14px 16px;border-radius:8px;font-size:13px;line-height:1.6;max-width:92%;word-break:break-word}.msg.system{background:rgba(0,242,254,.03);border:1px solid rgba(0,242,254,.15);color:var(--accent);align-self:flex-start}.msg.user{background:rgba(79,172,254,.08);border:1px solid rgba(79,172,254,.25);color:#fff;align-self:flex-end}.msg.ai{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);color:#cbd5e1;align-self:flex-start;white-space:pre-line;display:flex;flex-direction:column;gap:10px;width:100%;max-width:100%}.msg.error{background:rgba(244,63,94,.05);border:1px solid rgba(244,63,94,.2);color:#fda4af;align-self:flex-start}
+.doc-action-card{background:rgba(16,185,129,.03);border:1px solid rgba(16,185,129,.25);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;margin-top:6px}.doc-header-row{display:flex;justify-content:space-between;align-items:center;gap:8px}.doc-action-title{color:var(--success);font-size:11px;font-weight:bold}.actions-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}.action-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:linear-gradient(135deg,var(--accent),#4facfe);color:#000;text-decoration:none;border-radius:4px;font-weight:bold;font-size:10px;cursor:pointer;border:none}.action-btn.download{background:linear-gradient(135deg,#10b981,#00b0ff)}.action-btn:hover{filter:brightness(1.1)}
+.input-box-area{padding:16px;background:rgba(0,0,0,.4);border-top:1px solid var(--stroke);display:flex;gap:10px;align-items:center}.input-box-area input{flex:1;min-width:0;background:rgba(0,0,0,.6);border:1px solid var(--stroke);border-radius:6px;padding:12px 14px;color:var(--text);font-size:13px;outline:none}.input-box-area input:focus{border-color:var(--accent);box-shadow:0 0 10px var(--accent-glow)}.btn-action{background:linear-gradient(135deg,var(--accent),#4facfe);color:#000;border:none;padding:12px 20px;border-radius:6px;font-weight:bold;font-size:12px;cursor:pointer}.btn-action:disabled{opacity:.4;cursor:not-allowed}
+#pdfViewerModal{display:none;position:fixed;inset:0;width:100vw;height:100vh;background:rgba(1,3,8,.95);z-index:2000;backdrop-filter:blur(10px);flex-direction:column;padding:10px}.viewer-top{display:flex;justify-content:space-between;align-items:center;background:var(--panel);border:1px solid var(--stroke);padding:10px 16px;border-radius:8px 8px 0 0;flex-wrap:wrap;gap:10px}.viewer-title-text{color:var(--accent);font-size:12px;font-weight:bold;max-width:45vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.viewer-nav-controls{display:flex;align-items:center;gap:8px}.page-nav-btn{background:rgba(0,242,254,.1);border:1px solid var(--accent);color:var(--accent);padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer}.page-nav-btn:hover{background:var(--accent);color:#000}.page-nav-btn:disabled{opacity:.3;cursor:not-allowed}.viewer-close{background:var(--danger);color:#fff;border:none;padding:6px 12px;border-radius:4px;font-weight:bold;cursor:pointer;font-size:11px}.viewer-body{flex:1;display:grid;grid-template-columns:1fr 350px;background:#040812;border:1px solid var(--stroke);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;min-height:0}.canvas-container{overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:12px;background:#080d1a;width:100%;height:100%}#pdfCanvas{max-width:100%;height:auto;box-shadow:0 0 20px rgba(0,0,0,.9);background:white;display:block}.viewer-sidebar-chat{background:rgba(3,7,14,.98);border-left:1px solid var(--stroke);display:flex;flex-direction:column;padding:12px;gap:10px;min-height:0;height:100%}.v-chat-history{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;font-size:11px;padding-right:8px;scrollbar-width:thin;scrollbar-color:var(--accent) rgba(255,255,255,.1)}.v-msg{padding:10px 12px;border-radius:6px;line-height:1.5;white-space:pre-line;overflow-wrap:anywhere}.v-msg.bot{background:rgba(0,242,254,.05);border:1px solid rgba(0,242,254,.2);color:#cbd5e1}.v-msg.user{background:rgba(79,172,254,.1);border:1px solid rgba(79,172,254,.3);color:#fff;align-self:flex-end}.v-input-row{display:flex;gap:6px;margin-top:auto}.v-input-row input{flex:1;min-width:0;background:rgba(0,0,0,.6);border:1px solid var(--stroke);border-radius:4px;padding:8px;color:var(--text);font-size:11px;outline:none}.v-send{background:var(--accent);color:#000;border:none;padding:8px 12px;border-radius:4px;font-weight:bold;cursor:pointer;font-size:11px}.v-send:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:900px){.viewer-body{display:flex;flex-direction:column}.canvas-container{flex:1;min-height:45%}.viewer-sidebar-chat{border-left:none;border-top:1px solid var(--stroke);height:45%}}@media(max-width:600px){header{padding:12px}.logo{font-size:10px;letter-spacing:2px}.header-controls{width:100%;gap:8px}.api-config-bar{flex:1}.api-config-bar input{width:100%}.workspace{width:98vw;margin:8px auto}.main-panel{min-height:75vh}.input-box-area{padding:10px}.btn-action{padding:12px 14px}#pdfViewerModal{padding:4px}.viewer-title-text{max-width:100%;width:100%}}
+
+/* ========================= NEXUS-X BOOT SEQUENCE ========================= */
+#nexusBoot{position:fixed;inset:0;z-index:99999;background:#010308;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity .8s ease,visibility .8s ease}
+#nexusBoot.boot-out{opacity:0;visibility:hidden;pointer-events:none}
+.boot-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,242,254,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,254,.045) 1px,transparent 1px);background-size:42px 42px;mask-image:radial-gradient(circle at center,#000 0%,transparent 78%);animation:bootGrid 7s linear infinite}
+.boot-vignette{position:absolute;inset:-20%;background:radial-gradient(circle at 50% 46%,rgba(0,242,254,.11),transparent 30%),radial-gradient(circle at center,transparent 35%,rgba(0,0,0,.86) 78%)}
+.boot-console{position:absolute;top:22px;left:24px;font-size:10px;line-height:1.7;color:rgba(0,242,254,.55);letter-spacing:1px;white-space:pre;opacity:0;animation:consoleIn .7s 1.1s forwards}
+.boot-stage{position:relative;width:min(92vw,720px);height:min(78vh,560px);display:flex;align-items:center;justify-content:center}
+.boot-title{position:absolute;top:2%;left:50%;transform:translateX(-50%);font-size:clamp(11px,2vw,15px);letter-spacing:5px;color:var(--accent);text-shadow:0 0 18px var(--accent-glow);opacity:0;animation:titleIn .7s .15s forwards;white-space:nowrap}
+.boot-subtitle{position:absolute;bottom:2%;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:2px;color:#64748b;opacity:0;animation:subtitleIn .6s 3.2s forwards;white-space:nowrap}
+.robot{position:relative;width:250px;height:330px;filter:drop-shadow(0 0 18px rgba(0,242,254,.18));animation:robotFloat 3.4s ease-in-out infinite}
+.robot-shadow{position:absolute;bottom:2px;left:50%;width:190px;height:22px;transform:translateX(-50%);border-radius:50%;background:rgba(0,242,254,.12);filter:blur(10px);animation:shadowPulse 2s ease-in-out infinite}
+.robot-body{position:absolute;left:50%;bottom:34px;width:128px;height:135px;transform:translateX(-50%);border:2px solid rgba(0,242,254,.5);border-radius:34px 34px 24px 24px;background:linear-gradient(145deg,#0d1a2d,#030711 65%);box-shadow:inset 0 0 28px rgba(0,242,254,.06),0 0 18px rgba(0,242,254,.12)}
+.robot-panel{position:absolute;left:50%;top:32px;width:72px;height:42px;transform:translateX(-50%);border:1px solid rgba(0,242,254,.35);border-radius:8px;background:#02060d;box-shadow:inset 0 0 12px rgba(0,242,254,.08)}
+.robot-panel:after{content:'N-X';position:absolute;inset:0;display:grid;place-items:center;font-size:12px;color:var(--accent);letter-spacing:2px;text-shadow:0 0 8px var(--accent);animation:panelFlicker 1.7s infinite}
+.robot-neck{position:absolute;left:50%;top:89px;width:28px;height:20px;transform:translateX(-50%);border-left:2px solid #1d344b;border-right:2px solid #1d344b;background:#07111f}
+.robot-head{position:absolute;left:50%;top:47px;width:154px;height:110px;transform:translateX(-50%);border:2px solid rgba(0,242,254,.65);border-radius:30px 30px 38px 38px;background:linear-gradient(160deg,#12243a,#030711 72%);box-shadow:inset 0 0 35px rgba(0,242,254,.08),0 0 25px rgba(0,242,254,.14);animation:headAnalyze 2.8s .8s ease-in-out both}
+.robot-face{position:absolute;left:50%;top:35px;width:116px;height:43px;transform:translateX(-50%);border:1px solid rgba(0,242,254,.32);border-radius:10px;background:rgba(0,0,0,.38)}
+.eye{position:absolute;top:13px;width:14px;height:8px;border-radius:6px;background:var(--accent);box-shadow:0 0 12px var(--accent);animation:eyeScan 1.4s infinite}
+.eye.left{left:24px}.eye.right{right:24px}
+.robot-mouth{position:absolute;left:50%;bottom:8px;width:42px;height:3px;transform:translateX(-50%);background:#25445d;box-shadow:0 0 8px rgba(0,242,254,.3)}
+.robot-ear{position:absolute;top:86px;width:14px;height:30px;border:1px solid rgba(0,242,254,.5);background:#07111f}.robot-ear.left{left:-10px;border-radius:7px 0 0 7px}.robot-ear.right{right:-10px;border-radius:0 7px 7px 0}
+.robot-antenna{position:absolute;top:-24px;left:50%;width:2px;height:25px;transform:translateX(-50%);background:#31516b}.robot-antenna:after{content:'';position:absolute;top:-6px;left:50%;width:9px;height:9px;transform:translateX(-50%);border-radius:50%;background:var(--accent);box-shadow:0 0 16px var(--accent);animation:antennaPulse .9s infinite}
+.arm{position:absolute;top:158px;width:28px;height:100px;border:2px solid rgba(0,242,254,.42);border-radius:16px;background:linear-gradient(#0d1a2d,#030711);transform-origin:top center}
+.arm.left{left:22px;transform:rotate(13deg)}.arm.right{right:22px;transform:rotate(-13deg);animation:armRaise 3.1s 2.2s cubic-bezier(.22,.8,.3,1) both}
+.hand{position:absolute;bottom:-11px;left:50%;width:34px;height:34px;transform:translateX(-50%);border:2px solid rgba(0,242,254,.5);border-radius:50%;background:#07111f}
+.leg{position:absolute;bottom:8px;width:36px;height:66px;border:2px solid rgba(0,242,254,.35);border-radius:12px;background:#07111f}.leg.left{left:72px}.leg.right{right:72px}
+.foot{position:absolute;bottom:-4px;width:52px;height:17px;border:2px solid rgba(0,242,254,.35);border-radius:10px;background:#050b15}.foot.left{left:52px}.foot.right{right:52px}
+.formula{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);font-size:clamp(22px,4vw,38px);font-weight:bold;letter-spacing:5px;color:#e2f9ff;text-shadow:0 0 12px rgba(0,242,254,.6);opacity:0;animation:formulaIn .9s 1.1s forwards,formulaOut .7s 2.35s forwards}
+.formula .charge{color:var(--accent)}
+.scan-beam{position:absolute;left:50%;top:38%;width:240px;height:2px;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,var(--accent),transparent);box-shadow:0 0 14px var(--accent);opacity:0;animation:scanBeam 1.2s 1.35s ease-in-out forwards}
+.magnifier{position:absolute;right:8%;top:48%;width:112px;height:112px;border:7px solid var(--accent);border-radius:50%;box-shadow:0 0 24px rgba(0,242,254,.45),inset 0 0 25px rgba(0,242,254,.08);opacity:0;transform:translate(130px,40px) scale(.35) rotate(-18deg);animation:magnifyAim 1.65s 2.35s cubic-bezier(.2,.85,.25,1) forwards}
+.magnifier:before{content:'';position:absolute;inset:13px;border-radius:50%;background:radial-gradient(circle,rgba(0,242,254,.14),rgba(0,0,0,.05) 65%,transparent 66%);animation:magnifierScan 1s 3.25s infinite}
+.magnifier:after{content:'';position:absolute;width:78px;height:12px;right:-62px;bottom:-38px;border-radius:8px;background:linear-gradient(90deg,var(--accent),#4facfe);box-shadow:0 0 16px rgba(0,242,254,.35);transform:rotate(45deg);transform-origin:left center}
+.magnifier-label{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:9px;color:var(--accent);letter-spacing:1px;opacity:0;animation:labelIn .5s 3.25s forwards}
+.boot-particles{position:absolute;inset:0;pointer-events:none}.boot-particles i{position:absolute;width:2px;height:2px;background:var(--accent);box-shadow:0 0 7px var(--accent);border-radius:50%;opacity:0;animation:particle 2.6s infinite}
+.boot-particles i:nth-child(1){left:18%;top:30%;animation-delay:.2s}.boot-particles i:nth-child(2){left:77%;top:25%;animation-delay:.7s}.boot-particles i:nth-child(3){left:28%;top:72%;animation-delay:1.1s}.boot-particles i:nth-child(4){left:71%;top:68%;animation-delay:1.5s}.boot-particles i:nth-child(5){left:10%;top:54%;animation-delay:1.9s}.boot-particles i:nth-child(6){left:88%;top:51%;animation-delay:2.2s}
+.boot-skip{position:absolute;right:20px;bottom:18px;border:1px solid rgba(0,242,254,.35);background:rgba(0,0,0,.35);color:#64748b;padding:7px 10px;border-radius:4px;font:10px var(--mono);cursor:pointer;opacity:0;animation:skipIn .5s 1.8s forwards}.boot-skip:hover{color:var(--accent);border-color:var(--accent)}
+@keyframes bootGrid{to{transform:translateY(42px)}}@keyframes consoleIn{to{opacity:1}}@keyframes titleIn{to{opacity:1}}@keyframes subtitleIn{to{opacity:1}}@keyframes robotFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}@keyframes shadowPulse{50%{transform:translateX(-50%) scale(.85);opacity:.55}}@keyframes panelFlicker{0%,92%,100%{opacity:1}95%{opacity:.35}}@keyframes antennaPulse{50%{transform:translateX(-50%) scale(1.35);opacity:.6}}@keyframes eyeScan{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.45)}}@keyframes headAnalyze{0%{transform:translateX(-50%) rotate(0)}20%{transform:translateX(-50%) rotate(-5deg)}38%{transform:translateX(-50%) rotate(4deg)}56%{transform:translateX(-50%) rotate(-3deg)}72%{transform:translateX(-50%) rotate(2deg)}100%{transform:translateX(-50%) rotate(0)}}@keyframes formulaIn{to{opacity:1}}@keyframes formulaOut{to{opacity:0;transform:translate(-50%,-50%) scale(1.12)}}@keyframes scanBeam{0%{opacity:0;transform:translate(-50%,-50%) scaleX(.15)}35%{opacity:1}100%{opacity:0;transform:translate(-50%,120px) scaleX(1.15)}}@keyframes armRaise{0%{transform:rotate(-13deg)}45%{transform:rotate(-48deg)}100%{transform:rotate(-58deg)}}@keyframes magnifyAim{0%{opacity:0;transform:translate(130px,40px) scale(.35) rotate(-18deg)}45%{opacity:1}100%{opacity:1;transform:translate(-6vw,4px) scale(1.18) rotate(0)}}@keyframes magnifierScan{50%{transform:scale(.75);opacity:.4}}@keyframes labelIn{to{opacity:1}}@keyframes particle{0%{opacity:0;transform:translateY(12px)}30%{opacity:.8}100%{opacity:0;transform:translateY(-40px)}}@keyframes skipIn{to{opacity:1}}
+@media(max-width:600px){.boot-console{left:12px;top:12px;font-size:8px}.boot-stage{height:72vh}.robot{transform:scale(.82)}.magnifier{right:0}.boot-title{letter-spacing:3px}.boot-subtitle{font-size:8px}}
+@media(prefers-reduced-motion:reduce){#nexusBoot *{animation-duration:.01ms!important;animation-iteration-count:1!important}.boot-skip{opacity:1!important}.boot-title,.boot-subtitle{opacity:1!important}}
+
 </style>
  </head>
  <body>
-  <header>
-   <div>
-    <div class="logo">NEXUS-X // OMEGA ∞ TITAN</div>
-    <div style="font-size:8px;color:var(--muted)">LOCAL RESEARCH FABRIC · MULTI-AGENT EVIDENCE OS · AUDITABLE COMPUTATION</div>
+  <!-- ========================= NEXUS-X BOOT ANIMATION ========================= -->
+  <div id="nexusBoot" aria-label="Inicializando NEXUS-X" role="status">
+   <div class="boot-grid"></div>
+   <div class="boot-vignette"></div>
+   <div class="boot-console">NEXUS-X // QUANTUM CORE &gt; NEURAL ENGINE ........ ONLINE &gt; DOCUMENT MATRIX ...... READY &gt; GEMINI LINK .......... STANDBY &gt; VISUAL CORE .......... ANALYZING</div>
+   <div class="boot-stage">
+    <div class="boot-title">NEXUS-X // QUANTUM CORE</div>
+    <div class="formula">
+     Fe<span class="charge">2</span>O<span class="charge">3</span> + H<span class="charge">2</span>O
+    </div>
+    <div class="scan-beam"></div>
+    <div class="robot" aria-hidden="true">
+     <div class="robot-antenna"></div>
+     <div class="robot-head">
+      <div class="robot-face">
+       <span class="eye left"></span><span class="eye right"></span>
+       <div class="robot-mouth"></div>
+      </div>
+      <div class="robot-ear left"></div>
+      <div class="robot-ear right"></div>
+     </div>
+     <div class="robot-neck"></div>
+     <div class="robot-body">
+      <div class="robot-panel"></div>
+     </div>
+     <div class="arm left">
+      <div class="hand"></div>
+     </div>
+     <div class="arm right">
+      <div class="hand"></div>
+     </div>
+     <div class="leg left"></div>
+     <div class="leg right"></div>
+     <div class="foot left"></div>
+     <div class="foot right"></div>
+     <div class="robot-shadow"></div>
+    </div>
+    <div class="magnifier">
+     <span class="magnifier-label">SCAN</span>
+    </div>
+    <div class="boot-subtitle">ANALIZANDO ESTRUCTURA MOLECULAR · ACCESO AUTORIZADO</div>
    </div>
-   <div class="status">
-    <span><i class="dot"></i> TITAN ONLINE</span><span id="clock">--:--:--</span><span id="dbState">BOOT</span>
+   <div class="boot-particles">
+    <i></i><i></i><i></i><i></i><i></i><i></i>
+   </div>
+   <button class="boot-skip" id="bootSkip" type="button">SALTAR [ENTER]</button>
+  </div>
+  <header>
+   <div class="logo">NEXUS-X // QUANTUM CORE</div>
+   <div class="header-controls">
+    <div class="api-config-bar">
+     <span>API Key:</span><input id="apiKeyInput" type="password" placeholder="Pegá tu clave..." autocomplete="off">
+     <button id="saveApiKeyBtn">GUARDAR</button>
+    </div>
+    <div class="status-pill">
+     <div class="pulse"></div>
+     <span id="sysState">Inicializando...</span>
+    </div>
    </div>
   </header>
-  <div class="layout">
-   <aside>
-    <div class="sec">
-     <div class="title">FABRIC</div>
-     <div class="row">
-      <button id="import" class="green">IMPORT</button>
-      <button id="demo">LOAD DEMO</button>
-     </div>
-     <input id="files" type="file" multiple accept=".txt,.md,.json,.csv,.html,.htm,.log" hidden>
-     <div class="row">
-      <button id="export">EXPORT</button>
-      <button id="purge" class="danger">PURGE</button>
-     </div>
+  <div class="workspace">
+   <div class="main-panel">
+    <div class="chat-scroll" id="mainChatBox">
+     <div class="msg system">&gt;&gt; Núcleo listo. Ingresá un concepto para buscar en los manuales.</div>
     </div>
-    <div class="sec">
-     <div class="title">INDEX</div>
-     <div class="g2">
-      <div class="metric">
-       <b id="docs">0</b><span>DOCUMENTS</span>
-      </div>
-      <div class="metric">
-       <b id="chunks">0</b><span>CHUNKS</span>
-      </div>
-      <div class="metric">
-       <b id="claims">0</b><span>CLAIMS</span>
-      </div>
-      <div class="metric">
-       <b id="links">0</b><span>RELATIONS</span>
-      </div>
+    <div class="input-box-area">
+     <input id="mainQueryInput" type="text" placeholder="Buscá un concepto en los manuales..." autocomplete="off" disabled>
+     <button class="btn-action" id="mainSendBtn" disabled>BUSCAR</button>
+    </div>
+   </div>
+  </div>
+  <div id="pdfViewerModal">
+   <div class="viewer-top">
+    <span class="viewer-title-text" id="modalDocTitle">📄 Lector Activo</span>
+    <div class="viewer-nav-controls">
+     <button class="page-nav-btn" id="prevPageBtn">◀ ANTERIOR</button>
+     <span id="pageIndicator" style="font-size:11px;color:var(--accent)">Pág. 1 / 1</span>
+     <button class="page-nav-btn" id="nextPageBtn">SIGUIENTE ▶</button>
+    </div>
+    <button class="viewer-close" id="closeModalBtn">CERRAR [X]</button>
+   </div>
+   <div class="viewer-body">
+    <div class="canvas-container">
+     <canvas id="pdfCanvas"></canvas>
+    </div>
+    <div class="viewer-sidebar-chat">
+     <div style="font-size:11px;color:var(--success);font-weight:bold;border-bottom:1px solid var(--stroke);padding-bottom:6px">🤖 ASISTENTE DE GEMINI</div>
+     <div class="v-chat-history" id="modalChatHistory">
+      <div class="v-msg bot">Documento cargado. Consultame sobre cualquier parte del manual.</div>
      </div>
-    </div>
-    <div class="sec">
-     <div class="title">RETRIEVAL</div>
-     <label class="muted">TOP K</label><input id="topk" type="number" value="12" min="1" max="50"> <label class="muted">CHUNK SIZE</label><input id="size" type="number" value="1100" min="300" max="5000"> <label class="muted">MIN SCORE</label><input id="min" type="number" value=".06" step=".01" min="0" max="1"> <label class="muted">SOURCE</label><select id="source"><option value="">ALL</option></select>
-    </div>
-    <div class="sec">
-     <div class="title">AGENT CONTROL</div>
-     <select id="provider"><option value="det">Deterministic agents</option><option value="ollama">OpenAI-compatible local endpoint</option></select> <input id="url" value="http://localhost:11434/v1/chat/completions" style="margin-top:5px"> <input id="model" value="llama3.2" style="margin-top:5px">
-     <div class="row" style="margin-top:5px">
-      <button id="test">TEST</button>
-      <button id="showcase" class="violet">SHOWCASE</button>
+     <div class="v-input-row">
+      <input id="modalQueryInput" type="text" placeholder="Preguntale a Gemini..." autocomplete="off">
+      <button class="v-send" id="modalSendBtn">PREGUNTAR</button>
      </div>
     </div>
-    <div class="sec">
-     <div class="title">DOCUMENT SEARCH</div>
-     <input id="docSearch" placeholder="filter documents...">
-     <div id="docList" style="margin-top:6px"></div>
-    </div>
-   </aside>
-   <main>
-    <div class="hero">
-     <h1>OMEGA ∞ TITAN / INVESTIGATION CORE</h1>
-     <p>Arquitectura demostrativa de investigación evidence-first: recuperación híbrida, análisis de claims, contraevidencia, independencia de fuentes, hipótesis, grafo, auditoría y síntesis. El sistema no presume verdad: calcula señales de soporte y fragilidad a partir de la evidencia local.</p>
-     <div class="g2">
-      <div class="metric">
-       <b id="confidence">0%</b><span>CONFIDENCE SIGNAL</span>
-      </div>
-      <div class="metric">
-       <b id="coverage">0%</b><span>COVERAGE</span>
-      </div>
-      <div class="metric">
-       <b id="consistency">0%</b><span>CONSISTENCY</span>
-      </div>
-      <div class="metric">
-       <b id="independence">0%</b><span>INDEPENDENCE</span>
-      </div>
-     </div>
-    </div>
-    <div class="query">
-     <textarea id="query" placeholder="Formula una investigación...
-
-Ej.: ¿Qué evidencia respalda la hipótesis X?
-Compara A con B
-Busca evidencia adversarial sobre X"></textarea>
-     <div style="display:flex;flex-direction:column;gap:5px">
-      <button id="investigate" class="green">INVESTIGATE</button>
-      <button id="adversarial" class="amber">RED TEAM</button>
-      <button id="hypothesis" class="violet">HYPOTHESIS</button>
-     </div>
-    </div>
-    <div class="tabs">
-     <button class="tab active" data-tab="answer">ANSWER</button>
-     <button class="tab" data-tab="evidence">EVIDENCE</button>
-     <button class="tab" data-tab="claims">CLAIMS</button>
-     <button class="tab" data-tab="hyp">HYPOTHESES</button>
-     <button class="tab" data-tab="graph">GRAPH</button>
-     <button class="tab" data-tab="timeline">TIMELINE</button>
-     <button class="tab" data-tab="audit">AUDIT</button>
-    </div>
-    <section id="tab-answer" class="panel">
-     <div class="answer" id="answer">
-      <span class="label">TITAN OUTPUT</span>
-      <div style="margin-top:10px;color:#648994">Esperando investigación...</div>
-     </div>
-     <div class="title" style="margin-top:12px">RETRIEVED EVIDENCE</div>
-     <div id="results" class="cards"></div>
-    </section>
-    <section id="tab-evidence" class="panel hidden">
-     <div class="title">EVIDENCE LAB</div>
-     <div id="evidence"></div>
-    </section>
-    <section id="tab-claims" class="panel hidden">
-     <div class="title">CLAIM INTELLIGENCE</div>
-     <div id="claimLab"></div>
-    </section>
-    <section id="tab-hyp" class="panel hidden">
-     <div class="title">HYPOTHESIS LAB</div>
-     <div id="hypLab"></div>
-    </section>
-    <section id="tab-graph" class="panel hidden">
-     <div class="title">KNOWLEDGE GRAPH</div>
-     <canvas id="graph" class="grid"></canvas>
-    </section>
-    <section id="tab-timeline" class="panel hidden">
-     <div class="title">INVESTIGATION TIMELINE</div>
-     <div id="timeline"></div>
-    </section>
-    <section id="tab-audit" class="panel hidden">
-     <div class="title">AUDIT TRAIL</div>
-     <pre id="audit">No investigation.</pre>
-    </section>
-    <footer>NEXUS-X OMEGA ∞ TITAN · DEMONSTRATION SYSTEM · SIGNALS ARE NOT GUARANTEES OF TRUTH</footer>
-   </main>
-   <aside class="right">
-    <div class="sec">
-     <div class="title">TELEMETRY</div>
-     <div class="metric">
-      <b id="latency">0 ms</b><span>LATENCY</span>
-     </div>
-     <div class="metric">
-      <b id="cand">0</b><span>CANDIDATES</span>
-     </div>
-     <div class="metric">
-      <b id="ev">0</b><span>EVIDENCE</span>
-     </div>
-     <div class="metric">
-      <b id="conflicts">0</b><span>CONFLICTS</span>
-     </div>
-    </div>
-    <div class="sec">
-     <div class="title">MULTI-AGENT PIPELINE</div>
-     <div id="pipeline">
-      <div class="badge">PARSER</div>
-      <div class="progress">
-       <i></i>
-      </div>
-      <div class="badge">RETRIEVER</div>
-      <div class="progress">
-       <i></i>
-      </div>
-      <div class="badge">RERANKER</div>
-      <div class="progress">
-       <i></i>
-      </div>
-      <div class="badge">CLAIM ANALYST</div>
-      <div class="progress">
-       <i></i>
-      </div>
-      <div class="badge">RED TEAM</div>
-      <div class="progress">
-       <i></i>
-      </div>
-      <div class="badge">SYNTHESIZER</div>
-      <div class="progress">
-       <i></i>
-      </div>
-      <div class="badge">AUDITOR</div>
-      <div class="progress">
-       <i></i>
-      </div>
-     </div>
-    </div>
-    <div class="sec">
-     <div class="title">SESSION MEMORY</div>
-     <div id="memory"></div>
-    </div>
-    <div class="sec">
-     <div class="title">SYSTEM LOG</div>
-     <div id="log" class="log"></div>
-    </div>
-   </aside>
+   </div>
   </div>
   <script>
-"use strict";
-const $=id=>document.getElementById(id), uid=p=>p+"_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7), now=()=>new Date().toISOString();
-const STOP=new Set("a ante bajo cabe con contra de desde durante en entre hacia hasta mediante para por según sin sobre tras y o u e el la los las un una unos unas que como del al se su sus es son fue eran era ser estar this that the and or of to in on for with from is are was were be".split(/\s+/));
-const norm=s=>String(s??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-const tok=s=>norm(s).replace(/[^\p{L}\p{N}_-]+/gu," ").split(/\s+/).filter(x=>x&&x.length>1&&!STOP.has(x));
-const uniq=a=>[...new Set(a)];
-const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
-function vector(text,n=256){const v=new Float32Array(n);for(const t of tok(text)){const h=hash(t);for(let k=0;k<4;k++){let i=(h+k*7919)%n;v[i]+=((h>>>(k+3))&1?1:-1)*(1+Math.min(t.length,12)/12)}}let m=Math.hypot(...v)||1;return [...v].map(x=>x/m)}
-function cosine(a,b){let d=0,aa=0,bb=0;for(let i=0;i<Math.min(a.length,b.length);i++){d+=a[i]*b[i];aa+=a[i]*a[i];bb+=b[i]*b[i]}return aa&&bb?d/Math.sqrt(aa*bb):0}
-function log(m,t="INFO"){let x=document.createElement("div");x.innerHTML=`<span class="muted">[${new Date().toLocaleTimeString()}]</span> <b class="green">${esc(t)}</b> ${esc(m)}`;$("log").prepend(x);while($("log").children.length>180)$("log").lastChild.remove()}
-function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
-const DB="NEXUS_X_OMEGA_TITAN",VER=1;let db;
-function openDB(){return new Promise((res,rej)=>{let r=indexedDB.open(DB,VER);r.onupgradeneeded=e=>{let d=e.target.result;for(let s of ["docs","chunks","claims","links","investigations","memory","hypotheses"])if(!d.objectStoreNames.contains(s))d.createObjectStore(s,{keyPath:"id"});};r.onsuccess=e=>{db=e.target.result;res()};r.onerror=()=>rej(r.error)})}
-function all(s){return new Promise((res,rej)=>{let r=db.transaction(s).objectStore(s).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}
-function put(s,o){return new Promise((res,rej)=>{let r=db.transaction(s,"readwrite").objectStore(s).put(o);r.onsuccess=()=>res(o);r.onerror=()=>rej(r.error)})}
-function clearStore(s){return new Promise((res,rej)=>{let r=db.transaction(s,"readwrite").objectStore(s).clear();r.onsuccess=res;r.onerror=()=>rej(r.error)})}
-let S={docs:[],chunks:[],claims:[],links:[],investigations:[],memory:[],hypotheses:[],last:null};
-async function load(){for(let k of ["docs","chunks","claims","links","investigations","memory","hypotheses"])S[k]=await all(k);refresh();renderMemory();renderHypotheses();log(`${S.docs.length} docs / ${S.chunks.length} chunks / ${S.claims.length} claims`,"BOOT")}
-function split(text,n){let p=text.replace(/\r/g,"").replace(/[ \t]+\n/g,"\n").trim().split(/\n\s*\n/).filter(Boolean),out=[],cur="";for(let x of p){if((cur+" "+x).length<=n)cur=cur?cur+"\n\n"+x:x;else{if(cur)out.push(cur);if(x.length<=n)cur=x;else for(let i=0;i<x.length;i+=n)out.push(x.slice(i,i+n));}}if(cur)out.push(cur);return out}
-function concepts(t){let f={};for(let x of tok(t))f[x]=(f[x]||0)+1;return Object.entries(f).sort((a,b)=>b[1]-a[1]).slice(0,30).map(x=>x[0])}
-function polarity(t){let n=norm(t);if(/\b(no|not|never|cannot|false|impossible|without)\b/.test(n))return"negative";if(/\b(must|should|required|always|all)\b/.test(n))return"assertive";return"neutral"}
-async function ingest(name,text,size=1100){let c=split(text,size),d={id:uid("doc"),name,size:text.length,chars:text.length,created:now(),modified:now(),hash:hash(text),chunks:c.length,tags:concepts(text).slice(0,18)};await put("docs",d);for(let i=0;i<c.length;i++)await put("chunks",{id:uid("chunk"),docId:d.id,index:i,text:c[i],tokens:tok(c[i]),vector:vector(c[i]),length:c[i].length});let ss=text.replace(/\n+/g," ").split(/(?<=[.!?])\s+/).filter(x=>x.length>35);for(let x of ss.slice(0,160))await put("claims",{id:uid("claim"),docId:d.id,text:x,tokens:uniq(tok(x)),concepts:concepts(x).slice(0,12),polarity:polarity(x),created:now()});log(`${name}: ${c.length} chunks`,"INGEST")}
-async function demo(){let ds=[
-["01_safety.md",`LAB SAFETY\nChemical work requires appropriate protective equipment. Unknown mixtures should not be treated as safe merely because no immediate reaction is visible.\nWhen exposure occurs, the affected area should be flushed with water according to the emergency procedure. The exact response depends on the substance and exposure.\nSafety documentation should identify hazards, emergency procedures, storage requirements and compatibility information.`],
-["02_quality.md",`REAGENT QUALITY\nReagents should be identified with name, concentration, lot number and expiration information whenever applicable.\nUnexpected analytical results should trigger verification of reagent identity, preparation, storage and instrument condition.\nA single measurement is insufficient to establish the cause of an unexpected result. Independent confirmation increases confidence.`],
-["03_equipment.md",`EQUIPMENT MAINTENANCE\nEquipment should follow a documented maintenance schedule. Calibration status must be checked before measurements where accuracy matters.\nIf an instrument produces anomalous results, operators should inspect maintenance status, calibration records and known-good controls.\nReplacing a component without diagnosing the underlying cause can hide a recurring problem.`],
-["04_quality_system.md",`QUALITY SYSTEM\nImportant conclusions should be traceable to records. Evidence from independent sources is generally more useful than multiple copies of the same observation.\nConflicting observations should not simply be discarded. They should be flagged and investigated. Documentation should preserve dates, source identity and context.`],
-["05_adversarial.md",`LIMITATIONS AND COUNTEREVIDENCE\nA plausible explanation is not proof of causality. Measurements can be affected by calibration drift, contamination, sampling error or transcription mistakes.\nAbsence of a recorded incident does not prove that an incident never occurred. Repeated observations can still share a common hidden source.`]
-];for(let [n,t] of ds)await ingest(n,t);await load();await rebuild();await load();log("TITAN DEMO FABRIC ONLINE","SYSTEM")}
-async function rebuild(){for(let i=0;i<S.docs.length;i++)for(let j=i+1;j<S.docs.length;j++){let a=S.docs[i],b=S.docs[j],ca=concepts(S.chunks.filter(x=>x.docId===a.id).map(x=>x.text).join(" ")),cb=concepts(S.chunks.filter(x=>x.docId===b.id).map(x=>x.text).join(" ")),u=uniq([...ca,...cb]),inter=ca.filter(x=>cb.includes(x));let score=u.length?inter.length/u.length:0;if(score>.07)await put("links",{id:`${a.id}_${b.id}`,a:a.id,b:b.id,score})}S.links=await all("links")}
-function parse(q){let quoted=[...(q.match(/"[^"]+"/g)||[])].map(x=>x.slice(1,-1)),x=q.replace(/"[^"]+"/g," "),ex=[...(x.match(/-\S+/g)||[])].map(x=>x.slice(1));x=x.replace(/-\S+/g,"");return{raw:q,terms:tok(x),quoted,excludes:ex,intent:/compare|versus|vs|compar/i.test(norm(q))?"comparison":/why|porque|causa|cause/i.test(norm(q))?"causal":/evidence|evidencia|proof|respalda/i.test(norm(q))?"evidence":"research"}}
-function overlap(a,b){let A=new Set(tok(a)),B=new Set(tok(b));if(!A.size||!B.size)return 0;let n=0;for(let x of A)if(B.has(x))n++;return n/Math.sqrt(A.size*B.size)}
-function bm25(chunks,terms){let N=chunks.length,df=new Map(),avg=0;for(let c of chunks){avg+=c.tokens.length;for(let t of uniq(c.tokens))df.set(t,(df.get(t)||0)+1)}avg/=N||1;return c=>{let f={},s=0;for(let t of c.tokens)f[t]=(f[t]||0)+1;for(let t of terms){if(!f[t])continue;let d=df.get(t)||0,idf=Math.log(1+(N-d+.5)/(d+.5)),k=1.5,b=.75,tf=f[t]*(k+1)/(f[t]+k*(1-b+b*c.tokens.length/avg));s+=idf*tf}return s}}
-async function retrieve(p){let start=performance.now(),chunks=S.chunks,score=bm25(chunks,p.terms),qv=vector(p.raw),arr=[];for(let c of chunks){let b=score(c),v=(cosine(qv,c.vector)+1)/2,o=overlap(p.raw,c.text),ph=p.quoted.length?p.quoted.filter(x=>norm(c.text).includes(norm(x))).length/p.quoted.length:0,ex=p.excludes.filter(x=>c.tokens.includes(norm(x))).length,s=b*.38+v*.30+o*.18+ph*.14-ex*.45;if(p.terms.length&&p.terms.every(t=>c.tokens.includes(t))===false&&p.raw.match(/\bAND\b/i))s*=.35;arr.push({...c,score:s,parts:{bm:b,vec:v,overlap:o,phrase:ph}})}arr.sort((a,b)=>b.score-a.score);$("cand").textContent=arr.length;let out=arr.filter(x=>x.score>=+$("min").value).slice(0,+$("topk").value);$("latency").textContent=Math.round(performance.now()-start)+" ms";$("ev").textContent=out.length;return rerank(out,p.raw)}
-function rerank(a,q){let qt=new Set(tok(q));return a.map(x=>{let cov=[...qt].filter(t=>x.tokens.includes(t)).length/(qt.size||1),d=S.docs.find(d=>d.id===x.docId),fresh=d?.modified?1/(1+Math.max(0,(Date.now()-new Date(d.modified))/86400000)/365):.8;return{...x,coverage:cov,final:x.score*.62+cov*.28+fresh*.10}}).sort((a,b)=>b.final-a.final)}
-function contradictions(){let out=[];for(let i=0;i<S.claims.length;i++)for(let j=i+1;j<S.claims.length;j++){let a=S.claims[i],b=S.claims[j];if(a.docId===b.docId)continue;let o=overlap(a.text,b.text);if(o<.15)continue;let na=norm(a.text),nb=norm(b.text),pairs=[["safe","unsafe"],["increase","decrease"],["positive","negative"],["possible","impossible"],["required","optional"],["present","absent"]],hit=pairs.some(([x,y])=>(na.includes(x)&&nb.includes(y))||(na.includes(y)&&nb.includes(x)));if(hit||(a.polarity==="negative")!==(b.polarity==="negative")&&o>.3)out.push({a,b,score:o})}return out.sort((a,b)=>b.score-a.score).slice(0,60)}
-function redteam(q,pos){let terms=tok(q),neg=["not","never","cannot","false","contrary","however","although","conflict","exception","fails","risk","limitation","uncertain","without"],set=new Set(pos.map(x=>x.docId));return S.chunks.map(c=>({...c,red:overlap(q,c.text)*.6+neg.filter(x=>c.tokens.includes(x)).length/Math.max(3,neg.length)*.4})).filter(x=>!set.has(x.docId)||x.red>.35).sort((a,b)=>b.red-a.red).slice(0,8)}
-function pipe(n){document.querySelectorAll("#pipeline i").forEach((x,i)=>x.style.width=i<=n?"100%":"0%")}
-function evidenceText(r,i){let d=S.docs.find(x=>x.id===r.docId);return`[E${i+1}] ${d?.name||"unknown"} / chunk ${r.index+1}\n${r.text}`}
-function synth(q,res,adv,cons){if(!res.length)return"No se encontró evidencia suficiente en la base local.";let docs=uniq(res.slice(0,5).map(x=>S.docs.find(d=>d.id===x.docId)?.name||"unknown"));let s=["TITAN INVESTIGATION RESULT","",`Pregunta: ${q}`,"",`CONCLUSIÓN PROVISIONAL`,`La evidencia recuperada procede de ${docs.length} fuente(s): ${docs.join(", ")}.`,docs.length>1?"Existe convergencia documental parcial.":"La señal depende de una única fuente documental.","","EVIDENCE CHAIN"];res.slice(0,7).forEach((r,i)=>s.push(evidenceText(r,i).replace(/\n/,"\n").slice(0,650)));if(cons.length){s.push("","CONTRADICTIONS",`Se detectaron ${cons.length} conflicto(s) potencial(es). No deben ignorarse.`);cons.slice(0,2).forEach((c,i)=>s.push(`[C${i+1}] ${c.a.text} ↔ ${c.b.text}`))}if(adv.length){s.push("","RED TEAM",`La búsqueda adversarial encontró ${adv.length} fragmentos para desafiar la interpretación.`);adv.slice(0,3).forEach((x,i)=>s.push(`[A${i+1}] ${x.text.slice(0,300)}`))}s.push("","LIMITATIONS","El motor opera sobre el corpus local. Ausencia de evidencia no equivale a evidencia de ausencia.");return s.join("\n")}
-async function investigate(mode="normal"){let q=$("query").value.trim();if(!q)return;let t=performance.now();pipe(0);let p=parse(q);await sleep(20);pipe(1);let res=await retrieve(p);pipe(2);let cons=contradictions();pipe(3);let adv=mode==="red"||mode==="hyp"?redteam(q,res):[];pipe(4);if(mode==="red"||mode==="hyp")await sleep(20);pipe(5);let answer=await model(q,res,adv);pipe(6);let sources=uniq(res.map(x=>x.docId)),coverage=Math.min(1,res.length/(+$("topk").value||12)),consistency=Math.max(0,1-cons.length/Math.max(1,S.claims.length)),independence=Math.min(1,sources.length/Math.max(1,Math.min(5,res.length))),confidence=res.length?Math.min(1,res.slice(0,5).reduce((a,x)=>a+x.final,0)/Math.min(5,res.length)):0;for(let [id,v] of [["confidence",confidence],["coverage",coverage],["consistency",consistency],["independence",independence]])$(id).textContent=Math.round(v*100)+"%";$("conflicts").textContent=cons.length;$("answer").innerHTML=`<span class="label">TITAN OUTPUT</span><div style="margin-top:10px">${esc(answer)}</div>`;renderResults(res,adv);renderEvidence(res,adv,cons);renderClaims(cons);let inv={id:uid("inv"),created:now(),query:q,mode,parsed:p,resultIds:res.map(x=>x.id),adversarialIds:adv.map(x=>x.id),conflicts:cons.length,metrics:{confidence,coverage,consistency,independence},latency:performance.now()-t};S.last=inv;await put("investigations",inv);await remember(q,answer);renderTimeline();renderAudit();log(`Investigation complete · ${Math.round(inv.latency)}ms`,"CORE")}
-async function model(q,res,adv){if($("provider").value==="det")return synth(q,res,adv,contradictions());let body={model:$("model").value,messages:[{role:"system",content:"Eres OMEGA TITAN. Usa exclusivamente la evidencia suministrada. No inventes. Separa evidencia, inferencia, contradicción y limitación. Cita [E1], [A1]."}, {role:"user",content:`QUERY:\n${q}\n\nEVIDENCE:\n${res.map(evidenceText).join("\n\n")}\n\nADVERSARIAL:\n${adv.map((x,i)=>`[A${i+1}] ${x.text}`).join("\n\n")}`}],temperature:.1};let r=await fetch($("url").value,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});if(!r.ok)throw Error("Model HTTP "+r.status);let d=await r.json();return d?.choices?.[0]?.message?.content||"Sin respuesta del modelo."}
-function renderResults(res,adv){$("results").innerHTML=res.map((r,i)=>{let d=S.docs.find(x=>x.id===r.docId);return`<div class="card"><div class="head"><b class="cyan">[E${i+1}] ${esc(d?.name)}</b><b class="green">${r.final.toFixed(3)}</b></div><span class="badge good">BM25 ${(r.parts?.bm||0).toFixed(2)}</span><span class="badge">VECTOR ${(r.parts?.vec||0).toFixed(2)}</span><span class="badge">COVERAGE ${Math.round(r.coverage*100)}%</span><div class="body">${esc(r.text)}</div></div>`}).join("")+(adv.length?`<div class="title" style="margin-top:12px">ADVERSARIAL EVIDENCE</div>`+adv.map((x,i)=>`<div class="card"><b class="red">[A${i+1}]</b><div class="body">${esc(x.text)}</div></div>`).join(""):"")}
-function renderEvidence(res,adv,cons){$("evidence").innerHTML=`<div class="g2"><div class="metric"><b>${res.length}</b><span>SUPPORT</span></div><div class="metric"><b>${adv.length}</b><span>ADVERSARIAL</span></div><div class="metric"><b>${cons.length}</b><span>CONFLICTS</span></div><div class="metric"><b>${uniq(res.map(x=>x.docId)).length}</b><span>SOURCES</span></div></div><div class="cards">${res.map((r,i)=>`<div class="card"><b class="cyan">[E${i+1}] ${esc(S.docs.find(d=>d.id===r.docId)?.name)}</b><div class="body">Retrieval: BM25 ${(r.parts?.bm||0).toFixed(3)} · vector ${(r.parts?.vec||0).toFixed(3)} · overlap ${(r.parts?.overlap||0).toFixed(3)} · final ${r.final.toFixed(3)}</div></div>`).join("")}</div><div class="title" style="margin-top:12px">CONTRADICTION MATRIX</div>${cons.slice(0,15).map(c=>`<div class="card"><span class="badge bad">CONFLICT ${(c.score*100).toFixed(0)}%</span><div class="body"><b>A:</b> ${esc(c.a.text)}<br><br><b>B:</b> ${esc(c.b.text)}</div></div>`).join("")||`<div class="card muted">No strong conflicts detected.</div>`}`}
-function renderClaims(cons=[]){let c=S.claims.slice(-100).reverse();$("claimLab").innerHTML=`<div class="metric"><b>${S.claims.length}</b><span>TOTAL CLAIMS</span></div><div class="cards">${c.map(x=>`<div class="card"><span class="badge ${x.polarity==="negative"?"bad":x.polarity==="assertive"?"good":""}">${x.polarity}</span><span class="badge">${esc(S.docs.find(d=>d.id===x.docId)?.name)}</span><div class="body">${esc(x.text)}</div><div>${x.concepts.map(y=>`<span class="badge">${esc(y)}</span>`).join("")}</div></div>`).join("")}</div>`}
-async function remember(q,a){let x={id:uid("mem"),created:now(),query:q,answer:a.slice(0,1000)};await put("memory",x);S.memory.push(x);if(S.memory.length>60){S.memory.sort((a,b)=>new Date(a.created)-new Date(b.created));let old=S.memory.shift();let r=db.transaction("memory","readwrite").objectStore("memory").delete(old.id);}}
-function renderMemory(){let a=[...S.memory].sort((x,y)=>new Date(y.created)-new Date(x.created)).slice(0,8);$("memory").innerHTML=a.map(x=>`<div class="card" style="cursor:pointer" data-mid="${x.id}"><b class="cyan">${esc(x.query.slice(0,90))}</b><div class="muted" style="font-size:8px">${new Date(x.created).toLocaleString()}</div></div>`).join("")||`<span class="muted">No memory.</span>`}
-function renderHypotheses(){let h=[...S.hypotheses].sort((a,b)=>new Date(b.created)-new Date(a.created));$("hypLab").innerHTML=`<button id="newHyp" class="violet">CREATE HYPOTHESIS FROM QUERY</button><div class="cards">${h.map(x=>`<div class="card"><div class="head"><b class="violet">${esc(x.text)}</b><span class="green">${Math.round(x.score*100)}%</span></div><div class="body">Support ${x.support} · Adversarial ${x.adversarial} · ${new Date(x.created).toLocaleString()}</div></div>`).join("")}</div>`;$("newHyp").onclick=async()=>{let q=$("query").value.trim();if(!q)return;let r=await retrieve(parse(q)),a=redteam(q,r),score=Math.max(0,Math.min(1,(r.length/(+$("topk").value||12))*.65-(a.length/(r.length+a.length||1))*.25));await put("hypotheses",{id:uid("hyp"),created:now(),text:q,support:r.length,adversarial:a.length,score});await load();log("Hypothesis scored","HYPOTHESIS")}}
-function renderTimeline(){let a=[...S.investigations].sort((x,y)=>new Date(x.created)-new Date(y.created););$("timeline").innerHTML=`<div class="timeline">${a.slice(-25).map(x=>`<div class="event"><b class="cyan">${new Date(x.created).toLocaleString()}</b> <span class="badge">${x.mode}</span><div class="body">${esc(x.query)}<br>confidence ${Math.round((x.metrics?.confidence||0)*100)}% · conflicts ${x.conflicts||0}</div></div>`).join("")}</div>`}
-function renderAudit(){$("audit").textContent=JSON.stringify(S.last,null,2)}
-function draw(){let c=$("graph"),r=c.getBoundingClientRect(),dpr=devicePixelRatio||1;c.width=r.width*dpr;c.height=r.height*dpr;let x=c.getContext("2d");x.scale(dpr,dpr);let W=r.width,H=r.height;x.clearRect(0,0,W,H),x.font="8px monospace";let ds=S.docs.slice(0,40),nodes=ds.map((d,i)=>{let a=i/ds.length*Math.PI*2;return{id:d.id,name:d.name,x:W/2+Math.cos(a)*Math.min(W,H)*.36,y:H/2+Math.sin(a)*Math.min(W,H)*.36}}),m=new Map(nodes.map(n=>[n.id,n]));for(let l of S.links){let a=m.get(l.a),b=m.get(l.b);if(!a||!b)continue;x.strokeStyle="#00e5ff33";x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke()}for(let n of nodes){x.fillStyle="#00e5ff";x.beginPath();x.arc(n.x,n.y,5,0,7);x.fill();x.fillStyle="#8fbac3";x.fillText(n.name.slice(0,24),n.x+8,n.y+3)}}
-function renderDocs(){let q=norm($("docSearch").value),d=S.docs.filter(x=>!q||norm(x.name).includes(q));$("docList").innerHTML=d.map(x=>`<div class="card" style="cursor:pointer"><b class="cyan">${esc(x.name)}</b><div class="muted">${x.chunks} chunks · ${x.chars} chars</div></div>`).join("")||`<span class="muted">Empty fabric.</span>`}
-function refresh(){$("docs").textContent=S.docs.length;$("chunks").textContent=S.chunks.length;$("claims").textContent=S.claims.length;$("links").textContent=S.links.length;let cur=$("source").value;$("source").innerHTML=`<option value="">ALL</option>`+S.docs.map(d=>`<option value="${esc(d.id)}">${esc(d.name)}</option>`).join("");$("source").value=cur;renderDocs();renderHypotheses();draw()}
-async function exportBrain(){let b={version:"OMEGA-TITAN-1",exported:now(),...S};delete b.last;let blob=new Blob([JSON.stringify(b,null,2)],{type:"application/json"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="nexus-x-titan-brain.json";a.click();URL.revokeObjectURL(u);log("Brain exported","EXPORT")}
-$("import").onclick=()=>$("files").click();$("files").onchange=async e=>{for(let f of e.target.files)try{await ingest(f.name,await f.text(),+$("size").value)}catch(err){log(err.message,"IMPORT ERROR")}await load();await rebuild();await load();e.target.value=""};
-$("demo").onclick=demo;$("export").onclick=exportBrain;$("purge").onclick=async()=>{if(!confirm("Eliminar todos los datos locales?"))return;for(let s of["docs","chunks","claims","links","investigations","memory","hypotheses"])await clearStore(s);S={docs:[],chunks:[],claims:[],links:[],investigations:[],memory:[],hypotheses:[],last:null};refresh();renderMemory();$("answer").innerHTML=`<span class="label">TITAN OUTPUT</span><div style="margin-top:10px">Fabric purged.</div>`;log("ALL DATA PURGED","PURGE")};
-$("investigate").onclick=()=>investigate("normal");$("adversarial").onclick=()=>investigate("red");$("hypothesis").onclick=()=>investigate("hyp");
-$("test").onclick=async()=>{if($("provider").value==="det")return log("Deterministic multi-agent stack ready","MODEL");try{let a=await model("Reply only: TITAN LINK OK",[],[]);log(a,"MODEL")}catch(e){log(e.message,"MODEL ERROR")}};
-$("docSearch").oninput=renderDocs;$("query").onkeydown=e=>{if(e.ctrlKey&&e.key==="Enter"){e.preventDefault();investigate("normal")}if(e.ctrlKey&&e.shiftKey&&e.key==="Enter"){e.preventDefault();investigate("red")}};
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll("main>section").forEach(x=>x.classList.add("hidden"));$("tab-"+b.dataset.tab).classList.remove("hidden");if(b.dataset.tab==="graph")draw()});
-$("showcase").onclick=()=>{document.body.requestFullscreen?.();log("SHOWCASE MODE ACTIVATED","DEMO")};
-$("source").onchange=()=>{let id=$("source").value;if(!id)return;let d=S.docs.find(x=>x.id===id);if(d)$("query").value=`"${d.name}"`};
-$("memory").onclick=e=>{let card=e.target.closest("[data-mid]");if(!card)return;let x=S.memory.find(m=>m.id===card.dataset.mid);if(x){$("query").value=x.query;$("answer").innerHTML=`<span class="label">MEMORY RECALL</span><div style="margin-top:10px">${esc(x.answer)}</div>`}};
-setInterval(()=>$("clock").textContent=new Date().toLocaleTimeString(),1000);
-(async()=>{try{await openDB();await load();$("dbState").textContent="IDB ONLINE";log("TITAN cognitive substrate initialized","SYSTEM")}catch(e){$("dbState").textContent="DB ERROR";log(e.message,"FATAL")}})();
+(()=>{
+'use strict';
+
+const GITHUB_CONFIG={owner:'miqueas80',repo:'laboratorio-escolar-tecnico',branch:'main'};
+const MODEL_PREFERENCE=['gemini-3.8-flash','gemini-3.7-flash','gemini-3.6-flash','gemini-3.5-flash','gemini-3.5-flash-lite','gemini-3.1-flash-lite'];
+const API_BASE='https://generativelanguage.googleapis.com/v1beta';
+let globalApiKey=localStorage.getItem('nexus_gemini_key')||'';
+let activeModel='';
+let repositoryFiles=[];
+const repositoryTexts={};
+let activePdfDoc=null,activePageNum=1,activeFileName='',activePagesCache=[];
+let renderRequestId=0,searchBusy=false,aiBusy=false;
+const $=s=>document.querySelector(s);
+const apiKeyInput=$('#apiKeyInput'),mainQueryInput=$('#mainQueryInput'),mainSendBtn=$('#mainSendBtn'),modalQueryInput=$('#modalQueryInput'),modalSendBtn=$('#modalSendBtn'),modal=$('#pdfViewerModal');
+apiKeyInput.value=globalApiKey?'••••••••••':'';
+apiKeyInput.addEventListener('focus',()=>{if(apiKeyInput.value==='••••••••••')apiKeyInput.value='';});
+$('#saveApiKeyBtn').addEventListener('click',()=>{const val=apiKeyInput.value.trim();if(!val||val==='••••••••••'){alert(globalApiKey?'Ya existe una API Key guardada.':'Pegá una API Key válida.');return;}localStorage.setItem('nexus_gemini_key',val);globalApiKey=val;apiKeyInput.value='••••••••••';activeModel='';$('#sysState').textContent='Verificando API...';initGemini().catch(()=>{});});
+function addMsg(sel,text,type){const box=$(sel),div=document.createElement('div');div.className=`msg ${type}`;div.textContent=text;box.appendChild(div);box.scrollTop=box.scrollHeight;return div;}
+function normalizeStr(str){return String(str||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();}
+function escapeHtml(str){return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
+function formatAIText(text){return escapeHtml(text).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');}
+function getQueryTokens(q){return [...new Set(normalizeStr(q).split(/\s+/).filter(w=>w.length>=3))];}
+function scorePage(pageText,query){const p=normalizeStr(pageText),q=normalizeStr(query),words=getQueryTokens(query);if(!p||!words.length)return 0;let score=p.includes(q)?100:0;for(const w of words){if(p.includes(w))score+=10;const n=p.split(w).length-1;if(n>1)score+=Math.min(n*2,10);}return score;}
+async function fetchGitHubPath(path=''){const suffix=path?`/${path.split('/').map(encodeURIComponent).join('/')}`:'';const url=`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents${suffix}`;const res=await fetch(url,{headers:{Accept:'application/vnd.github+json'}});if(!res.ok){let msg=`GitHub HTTP ${res.status}`;try{const d=await res.json();if(d.message)msg+=`: ${d.message}`;}catch{}throw new Error(msg);}return res.json();}
+async function discoverPDFs(path='',out=[]){const data=await fetchGitHubPath(path);if(!Array.isArray(data))return out;for(const item of data){if(item.type==='file'&&item.name.toLowerCase().endsWith('.pdf'))out.push({name:item.name,path:item.path,download_url:item.download_url});else if(item.type==='dir'&&item.path.split('/').length<=5){try{await discoverPDFs(item.path,out);}catch(e){console.warn('No se pudo explorar',item.path,e);}}}return out;}
+async function indexAllPdfs(){let ok=0;$('#sysState').textContent=`Indexando 0/${repositoryFiles.length}...`;for(let i=0;i<repositoryFiles.length;i++){const file=repositoryFiles[i];$('#sysState').textContent=`Indexando ${i+1}/${repositoryFiles.length}...`;try{const pdf=await pdfjsLib.getDocument({url:file.download_url,disableAutoFetch:false,disableStream:false}).promise;const original=[],normalized=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();const text=content.items.map(x=>x.str||'').join(' ').replace(/\s+/g,' ').trim();original.push(text);normalized.push(normalizeStr(text));}repositoryTexts[file.path]={original,normalized,numPages:pdf.numPages};ok++;}catch(e){console.warn('No se pudo indexar',file.path,e);repositoryTexts[file.path]={original:[],normalized:[],numPages:0,error:true};}}$('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;addMsg('#mainChatBox',`>> Sistema listo.\n>> ${ok}/${repositoryFiles.length} manuales indexados.\n>> Podés buscar conceptos, fórmulas o palabras clave.`,'system');}
+async function fetchFiles(){try{$('#sysState').textContent='Conectando con GitHub...';repositoryFiles=await discoverPDFs();if(!repositoryFiles.length){$('#sysState').textContent='Sin manuales';addMsg('#mainChatBox','>> No se encontraron archivos PDF en el repositorio.','error');return;}await indexAllPdfs();}catch(e){console.error(e);$('#sysState').textContent='Error de conexión';addMsg('#mainChatBox',`>> No se pudo sincronizar GitHub.\n${e.message}`,'error');}}
+
+/* Detecta automáticamente un modelo que la API Key realmente pueda usar. */
+async function listAvailableModels(key){const res=await fetch(`${API_BASE}/models?pageSize=1000`,{headers:{'x-goog-api-key':key}});let data={};try{data=await res.json();}catch{}if(!res.ok)throw new Error(data.error?.message||`No se pudo consultar la lista de modelos (HTTP ${res.status}).`);return Array.isArray(data.models)?data.models:[];}
+async function initGemini(){const key=localStorage.getItem('nexus_gemini_key')||globalApiKey;if(!key){activeModel='';return false;}try{const models=await listAvailableModels(key);const usable=new Map();for(const m of models){const name=String(m.name||'').replace(/^models\//,'');const methods=m.supportedGenerationMethods||[];if(methods.includes('generateContent'))usable.set(name,m);}activeModel=MODEL_PREFERENCE.find(n=>usable.has(n))||[...usable.keys()].find(n=>/^gemini-.*flash/i.test(n))||'';if(!activeModel)throw new Error('La API Key funciona, pero no encontré un modelo Gemini compatible con generateContent.');$('#sysState').textContent=`IA: ${activeModel}`;return true;}catch(e){console.error(e);$('#sysState').textContent='API no disponible';addMsg('#mainChatBox',`>> API Gemini: ${e.message}`,'error');return false;}}
+async function callGeminiAPI(prompt,key){if(!key)throw new Error('No hay API Key configurada.');if(!activeModel){await initGemini();}if(!activeModel)throw new Error('No hay un modelo Gemini disponible para esta API Key.');const url=`${API_BASE}/models/${encodeURIComponent(activeModel)}:generateContent`;const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}]})});let data={};try{data=await res.json();}catch{}if(!res.ok){if(res.status===400)throw new Error(data.error?.message||'Solicitud inválida.');if(res.status===401||res.status===403)throw new Error('La API Key no es válida o no tiene permisos.');if(res.status===404){activeModel='';throw new Error('El modelo dejó de estar disponible. Guardá nuevamente la API Key o reintentá para seleccionar otro modelo.');}if(res.status===429)throw new Error('Se alcanzó el límite de solicitudes. Esperá unos segundos.');throw new Error(data.error?.message||`Error HTTP ${res.status}`);}const text=data.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('').trim();if(!text)throw new Error('Gemini no devolvió texto.');return text;}
+function searchRepository(query){const results=[];for(const file of repositoryFiles){const data=repositoryTexts[file.path];if(!data)continue;for(let i=0;i<data.normalized.length;i++){const score=scorePage(data.original[i],query);if(score>0)results.push({file,page:i+1,score,text:data.original[i]});}}results.sort((a,b)=>b.score-a.score);return results;}
+async function loadPdfInModal(file,targetPage=1){activeFileName=file.path;activePagesCache=repositoryTexts[file.path]?.original||[];$('#modalDocTitle').textContent=`📄 ${file.path}`;modal.style.display='flex';$('#modalChatHistory').innerHTML='';addViewerMessage(`Manual "${file.name}" cargado.\nPáginas: ${activePagesCache.length}\n\nConsultame sobre cualquier parte del manual.`,'bot');try{activePdfDoc=await pdfjsLib.getDocument({url:file.download_url}).promise;activePageNum=Math.min(Math.max(1,targetPage),activePdfDoc.numPages);await renderCurrentPage();}catch(e){addViewerMessage(`⚠️ No se pudo cargar el PDF.\n${e.message}`,'bot');}}
+async function renderCurrentPage(){if(!activePdfDoc)return;const id=++renderRequestId;try{$('#pageIndicator').textContent=`Pág. ${activePageNum} / ${activePdfDoc.numPages}`;$('#prevPageBtn').disabled=activePageNum<=1;$('#nextPageBtn').disabled=activePageNum>=activePdfDoc.numPages;const page=await activePdfDoc.getPage(activePageNum);if(id!==renderRequestId)return;const canvas=$('#pdfCanvas'),ctx=canvas.getContext('2d'),container=document.querySelector('.canvas-container'),base=page.getViewport({scale:1}),width=Math.max(250,(container.clientWidth||700)-24),scale=Math.max(.5,Math.min(2.5,width/base.width)),vp=page.getViewport({scale});canvas.width=Math.ceil(vp.width);canvas.height=Math.ceil(vp.height);await page.render({canvasContext:ctx,viewport:vp}).promise;}catch(e){console.error(e);}}
+function addViewerMessage(text,type){const h=$('#modalChatHistory'),d=document.createElement('div');d.className=`v-msg ${type}`;d.textContent=text;h.appendChild(d);h.scrollTop=h.scrollHeight;return d;}
+async function handleModalAIQuery(){if(aiBusy)return;const value=modalQueryInput.value.trim();if(!value)return;const key=localStorage.getItem('nexus_gemini_key')||globalApiKey;addViewerMessage(value,'user');modalQueryInput.value='';const bot=addViewerMessage('Analizando el manual...','bot');if(!key){bot.textContent='⚠️ Primero guardá tu API Key.';return;}aiBusy=true;modalSendBtn.disabled=true;try{const ranked=[];for(let i=0;i<activePagesCache.length;i++){const score=scorePage(activePagesCache[i],value);if(score>0)ranked.push({page:i+1,score,text:activePagesCache[i]});}ranked.sort((a,b)=>b.score-a.score);const selected=ranked.slice(0,8);let context=selected.length?selected.map(x=>`--- PÁGINA ${x.page} ---\n${x.text.slice(0,7000)}`).join('\n\n'):activePagesCache.slice(0,3).map((x,i)=>`--- PÁGINA ${i+1} ---\n${x.slice(0,5000)}`).join('\n\n');const prompt=`Sos el asistente académico de NEXUS-X. Respondé en español claro, natural y directo.\n\nMANUAL: ${activeFileName}\n\nCONSULTA: ${value}\n\nCONTEXTO RELEVANTE:\n${context}\n\nREGLAS:\n- Basate principalmente en el contenido proporcionado.\n- No inventes información que contradiga el manual.\n- Indicá las páginas cuando puedas.\n- Si la información no aparece claramente, decilo.\n- Explicá como un buen tutor.\n- No uses LaTeX ni símbolos $.\n- Para fórmulas químicas escribí H2O, CO2, SO2, etc.`;const response=await callGeminiAPI(prompt,key);bot.innerHTML=formatAIText(response);}catch(e){bot.textContent=`⚠️ Error al consultar Gemini:\n${e.message}`;}finally{aiBusy=false;modalSendBtn.disabled=false;}}
+async function handleMainGlobalQuery(){if(searchBusy)return;const value=mainQueryInput.value.trim();if(!value)return;searchBusy=true;mainSendBtn.disabled=true;addMsg('#mainChatBox',value,'user');mainQueryInput.value='';addMsg('#mainChatBox',`>> Buscando: "${value}"...`,'system');try{const results=searchRepository(value),grouped=new Map();for(const r of results){if(!grouped.has(r.file.path))grouped.set(r.file.path,{file:r.file,pages:[],score:0});const g=grouped.get(r.file.path);g.pages.push(r.page);g.score+=r.score;}const docs=[...grouped.values()].sort((a,b)=>b.score-a.score);if(!docs.length){addMsg('#mainChatBox',`>> No encontré coincidencias para "${value}".\n>> Probá con otra palabra o concepto.`,'error');return;}const aiMsg=addMsg('#mainChatBox',`Se encontraron ${docs.length} manuales relacionados:`,'ai');for(const d of docs.slice(0,10)){const f=d.file,pages=[...new Set(d.pages)].sort((a,b)=>a-b).slice(0,8),card=document.createElement('div');card.className='doc-action-card';card.innerHTML=`<div class="doc-header-row"><span class="doc-action-title">📄 ${escapeHtml(f.name)}</span></div><div style="font-size:10px;color:var(--muted)">Páginas relevantes: ${pages.join(', ')}</div><div class="actions-row"><button class="action-btn open-file-btn" type="button">🔍 ABRIR EN VISOR</button><a class="action-btn download" href="${escapeHtml(f.download_url)}" target="_blank" rel="noopener noreferrer">💾 DESCARGAR PDF</a></div>`;aiMsg.appendChild(card);card.querySelector('.open-file-btn').addEventListener('click',()=>loadPdfInModal(f,pages[0]||1));}}catch(e){addMsg('#mainChatBox',`>> Error durante la búsqueda:\n${e.message}`,'error');}finally{searchBusy=false;mainSendBtn.disabled=false;}}
+$('#prevPageBtn').addEventListener('click',async()=>{if(activePdfDoc&&activePageNum>1){activePageNum--;await renderCurrentPage();}});$('#nextPageBtn').addEventListener('click',async()=>{if(activePdfDoc&&activePageNum<activePdfDoc.numPages){activePageNum++;await renderCurrentPage();}});$('#closeModalBtn').addEventListener('click',()=>{modal.style.display='none';renderRequestId++;activePdfDoc=null;});mainSendBtn.addEventListener('click',handleMainGlobalQuery);mainQueryInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();handleMainGlobalQuery();}});modalSendBtn.addEventListener('click',handleModalAIQuery);modalQueryInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();handleModalAIQuery();}});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.style.display==='flex'){$('#closeModalBtn').click();}});let resizeTimer;window.addEventListener('resize',()=>{if(modal.style.display!=='flex')return;clearTimeout(resizeTimer);resizeTimer=setTimeout(renderCurrentPage,150);});
+(async()=>{if(!window.pdfjsLib){$('#sysState').textContent='PDF.js no disponible';addMsg('#mainChatBox','>> No se pudo cargar PDF.js. Revisá tu conexión.','error');return;}if(globalApiKey)await initGemini();await fetchFiles();})();
+})();
+</script>
+  <script>
+
+/* ========================= BOOT CONTROLLER ========================= */
+(function(){
+  const boot=document.getElementById('nexusBoot');
+  const skip=document.getElementById('bootSkip');
+  if(!boot)return;
+  let closed=false;
+  const closeBoot=()=>{
+    if(closed)return;
+    closed=true;
+    boot.classList.add('boot-out');
+    setTimeout(()=>boot.remove(),900);
+  };
+  skip?.addEventListener('click',closeBoot);
+  window.addEventListener('keydown',e=>{
+    if(e.key==='Enter' && !closed) closeBoot();
+  });
+  const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  setTimeout(closeBoot,reduced?500:5200);
+})();
+
 </script>
  </body>
 </html>
