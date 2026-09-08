@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#010308">
-  <title>NEXUS-X // QUANTUM CORE v9.1</title>
+  <title>NEXUS-X // QUANTUM CORE v9.2</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
 if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}
@@ -16,7 +16,7 @@ header{padding:16px 28px;border-bottom:1px solid var(--stroke);background:var(--
 .logo{font-size:13px;font-weight:bold;letter-spacing:3px;color:var(--accent);text-shadow:0 0 12px var(--accent-glow);display:flex;align-items:center;gap:8px}.logo:before{content:"";display:block;width:8px;height:8px;background:var(--accent);border-radius:50%;box-shadow:0 0 10px var(--accent)}
 .header-controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap}.api-config-bar{display:flex;align-items:center;gap:6px;font-size:11px;background:rgba(0,0,0,.4);border:1px solid var(--stroke);padding:4px 10px;border-radius:6px}.api-config-bar input{background:transparent;border:none;color:var(--text);font-size:11px;width:150px;outline:none}.api-config-bar button{background:rgba(0,242,254,.1);border:1px solid var(--accent);color:var(--accent);padding:4px 8px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold}.api-config-bar button:hover{background:var(--accent);color:#000}
 .status-pill{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.02);padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.05)}.pulse{width:6px;height:6px;background:var(--success);border-radius:50%;box-shadow:0 0 8px var(--success);animation:blink 2s infinite}@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.workspace{max-width:900px;width:95vw;margin:20px auto;flex:1;display:flex;flex-direction:column;gap:20px}.main-panel{background:var(--panel);border:1px solid var(--stroke);border-radius:12px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.8);min-height:650px}.chat-scroll{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;max-height:68vh;scrollbar-width:thin;scrollbar-color:var(--accent) rgba(0,0,0,.5)}
+.workspace{max-width:900px;width:95vw;margin:20px auto;flex:1;display:flex;flex-direction:column;gap:20px}.main-panel{background:var(--panel);border:1px solid var(--stroke);border-radius:12px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.8);min-height:650px}.chat-scroll{flex:1;padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;max-height:76vh;scrollbar-width:thin;scrollbar-color:var(--accent) rgba(0,0,0,.5)}
 .msg{padding:14px 16px;border-radius:8px;font-size:13px;line-height:1.6;max-width:92%;word-break:break-word}.msg.system{background:rgba(0,242,254,.03);border:1px solid rgba(0,242,254,.15);color:var(--accent);align-self:flex-start}.msg.user{background:rgba(79,172,254,.08);border:1px solid rgba(79,172,254,.25);color:#fff;align-self:flex-end}.msg.ai{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);color:#cbd5e1;align-self:flex-start;white-space:pre-line;display:flex;flex-direction:column;gap:10px;width:100%;max-width:100%}.msg.error{background:rgba(244,63,94,.05);border:1px solid rgba(244,63,94,.2);color:#fda4af;align-self:flex-start}
 .doc-action-card{background:rgba(16,185,129,.03);border:1px solid rgba(16,185,129,.25);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;margin-top:6px}.doc-header-row{display:flex;justify-content:space-between;align-items:center;gap:8px}.doc-action-title{color:var(--success);font-size:11px;font-weight:bold}.actions-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}.action-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:linear-gradient(135deg,var(--accent),#4facfe);color:#000;text-decoration:none;border-radius:4px;font-weight:bold;font-size:10px;cursor:pointer;border:none}.action-btn.download{background:linear-gradient(135deg,#10b981,#00b0ff)}.action-btn:hover{filter:brightness(1.1)}
 .input-box-area{padding:16px;background:rgba(0,0,0,.4);border-top:1px solid var(--stroke);display:flex;gap:10px;align-items:center}.input-box-area input{flex:1;min-width:0;background:rgba(0,0,0,.6);border:1px solid var(--stroke);border-radius:6px;padding:12px 14px;color:var(--text);font-size:13px;outline:none}.input-box-area input:focus{border-color:var(--accent);box-shadow:0 0 10px var(--accent-glow)}.btn-action{background:linear-gradient(135deg,var(--accent),#4facfe);color:#000;border:none;padding:12px 20px;border-radius:6px;font-weight:bold;font-size:12px;cursor:pointer}.btn-action:disabled{opacity:.4;cursor:not-allowed}
@@ -260,6 +260,24 @@ header{padding:16px 28px;border-bottom:1px solid var(--stroke);background:var(--
   background:rgba(16,185,129,.025);color:#94a3b8;font-size:8px;line-height:1.5
 }
 
+
+@media (min-width: 1100px){
+  .workspace{width:98vw;max-width:1600px;margin:10px auto}
+  .main-panel{min-height:calc(100vh - 90px)}
+  .chat-scroll{padding:16px;max-height:78vh}
+  .msg.ai{max-width:100%}
+  .kg-canvas{height:300px}
+}
+@media (min-width: 1500px){
+  .workspace{width:97vw;max-width:1800px}
+  .kg-canvas{height:360px}
+}
+@media (max-width: 700px){
+  .workspace{width:96vw;margin:8px auto}
+  .chat-scroll{padding:10px;max-height:72vh}
+  .kg-canvas{height:230px}
+}
+
 </style>
  </head>
  <body>
@@ -392,7 +410,7 @@ async function fetchGitHubPath(path=''){const suffix=path?`/${path.split('/').ma
 async function discoverPDFs(path='',out=[]){const data=await fetchGitHubPath(path);if(!Array.isArray(data))return out;for(const item of data){if(item.type==='file'&&item.name.toLowerCase().endsWith('.pdf'))out.push({name:item.name,path:item.path,download_url:item.download_url});else if(item.type==='dir'&&item.path.split('/').length<=5){try{await discoverPDFs(item.path,out);}catch(e){console.warn('No se pudo explorar',item.path,e);}}}return out;}
 async function indexAllPdfs(){let ok=0;$('#sysState').textContent=`Indexando 0/${repositoryFiles.length}...`;for(let i=0;i<repositoryFiles.length;i++){const file=repositoryFiles[i];$('#sysState').textContent=`Indexando ${i+1}/${repositoryFiles.length}...`;try{const pdf=await pdfjsLib.getDocument({url:file.download_url,disableAutoFetch:false,disableStream:false}).promise;const original=[],normalized=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();const text=content.items.map(x=>x.str||'').join(' ').replace(/\s+/g,' ').trim();original.push(text);normalized.push(normalizeStr(text));}repositoryTexts[file.path]={original,normalized,numPages:pdf.numPages};ok++;}catch(e){console.warn('No se pudo indexar',file.path,e);repositoryTexts[file.path]={original:[],normalized:[],numPages:0,error:true};}}$('#sysState').textContent='Construyendo matriz...';
   try{ buildKnowledgeMatrix(); }catch(e){ console.warn('Matriz:',e); }
-  $('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;addMsg('#mainChatBox',`>> NEXUS-X v9.1 listo.\n>> ${ok}/${repositoryFiles.length} manuales indexados.\n>> Podés buscar conceptos, fórmulas o palabras clave.`,'system');}
+  $('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;addMsg('#mainChatBox',`>> NEXUS-X v9.2 listo.\n>> ${ok}/${repositoryFiles.length} manuales indexados.\n>> Podés buscar conceptos, fórmulas o palabras clave.`,'system');}
 
 
 
