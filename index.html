@@ -1,1301 +1,293 @@
-``html
-<!-- index.html — Panel de control y buscador inteligente de protocolos (ultraliviano, 1 solo archivo) -->
 <!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Command Center · Protocolos de Laboratorio</title>
-  <meta name="description" content="Buscador inteligente y panel de control para protocolos de laboratorio escolar."/>
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>NEXUS-X // OMEGA ∞ TITAN</title>
   <style>
-    :root{
-      --bg0:#070A12;
-      --bg1:#0B1223;
-      --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.085);
-      --stroke: rgba(255,255,255,.12);
-      --text:#EAF0FF;
-      --muted: rgba(234,240,255,.72);
-      --muted2: rgba(234,240,255,.55);
-      --shadow: 0 18px 55px rgba(0,0,0,.35);
-      --shadow2: 0 10px 30px rgba(0,0,0,.25);
-      --ring: rgba(110,231,255,.35);
-      --ring2: rgba(167,139,250,.35);
-      --accent:#6EE7FF;      /* cian */
-      --accent2:#A78BFA;     /* morado */
-      --good:#34D399;        /* verde */
-      --warn:#FBBF24;        /* ámbar */
-      --bad:#FB7185;         /* rosa/rojo */
-      --info:#60A5FA;       /* azul */
-      --radius: 16px;
-      --radius2: 22px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    }
-
-    /* ====== Base ====== */
-    *{ box-sizing:border-box; }
-    html, body { height:100%; }
-    body{
-      margin:0;
-      font-family: var(--sans);
-      color: var(--text);
-      background:
-        radial-gradient(1000px 650px at 15% 10%, rgba(110,231,255,.20), transparent 55%),
-        radial-gradient(900px 550px at 85% 20%, rgba(167,139,250,.18), transparent 50%),
-        radial-gradient(800px 500px at 50% 90%, rgba(52,211,153,.10), transparent 50%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
-      overflow-x:hidden;
-    }
-
-    a{ color:inherit; text-decoration:none; }
-    button, input, textarea { font:inherit; }
-    :focus-visible{
-      outline: 3px solid var(--ring);
-      outline-offset: 2px;
-      border-radius: 10px;
-    }
-
-    /* ====== Layout ====== */
-    .wrap{
-      width:min(1200px, 92vw);
-      margin: 0 auto;
-      padding: 28px 0 64px;
-    }
-
-    .topbar{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .brand{
-      display:flex;
-      gap: 12px;
-      align-items:flex-start;
-      min-width: 280px;
-    }
-
-    .logo{
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      background:
-        radial-gradient(circle at 30% 20%, rgba(255,255,255,.35), transparent 40%),
-        linear-gradient(135deg, rgba(110,231,255,.9), rgba(167,139,250,.9));
-      box-shadow: 0 10px 24px rgba(110,231,255,.12);
-      display:grid;
-      place-items:center;
-      border: 1px solid rgba(255,255,255,.18);
-      flex: 0 0 auto;
-    }
-    .logo svg{ opacity:.95; }
-
-    .brand h1{
-      margin:0;
-      font-size: 16px;
-      line-height:1.25;
-      letter-spacing:.2px;
-    }
-    .brand p{
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height:1.35;
-      max-width: 520px;
-    }
-
-    .panel{
-      background: rgba(255,255,255,.03);
-      border: 1px solid var(--stroke);
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 14px;
-      overflow:hidden;
-      position: relative;
-    }
-    .panel:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background:
-        radial-gradient(800px 150px at 30% 0%, rgba(110,231,255,.14), transparent 60%),
-        radial-gradient(800px 200px at 70% 0%, rgba(167,139,250,.12), transparent 60%);
-      pointer-events:none;
-      opacity:.9;
-    }
-    .panel > *{ position: relative; }
-
-    /* ====== Search area ====== */
-    .searchGrid{
-      display:grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items:center;
-      margin-top: 10px;
-    }
-
-    .searchBar{
-      position: relative;
-      border-radius: 16px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.12);
-      padding: 12px 12px;
-      display:flex;
-      gap: 10px;
-      align-items:center;
-    }
-
-    .searchIcon{
-      width: 38px;
-      height: 38px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.06);
-      display:grid;
-      place-items:center;
-      border: 1px solid rgba(255,255,255,.10);
-      flex: 0 0 auto;
-    }
-    .searchBar input{
-      width:100%;
-      background: transparent;
-      border:none;
-      outline:none;
-      color: var(--text);
-      font-size: 14.5px;
-      padding: 2px 0;
-    }
-    .searchBar input::placeholder{ color: rgba(234,240,255,.50); }
-
-    .kbd{
-      font-family: var(--mono);
-      font-size: 12px;
-      color: rgba(234,240,255,.65);
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      padding: 6px 8px;
-      border-radius: 12px;
-      white-space:nowrap;
-    }
-
-    /* ====== Quick filters ====== */
-    .filters{
-      display:flex;
-      flex-wrap:wrap;
-      gap: 8px;
-      align-items:center;
-      margin-top: 12px;
-    }
-
-    .chip{
-      appearance:none;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 8px 12px;
-      cursor:pointer;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease, color .12s ease;
-      font-size: 13px;
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      user-select:none;
-    }
-    .chip:hover{ transform: translateY(-1px); border-color: rgba(110,231,255,.35); color: rgba(234,240,255,.92); }
-    .chip[aria-pressed="true"]{
-      background: linear-gradient(135deg, rgba(110,231,255,.18), rgba(167,139,250,.18));
-      border-color: rgba(110,231,255,.45);
-      color: rgba(234,240,255,.98);
-      box-shadow: 0 10px 30px rgba(110,231,255,.10);
-    }
-
-    .chip .dot{
-      width:10px; height:10px; border-radius:50%;
-      background: rgba(255,255,255,.35);
-      border: 1px solid rgba(255,255,255,.20);
-    }
-
-    /* ====== Results ====== */
-    .resultsHead{
-      display:flex;
-      justify-content:space-between;
-      align-items: center;
-      gap: 10px;
-      margin: 18px 0 10px;
-    }
-    .resultsHead .left{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-    }
-    .resultsHead h2{
-      margin:0;
-      font-size: 14px;
-      color: rgba(234,240,255,.9);
-      letter-spacing:.2px;
-    }
-    .resultsHead .sub{
-      color: var(--muted2);
-      font-size: 12.5px;
-    }
-
-    .sortBtn{
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
-      padding: 10px 12px;
-      cursor:pointer;
-      transition: transform .12s ease, border-color .12s ease, color .12s ease;
-      display:flex; align-items:center; gap: 10px;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-    .sortBtn:hover{ transform: translateY(-1px); border-color: rgba(167,139,250,.35); color: rgba(234,240,255,.92); }
-
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 12px;
-      margin-top: 10px;
-    }
-    .card{
-      grid-column: span 6;
-      background: rgba(255,255,255,.045);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: var(--radius);
-      padding: 14px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.18);
-      position: relative;
-      overflow:hidden;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: transform .14s ease, border-color .14s ease, background .14s ease;
-      min-height: 220px;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-    }
-    .card:hover{
-      transform: translateY(-2px);
-      border-color: rgba(110,231,255,.22);
-      background: rgba(255,255,255,.055);
-    }
-    .card:before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      background:
-        radial-gradient(320px 120px at 10% 0%, rgba(110,231,255,.18), transparent 50%),
-        radial-gradient(300px 120px at 90% 0%, rgba(167,139,250,.15), transparent 55%);
-      opacity: .65;
-      pointer-events:none;
-    }
-    .card > *{ position: relative; }
-
-    .cardTop{
-      display:flex;
-      gap: 10px;
-      justify-content:space-between;
-      align-items:flex-start;
-    }
-    .titleWrap{
-      display:flex;
-      flex-direction:column;
-      gap: 6px;
-      min-width: 0;
-    }
-    .cardTitle{
-      margin:0;
-      font-size: 15.5px;
-      letter-spacing:.2px;
-      line-height:1.25;
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      flex-wrap:wrap;
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap: 7px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
-      font-size: 12.5px;
-      user-select:none;
-      white-space:nowrap;
-    }
-    .badge .pill{
-      width:9px; height:9px; border-radius:50%;
-      background: rgba(255,255,255,.35);
-      border: 1px solid rgba(255,255,255,.2);
-    }
-
-    .urgency{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      justify-content:flex-end;
-      flex: 0 0 auto;
-    }
-    .urgency .level{
-      font-family: var(--mono);
-      font-size: 12px;
-      padding: 8px 10px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(255,255,255,.04);
-      color: rgba(234,240,255,.85);
-      display:flex;
-      gap: 8px;
-      align-items:center;
-      user-select:none;
-      white-space:nowrap;
-    }
-    .urgency .level .sig{
-      width:10px; height:10px; border-radius:50%;
-      background: rgba(255,255,255,.3);
-      border: 1px solid rgba(255,255,255,.2);
-    }
-
-    .summary{
-      margin:0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height:1.45;
-    }
-
-    .tags{
-      display:flex;
-      flex-wrap:wrap;
-      gap: 8px;
-      margin-top: 2px;
-    }
-    .tag{
-      font-size: 12.5px;
-      color: rgba(234,240,255,.78);
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-      padding: 6px 10px;
-      border-radius: 999px;
-      user-select:none;
-    }
-
-    .stepsPreview{
-      margin: 0;
-      padding-left: 18px;
-      color: rgba(234,240,255,.75);
-      font-size: 13px;
-      line-height:1.45;
-    }
-    .stepsPreview li{
-      margin: 4px 0;
-    }
-
-    .cardActions{
-      margin-top:auto;
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .actionsLeft{
-      display:flex; gap: 10px; flex-wrap:wrap;
-    }
-
-    .btn{
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: rgba(234,240,255,.88);
-      padding: 10px 12px;
-      cursor:pointer;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
-      display:flex; align-items:center; gap: 10px;
-      font-size: 13px;
-      user-select:none;
-      white-space:nowrap;
-    }
-    .btn:hover{ transform: translateY(-1px); border-color: rgba(110,231,255,.35); background: rgba(255,255,255,.06); }
-
-    .btn.primary{
-      border-color: rgba(110,231,255,.45);
-      background: linear-gradient(135deg, rgba(110,231,255,.16), rgba(167,139,250,.12));
-    }
-
-    .btn.danger{
-      border-color: rgba(251,113,133,.35);
-      background: rgba(251,113,133,.08);
-    }
-
-    /* ====== Empty state ====== */
-    .empty{
-      grid-column: 1 / -1;
-      border: 1px dashed rgba(255,255,255,.18);
-      background: rgba(255,255,255,.03);
-      border-radius: var(--radius);
-      padding: 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 14px;
-    }
-    .empty h3{
-      margin:0;
-      font-size: 14.5px;
-      letter-spacing:.2px;
-    }
-    .empty p{
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height:1.4;
-    }
-
-    /* ====== Modal ====== */
-    .modalOverlay{
-      position: fixed;
-      inset:0;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 18px;
-      z-index: 50;
-    }
-    .modalOverlay[aria-hidden="false"]{ display:flex; }
-
-    .modal{
-      width: min(860px, 96vw);
-      max-height: min(86vh, 760px);
-      overflow:auto;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.15);
-      background: rgba(12,18,35,.75);
-      box-shadow: var(--shadow);
-      position: relative;
-    }
-    .modalHeader{
-      position: sticky;
-      top: 0;
-      background: linear-gradient(180deg, rgba(12,18,35,.92), rgba(12,18,35,.70));
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      padding: 14px 14px;
-      display:flex; align-items:flex-start; justify-content:space-between; gap: 12px;
-      z-index: 2;
-    }
-    .modalHeader h3{
-      margin:0;
-      font-size: 15.5px;
-      letter-spacing:.2px;
-    }
-    .modalHeader .meta{
-      margin-top: 6px;
-      display:flex;
-      flex-wrap:wrap;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 12.8px;
-    }
-    .closeBtn{
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: rgba(234,240,255,.9);
-      cursor:pointer;
-      padding: 10px 12px;
-      display:flex; align-items:center; gap: 10px;
-      transition: transform .12s ease, border-color .12s ease;
-      white-space:nowrap;
-    }
-    .closeBtn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.25); }
-
-    .modalBody{
-      padding: 14px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .modalBody .box{
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.035);
-      padding: 12px;
-    }
-    .modalBody .box h4{
-      margin:0 0 8px;
-      font-size: 13px;
-      letter-spacing:.2px;
-      color: rgba(234,240,255,.9);
-    }
-    .modalBody .box p{
-      margin:0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height:1.5;
-    }
-
-    .modalBody .steps{
-      margin: 0;
-      padding-left: 18px;
-      color: rgba(234,240,255,.78);
-      font-size: 13px;
-      line-height:1.5;
-    }
-
-    .editForm label{
-      display:block;
-      font-size: 12.5px;
-      color: var(--muted2);
-      margin-bottom: 6px;
-    }
-    .editForm textarea{
-      width:100%;
-      min-height: 96px;
-      resize: vertical;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-      padding: 10px 12px;
-      outline:none;
-    }
-    .modalFooter{
-      padding: 0 14px 14px;
-      display:flex; justify-content:space-between; align-items:center; gap: 10px; flex-wrap:wrap;
-    }
-    .note{
-      color: var(--muted2);
-      font-size: 12.5px;
-      line-height:1.35;
-    }
-
-    /* ====== Floating report ====== */
-    .floating{
-      position: fixed;
-      right: 14px;
-      bottom: 14px;
-      z-index: 60;
-      width: min(380px, 92vw);
-      pointer-events:none;
-    }
-    .floating .cardMini{
-      pointer-events:auto;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.15);
-      background: rgba(12,18,35,.72);
-      box-shadow: var(--shadow2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 12px;
-      display:flex;
-      gap: 12px;
-      align-items:flex-start;
-    }
-    .floating .cardMini .icon{
-      width: 40px; height: 40px;
-      border-radius: 14px;
-      background: rgba(251,113,133,.10);
-      border: 1px solid rgba(251,113,133,.30);
-      display:grid; place-items:center;
-      flex: 0 0 auto;
-    }
-    .floating h4{
-      margin:0;
-      font-size: 13.5px;
-      letter-spacing:.2px;
-    }
-    .floating p{
-      margin: 6px 0 10px;
-      color: var(--muted);
-      font-size: 12.8px;
-      line-height:1.35;
-    }
-    .floating .row{
-      display:flex; gap: 10px; flex-wrap:wrap; align-items:center;
-    }
-    .floating .btnSmall{
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: rgba(234,240,255,.92);
-      cursor:pointer;
-      transition: transform .12s ease, border-color .12s ease;
-      font-size: 13px;
-      white-space:nowrap;
-      display:flex; align-items:center; gap: 10px;
-    }
-    .floating .btnSmall:hover{ transform: translateY(-1px); border-color: rgba(251,113,133,.35); }
-
-    /* ====== Responsive ====== */
-    @media (max-width: 920px){
-      .card{ grid-column: span 12; }
-      .modalBody{ grid-template-columns: 1fr; }
-    }
-    @media (max-width: 560px){
-      .topbar{ flex-direction:column; }
-      .searchGrid{ grid-template-columns: 1fr; }
-      .kbd{ display:none; }
-      .card{ min-height: 235px; }
-    }
-  </style>
-</head>
-
-<body>
-  <main class="wrap">
-    <header class="topbar" aria-label="Encabezado">
-      <div class="brand">
-        <div class="logo" aria-hidden="true">
-          <!-- icono -->
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2l9 5v10l-9 5-9-5V7l9-5z" stroke="white" stroke-opacity=".85" stroke-width="1.6"/>
-            <path d="M8.2 10.5c1.2-2.8 6.4-2.7 7.6 0 1.1 2.5-1.1 5.2-3.8 5.2-2.7 0-4.9-2.7-3.8-5.2z" fill="white" fill-opacity=".12"/>
-          </svg>
-        </div>
-        <div>
-          <h1>Command Center · Protocolos Inteligentes</h1>
-          <p>
-            Busca por palabras, etiquetas o categorías. Filtrado instantáneo (solo cliente).
-            Ideal para laboratorios de escuelas técnicas.
-          </p>
-        </div>
-      </div>
-
-      <div class="panel" style="flex:1; min-width: 280px;">
-        <div class="searchGrid">
-          <div class="searchBar" role="search">
-            <div class="searchIcon" aria-hidden="true">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="white" stroke-opacity=".85" stroke-width="1.8"/>
-                <path d="M16.3 16.3L21 21" stroke="white" stroke-opacity=".85" stroke-width="1.8" stroke-linecap="round"/>
-              </svg>
-            </div>
-
-            <label for="q" style="position:absolute; left:-9999px;">Buscar protocolos</label>
-            <input id="q" type="search" placeholder="Buscar: derrames, microscopio, soldadura, reactivos…"
-                   autocomplete="off" spellcheck="false" />
-          </div>
-
-          <div class="kbd" title="Atajo de teclado">⌨️ / para buscar</div>
-        </div>
-
-        <div class="filters" aria-label="Filtros rápidos por categoría">
-          <!-- chips generados por JS -->
-          <button class="chip" type="button" data-filter="__all__" aria-pressed="true">
-            <span class="dot" aria-hidden="true"></span> Todas
-          </button>
-          <button class="chip" type="button" data-filter="Seguridad" aria-pressed="false">
-            <span class="dot" aria-hidden="true" style="background:rgba(251,191,36,.55); border-color:rgba(251,191,36,.35)"></span>
-            Seguridad
-          </button>
-          <button class="chip" type="button" data-filter="Equipos" aria-pressed="false">
-            <span class="dot" aria-hidden="true" style="background:rgba(110,231,255,.55); border-color:rgba(110,231,255,.35)"></span>
-            Equipos
-          </button>
-          <button class="chip" type="button" data-filter="Reactivos" aria-pressed="false">
-            <span class="dot" aria-hidden="true" style="background:rgba(167,139,250,.55); border-color:rgba(167,139,250,.35)"></span>
-            Reactivos
-          </button>
-          <button class="chip" type="button" data-filter="Emergencias" aria-pressed="false">
-            <span class="dot" aria-hidden="true" style="background:rgba(251,113,133,.55); border-color:rgba(251,113,133,.35)"></span>
-            Emergencias
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <section class="resultsHead" aria-label="Resumen de resultados">
-      <div class="left">
-        <h2>Protocolos disponibles</h2>
-        <div class="sub" id="resultsMeta">Escribe para filtrar…</div>
-      </div>
-      <button class="sortBtn" id="toggleUrgency" type="button" title="Ordenar por urgencia / relevancia">
-        <span aria-hidden="true">⚡</span>
-        Orden: <span id="sortLabel">Relevancia</span>
-      </button>
-    </section>
-
-    <section class="grid" id="grid" aria-live="polite" aria-label="Listado de tarjetas de protocolos">
-      <!-- tarjetas inyectadas por JS -->
-    </section>
-  </main>
-
-  <!-- Modal de lectura/edición/reporte -->
-  <div class="modalOverlay" id="modalOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modalHeader">
-        <div>
-          <h3 id="modalTitle">Protocolo</h3>
-          <div class="meta" id="modalMeta"></div>
-        </div>
-        <button class="closeBtn" type="button" id="closeModal" aria-label="Cerrar">
-          <span aria-hidden="true">✕</span> Cerrar
-        </button>
-      </div>
-
-      <div class="modalBody">
-        <div class="box">
-          <h4>Resumen de pasos</h4>
-          <ol class="steps" id="modalSteps"></ol>
-        </div>
-        <div class="box editForm">
-          <h4>Reportar error / sugerir corrección</h4>
-          <label for="modalReport">Escribe tu observación (ej: “falta mencionar neutralización”, “ajustar concentración”, etc.)</label>
-          <textarea id="modalReport" maxlength="900" placeholder="Tu sugerencia se guarda localmente en este navegador (demo)."></textarea>
-          <div class="note" style="margin-top:10px;">
-            ✅ Esto es una demo: la corrección se almacena en <span style="font-family:var(--mono)">localStorage</span>.
-          </div>
-        </div>
-      </div>
-
-      <div class="modalFooter">
-        <div class="note" id="modalSavedMeta">—</div>
-        <div class="row" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
-          <button class="btn danger" type="button" id="clearReportBtn" title="Borrar el texto del reporte">
-            <span aria-hidden="true">🧹</span> Limpiar
-          </button>
-          <button class="btn primary" type="button" id="saveReportBtn">
-            <span aria-hidden="true">📝</span> Enviar reporte (demo)
-          </button>
-        </div>
-      </div>
+:root{--bg:#020508;--p:#061016;--p2:#09161d;--line:#12313b;--cyan:#00e5ff;--green:#00ff9d;--amber:#ffbd45;--red:#ff4567;--violet:#b77dff;--txt:#d9f7fb;--muted:#628792}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--txt);font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{overflow:hidden}button,input,textarea,select{font:inherit}button{background:#07151c;color:var(--cyan);border:1px solid #17404b;padding:8px 11px;cursor:pointer}button:hover{border-color:var(--cyan);box-shadow:0 0 18px #00e5ff22}button.green{color:var(--green)}button.amber{color:var(--amber)}button.danger{color:var(--red)}button.violet{color:var(--violet)}
+input,textarea,select{width:100%;background:#02090d;color:var(--txt);border:1px solid var(--line);padding:8px;outline:0}input:focus,textarea:focus,select:focus{border-color:var(--cyan)}
+header{height:64px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 16px;background:linear-gradient(90deg,#03090c,#07171d,#03090c)}
+.logo{font-size:18px;font-weight:900;letter-spacing:3px;color:var(--cyan)}.logo small{font-size:9px;color:var(--green)}
+.status{display:flex;gap:15px;color:var(--muted);font-size:10px;align-items:center}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 12px var(--green)}
+.layout{height:calc(100vh - 64px);display:grid;grid-template-columns:265px 1fr 330px}
+aside{overflow:auto;background:var(--p);padding:11px;border-right:1px solid var(--line)}.right{border-right:0;border-left:1px solid var(--line)}main{overflow:auto;padding:14px;background:radial-gradient(circle at 50% 0,#00e5ff0b,transparent 45%)}
+.title{font-size:10px;color:var(--green);letter-spacing:2px;border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:8px}.sec{margin-bottom:13px}.row{display:flex;gap:6px;margin-bottom:6px}.row>*{flex:1}.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.metric{border:1px solid var(--line);background:#051016cc;padding:9px;min-height:59px}.metric b{display:block;color:var(--cyan);font-size:19px}.metric span{font-size:8px;color:var(--muted)}
+.hero{border:1px solid #15505b;background:linear-gradient(135deg,#00e5ff0a,#00ff9d06,#b77dff06);padding:14px;margin-bottom:10px}.hero h1{margin:0 0 4px;color:#fff;font-size:22px}.hero p{color:var(--muted);line-height:1.6;font-size:10px}
+.query{display:grid;grid-template-columns:1fr 135px;gap:7px}.query textarea{height:78px;resize:vertical}.query button{height:100%}
+.tabs{display:flex;gap:4px;margin:10px 0;overflow:auto}.tab.active{background:#0d2931;border-color:var(--cyan)}section.panel{min-height:250px}.hidden{display:none!important}
+.answer{white-space:pre-wrap;border:1px solid var(--line);background:#030a0e;padding:13px;min-height:170px;line-height:1.65}.label{color:var(--green);font-size:9px;letter-spacing:2px}
+.cards{display:grid;gap:7px;margin-top:8px}.card{border:1px solid var(--line);background:#061117cc;padding:10px}.card:hover{border-color:#21616e}.head{display:flex;justify-content:space-between;gap:8px}.cyan{color:var(--cyan)}.green{color:var(--green)}.amber{color:var(--amber)}.red{color:var(--red)}.violet{color:var(--violet)}.muted{color:var(--muted)}.body{color:#9bc3ca;line-height:1.6;margin-top:6px}.badge{display:inline-block;padding:2px 5px;border:1px solid #23434b;color:var(--muted);font-size:8px;margin:2px}.good{color:var(--green);border-color:#155d49}.warn{color:var(--amber);border-color:#604a1c}.bad{color:var(--red);border-color:#642338}
+pre{white-space:pre-wrap;word-break:break-word;color:#9bc8d0;font-size:9px}.grid{width:100%;height:330px;border:1px solid var(--line);background:#020609}.log{height:205px;overflow:auto;background:#020608;border:1px solid var(--line);padding:8px;font-size:8px}.log div{margin-bottom:4px}
+.progress{height:4px;background:#0b1c23;margin:4px 0 7px}.progress i{display:block;height:100%;width:0;background:var(--cyan);transition:.2s}
+.table{width:100%;border-collapse:collapse;font-size:9px}.table th,.table td{border:1px solid var(--line);padding:6px;text-align:left}.table th{color:var(--green)}
+.timeline{border-left:1px solid var(--cyan);margin:8px 0;padding-left:12px}.event{position:relative;margin:0 0 10px}.event:before{content:"";position:absolute;left:-17px;top:4px;width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+footer{color:#45656d;text-align:center;font-size:8px;padding:8px}
+@media(max-width:1100px){.layout{grid-template-columns:225px 1fr}.right{display:none}}@media(max-width:700px){body{overflow:auto}.layout{height:auto;display:block}aside{border-bottom:1px solid var(--line);border-right:0}main{min-height:900px}.query{grid-template-columns:1fr}}
+</style>
+ </head>
+ <body>
+  <header>
+   <div>
+    <div class="logo">NEXUS-X // OMEGA ∞ TITAN</div>
+    <div style="font-size:8px;color:var(--muted)">LOCAL RESEARCH FABRIC · MULTI-AGENT EVIDENCE OS · AUDITABLE COMPUTATION</div>
+   </div>
+   <div class="status">
+    <span><i class="dot"></i> TITAN ONLINE</span><span id="clock">--:--:--</span><span id="dbState">BOOT</span>
+   </div>
+  </header>
+  <div class="layout">
+   <aside>
+    <div class="sec">
+     <div class="title">FABRIC</div>
+     <div class="row">
+      <button id="import" class="green">IMPORT</button>
+      <button id="demo">LOAD DEMO</button>
+     </div>
+     <input id="files" type="file" multiple accept=".txt,.md,.json,.csv,.html,.htm,.log" hidden>
+     <div class="row">
+      <button id="export">EXPORT</button>
+      <button id="purge" class="danger">PURGE</button>
+     </div>
     </div>
+    <div class="sec">
+     <div class="title">INDEX</div>
+     <div class="g2">
+      <div class="metric">
+       <b id="docs">0</b><span>DOCUMENTS</span>
+      </div>
+      <div class="metric">
+       <b id="chunks">0</b><span>CHUNKS</span>
+      </div>
+      <div class="metric">
+       <b id="claims">0</b><span>CLAIMS</span>
+      </div>
+      <div class="metric">
+       <b id="links">0</b><span>RELATIONS</span>
+      </div>
+     </div>
+    </div>
+    <div class="sec">
+     <div class="title">RETRIEVAL</div>
+     <label class="muted">TOP K</label><input id="topk" type="number" value="12" min="1" max="50"> <label class="muted">CHUNK SIZE</label><input id="size" type="number" value="1100" min="300" max="5000"> <label class="muted">MIN SCORE</label><input id="min" type="number" value=".06" step=".01" min="0" max="1"> <label class="muted">SOURCE</label><select id="source"><option value="">ALL</option></select>
+    </div>
+    <div class="sec">
+     <div class="title">AGENT CONTROL</div>
+     <select id="provider"><option value="det">Deterministic agents</option><option value="ollama">OpenAI-compatible local endpoint</option></select> <input id="url" value="http://localhost:11434/v1/chat/completions" style="margin-top:5px"> <input id="model" value="llama3.2" style="margin-top:5px">
+     <div class="row" style="margin-top:5px">
+      <button id="test">TEST</button>
+      <button id="showcase" class="violet">SHOWCASE</button>
+     </div>
+    </div>
+    <div class="sec">
+     <div class="title">DOCUMENT SEARCH</div>
+     <input id="docSearch" placeholder="filter documents...">
+     <div id="docList" style="margin-top:6px"></div>
+    </div>
+   </aside>
+   <main>
+    <div class="hero">
+     <h1>OMEGA ∞ TITAN / INVESTIGATION CORE</h1>
+     <p>Arquitectura demostrativa de investigación evidence-first: recuperación híbrida, análisis de claims, contraevidencia, independencia de fuentes, hipótesis, grafo, auditoría y síntesis. El sistema no presume verdad: calcula señales de soporte y fragilidad a partir de la evidencia local.</p>
+     <div class="g2">
+      <div class="metric">
+       <b id="confidence">0%</b><span>CONFIDENCE SIGNAL</span>
+      </div>
+      <div class="metric">
+       <b id="coverage">0%</b><span>COVERAGE</span>
+      </div>
+      <div class="metric">
+       <b id="consistency">0%</b><span>CONSISTENCY</span>
+      </div>
+      <div class="metric">
+       <b id="independence">0%</b><span>INDEPENDENCE</span>
+      </div>
+     </div>
+    </div>
+    <div class="query">
+     <textarea id="query" placeholder="Formula una investigación...
+
+Ej.: ¿Qué evidencia respalda la hipótesis X?
+Compara A con B
+Busca evidencia adversarial sobre X"></textarea>
+     <div style="display:flex;flex-direction:column;gap:5px">
+      <button id="investigate" class="green">INVESTIGATE</button>
+      <button id="adversarial" class="amber">RED TEAM</button>
+      <button id="hypothesis" class="violet">HYPOTHESIS</button>
+     </div>
+    </div>
+    <div class="tabs">
+     <button class="tab active" data-tab="answer">ANSWER</button>
+     <button class="tab" data-tab="evidence">EVIDENCE</button>
+     <button class="tab" data-tab="claims">CLAIMS</button>
+     <button class="tab" data-tab="hyp">HYPOTHESES</button>
+     <button class="tab" data-tab="graph">GRAPH</button>
+     <button class="tab" data-tab="timeline">TIMELINE</button>
+     <button class="tab" data-tab="audit">AUDIT</button>
+    </div>
+    <section id="tab-answer" class="panel">
+     <div class="answer" id="answer">
+      <span class="label">TITAN OUTPUT</span>
+      <div style="margin-top:10px;color:#648994">Esperando investigación...</div>
+     </div>
+     <div class="title" style="margin-top:12px">RETRIEVED EVIDENCE</div>
+     <div id="results" class="cards"></div>
+    </section>
+    <section id="tab-evidence" class="panel hidden">
+     <div class="title">EVIDENCE LAB</div>
+     <div id="evidence"></div>
+    </section>
+    <section id="tab-claims" class="panel hidden">
+     <div class="title">CLAIM INTELLIGENCE</div>
+     <div id="claimLab"></div>
+    </section>
+    <section id="tab-hyp" class="panel hidden">
+     <div class="title">HYPOTHESIS LAB</div>
+     <div id="hypLab"></div>
+    </section>
+    <section id="tab-graph" class="panel hidden">
+     <div class="title">KNOWLEDGE GRAPH</div>
+     <canvas id="graph" class="grid"></canvas>
+    </section>
+    <section id="tab-timeline" class="panel hidden">
+     <div class="title">INVESTIGATION TIMELINE</div>
+     <div id="timeline"></div>
+    </section>
+    <section id="tab-audit" class="panel hidden">
+     <div class="title">AUDIT TRAIL</div>
+     <pre id="audit">No investigation.</pre>
+    </section>
+    <footer>NEXUS-X OMEGA ∞ TITAN · DEMONSTRATION SYSTEM · SIGNALS ARE NOT GUARANTEES OF TRUTH</footer>
+   </main>
+   <aside class="right">
+    <div class="sec">
+     <div class="title">TELEMETRY</div>
+     <div class="metric">
+      <b id="latency">0 ms</b><span>LATENCY</span>
+     </div>
+     <div class="metric">
+      <b id="cand">0</b><span>CANDIDATES</span>
+     </div>
+     <div class="metric">
+      <b id="ev">0</b><span>EVIDENCE</span>
+     </div>
+     <div class="metric">
+      <b id="conflicts">0</b><span>CONFLICTS</span>
+     </div>
+    </div>
+    <div class="sec">
+     <div class="title">MULTI-AGENT PIPELINE</div>
+     <div id="pipeline">
+      <div class="badge">PARSER</div>
+      <div class="progress">
+       <i></i>
+      </div>
+      <div class="badge">RETRIEVER</div>
+      <div class="progress">
+       <i></i>
+      </div>
+      <div class="badge">RERANKER</div>
+      <div class="progress">
+       <i></i>
+      </div>
+      <div class="badge">CLAIM ANALYST</div>
+      <div class="progress">
+       <i></i>
+      </div>
+      <div class="badge">RED TEAM</div>
+      <div class="progress">
+       <i></i>
+      </div>
+      <div class="badge">SYNTHESIZER</div>
+      <div class="progress">
+       <i></i>
+      </div>
+      <div class="badge">AUDITOR</div>
+      <div class="progress">
+       <i></i>
+      </div>
+     </div>
+    </div>
+    <div class="sec">
+     <div class="title">SESSION MEMORY</div>
+     <div id="memory"></div>
+    </div>
+    <div class="sec">
+     <div class="title">SYSTEM LOG</div>
+     <div id="log" class="log"></div>
+    </div>
+   </aside>
   </div>
-
-  <!-- Botón/Sección flotante -->
-  <aside class="floating" aria-label="Reportar error de forma rápida">
-    <div class="cardMini">
-      <div class="icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-          <path d="M12 9v4" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round"/>
-          <path d="M12 17h.01" stroke="white" stroke-opacity=".9" stroke-width="3" stroke-linecap="round"/>
-          <path d="M10.3 3.9L2.6 18.2a2 2 0 0 0 1.8 3h15.2a2 2 0 0 0 1.8-3L13.7 3.9a2 2 0 0 0-3.4 0z" stroke="white" stroke-opacity=".85" stroke-width="1.6"/>
-        </svg>
-      </div>
-      <div style="flex:1; min-width: 0;">
-        <h4>¿Encontraste un error o mejora? 🛠️</h4>
-        <p>Este contenido puede corregirse. Abre un protocolo, escribe tu sugerencia y “Enviar reporte (demo)”.</p>
-        <div class="row">
-          <button class="btnSmall" type="button" id="jumpToFirst">
-            <span aria-hidden="true">🔎</span> Abrir primer resultado
-          </button>
-          <button class="btnSmall" type="button" id="openHelpModal" title="Cómo funciona">
-            <span aria-hidden="true">💡</span> Cómo funciona
-          </button>
-        </div>
-      </div>
-    </div>
-  </aside>
-
   <script>
-    (() => {
-      const protocols = [
-        {
-          id: "MICRO_01",
-          title: "Uso seguro del microscopio (enfoque, limpieza y postura)",
-          category: "Equipos",
-          urgency: "Info",
-          urgencyLevel: "info",
-          tags: ["microscopio", "enfoque", "limpieza", "postura", "equipos"],
-          summary: "Procedimiento para operar el microscopio sin dañar lentes, incluyendo limpieza y recomendaciones ergonómicas.",
-          steps: [
-            "Verifica el estado general: cables, platina y perilla de enfoque.",
-            "Comienza con el objetivo de menor aumento (p. ej. 4x/10x) y ajusta iluminación.",
-            "Enfoca lentamente: primero eleva/baja con enfoque grueso y luego afina con enfoque fino.",
-            "Para limpieza: usa solo paño para lentes (sin frotar seco fuerte). No soplar lentes."
-          ],
-          content: "El objetivo es proteger lentes y evitar rayas. Ajusta iluminación gradualmente, usa siempre el menor aumento al iniciar y cuida la postura (espalda recta, movimientos suaves)."
-        },
-        {
-          id: "DERR_A06",
-          title: "Normas ante derrames de ácidos: contención, neutralización y reporte",
-          category: "Reactivos",
-          urgency: "Alta",
-          urgencyLevel: "bad",
-          tags: ["derrames", "ácidos", "neutralización", "EPP", "seguridad"],
-          summary: "Pasos para contener un derrame de ácido, proteger al personal y gestionar la neutralización y el descarte.",
-          steps: [
-            "Avisa al docente y delimita el área; evita que el derrame alcance desagües.",
-            "Colócate EPP: guantes resistentes, bata, protección ocular y calzado adecuado.",
-            "Contén con material absorbente/neutralizante según el instructivo del laboratorio.",
-            "Neutraliza con cuidado (si aplica), recolecta residuos en recipiente rotulado y reporta el incidente."
-          ],
-          content: "Controla la propagación, usa material absorbente compatible y sigue la ficha de seguridad. No uses agua a menos que el protocolo del reactivo lo indique."
-        },
-        {
-          id: "METAL_02",
-          title: "Soldadura y metalurgia segura: preparación, ventilación y verificación",
-          category: "Seguridad",
-          urgency: "Media",
-          urgencyLevel: "warn",
-          tags: ["soldadura", "metalurgia", "ventilación", "EPP", "riesgo térmico"],
-          summary: "Checklist para soldadura: ventilación, EPP, inspección del equipo y manejo de riesgos térmicos.",
-          steps: [
-            "Revisa el equipo y cables; confirma que la toma y el protector estén en condiciones.",
-            "Usa careta/antiparras, guantes y ropa de algodón. Mantén el área libre de combustibles.",
-            "Asegura ventilación/ extracción; no dirijas chispas a personas ni a materiales inflamables.",
-            "Realiza pruebas en un material de práctica; registra cualquier falla o daño del equipo."
-          ],
-          content: "La prioridad es prevenir quemaduras y riesgos por humos. Mantén extintor disponible y sigue el instructivo del taller."
-        },
-        {
-          id: "EMERG_09",
-          title: "Emergencia: protocolo básico ante exposición o lesión durante el laboratorio",
-          category: "Emergencias",
-          urgency: "Crítica",
-          urgencyLevel: "bad",
-          tags: ["emergencias", "primeros auxilios", "accidente", "exposición", "docente"],
-          summary: "Acciones inmediatas: detener actividad, evaluar seguridad, asistir y comunicar según el caso.",
-          steps: [
-            "Detén la actividad y asegúrate de que la zona sea segura (corta equipos si corresponde).",
-            "Avísale de inmediato al docente/brigada; no improvisar tratamientos fuera del marco del laboratorio.",
-            "Si hubo contacto: retira fuente de exposición según indicación del protocolo del reactivo/material.",
-            "Registra: qué pasó, tiempos aproximados, reactivos/equipos involucrados y medidas tomadas."
-          ],
-          content: "Ante dudas: prioriza evacuación/seguridad y comunicación. Se recomienda seguir cartelería del establecimiento."
-        }
-      ];
-
-      const $ = (sel, root=document) => root.querySelector(sel);
-      const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
-
-      // ====== Utilidades de búsqueda ======
-      const normalize = (s) =>
-        (s ?? "")
-          .toString()
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/\p{Diacritic}/gu, "")
-          .replace(/[^a-z0-9\s_-]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
-
-      function buildSearchHaystack(p){
-        // Incluye título, categoría, tags y contenido/steps para filtrado por contenido interno.
-        return normalize([
-          p.title,
-          p.category,
-          p.tags.join(" "),
-          p.summary,
-          (p.steps || []).join(" "),
-          p.content
-        ].join(" | "));
-      }
-
-      const indexed = protocols.map(p => ({
-        ...p,
-        haystack: buildSearchHaystack(p)
-      }));
-
-      // ====== UI ======
-      const grid = $("#grid");
-      const q = $("#q");
-      const resultsMeta = $("#resultsMeta");
-      const sortLabel = $("#sortLabel");
-      const toggleUrgency = $("#toggleUrgency");
-
-      const chips = $$(".chip[data-filter]");
-      let activeCategory = "__all__";
-      let sortMode = "relevance"; // 'relevance' | 'urgency'
-
-      function urgencyRank(u){
-        // Mayor número = más urgente
-        switch(u){
-          case "Crítica": return 3;
-          case "Alta": return 2;
-          case "Media": return 1;
-          case "Info": return 0;
-          default: return 0;
-        }
-      }
-
-      function urgencyColor(level){
-        switch(level){
-          case "bad": return { bg:"rgba(251,113,133,.10)", bd:"rgba(251,113,133,.35)", dot:"rgba(251,113,133,.65)" };
-          case "warn": return { bg:"rgba(251,191,36,.10)", bd:"rgba(251,191,36,.35)", dot:"rgba(251,191,36,.65)" };
-          case "good": return { bg:"rgba(52,211,153,.10)", bd:"rgba(52,211,153,.35)", dot:"rgba(52,211,153,.65)" };
-          case "info":
-          default: return { bg:"rgba(96,165,250,.10)", bd:"rgba(96,165,250,.35)", dot:"rgba(96,165,250,.65)" };
-        }
-      }
-
-      function highlightMaybe(text, query){
-        // Sin dependencias pesadas: no hacemos highlight complejo,
-        // solo mostramos texto normal. (Los chips y el filtrado ya dan contexto.)
-        return text;
-      }
-
-      function computeRelevance(p, query){
-        // Relevancia simple basada en coincidencia por campos.
-        if(!query) return 1;
-
-        const nQuery = normalize(query);
-        const tokens = nQuery.split(" ").filter(Boolean);
-        if(tokens.length === 0) return 1;
-
-        const title = normalize(p.title);
-        const cat = normalize(p.category);
-        const tags = normalize(p.tags.join(" "));
-        const summary = normalize(p.summary);
-        const steps = normalize((p.steps||[]).join(" "));
-        const content = normalize(p.content);
-
-        let score = 0;
-        for(const t of tokens){
-          if(title.includes(t)) score += 6;
-          if(cat.includes(t)) score += 4;
-          if(tags.includes(t)) score += 5;
-          if(summary.includes(t)) score += 3;
-          if(steps.includes(t)) score += 2;
-          if(content.includes(t)) score += 1;
-        }
-        // Bonus si aparece como "frase"
-        if(title.includes(nQuery)) score += 5;
-        if(tags.includes(nQuery)) score += 3;
-        if(p.haystack.includes(nQuery)) score += 2;
-
-        return score;
-      }
-
-      function renderCards(list){
-        grid.innerHTML = "";
-
-        if(list.length === 0){
-          const empty = document.createElement("div");
-          empty.className = "empty";
-          empty.innerHTML = `
-            <div>
-              <h3>🙈 No se encontraron resultados</h3>
-              <p>
-                Prueba con otra palabra clave (ej: <span style="font-family:var(--mono)">derrame</span>,
-                <span style="font-family:var(--mono)">microscopio</span> o una etiqueta).
-              </p>
-            </div>
-            <button class="btn" type="button" id="clearSearchBtn">
-              <span aria-hidden="true">↩️</span> Limpiar búsqueda
-            </button>
-          `;
-          grid.appendChild(empty);
-          $("#clearSearchBtn")?.addEventListener("click", () => {
-            q.value = "";
-            activeCategory = "__all__";
-            syncChips();
-            applyFilters();
-            q.focus();
-          });
-          return;
-        }
-
-        for(const p of list){
-          const u = urgencyColor(p.urgencyLevel);
-          const card = document.createElement("article");
-          card.className = "card";
-          card.setAttribute("data-id", p.id);
-
-          const previewSteps = (p.steps || []).slice(0,3);
-
-          card.innerHTML = `
-            <div class="cardTop">
-              <div class="titleWrap">
-                <h3 class="cardTitle">
-                  <span aria-hidden="true">📘</span>
-                  ${highlightMaybe(p.title, q.value)}
-                </h3>
-                <div class="badge" title="Categoría">
-                  <span class="pill" aria-hidden="true" style="background: rgba(110,231,255,.55); border-color: rgba(110,231,255,.35)"></span>
-                  ${p.category}
-                </div>
-              </div>
-
-              <div class="urgency">
-                <div class="level" style="background:${u.bg}; border-color:${u.bd};">
-                  <span class="sig" aria-hidden="true" style="background:${u.dot}; border-color:${u.bd}"></span>
-                  Urgencia: ${p.urgency}
-                </div>
-              </div>
-            </div>
-
-            <p class="summary">${p.summary}</p>
-
-            <div class="tags" aria-label="Etiquetas">
-              ${p.tags.slice(0,6).map(t => `<span class="tag">#${t}</span>`).join("")}
-            </div>
-
-            <ol class="stepsPreview" aria-label="Resumen de pasos">
-              ${previewSteps.map(s => `<li>${s}</li>`).join("")}
-            </ol>
-
-            <div class="cardActions">
-              <div class="actionsLeft">
-                <button class="btn primary" type="button" data-open="${p.id}">
-                  <span aria-hidden="true">🔍</span> Leer / editar
-                </button>
-                <button class="btn" type="button" data-copy="${p.id}" title="Copiar ID de protocolo">
-                  <span aria-hidden="true">📋</span> Copiar ID
-                </button>
-              </div>
-              <div class="note" style="max-width:280px; text-align:right;">
-                ID: <span style="font-family:var(--mono)">${p.id}</span>
-              </div>
-            </div>
-          `;
-
-          grid.appendChild(card);
-
-          card.querySelector(`[data-open="${p.id}"]`).addEventListener("click", () => openModal(p.id));
-          card.querySelector(`[data-copy="${p.id}"]`).addEventListener("click", async () => {
-            try{
-              await navigator.clipboard.writeText(p.id);
-              toast(`✅ ID copiado: ${p.id}`);
-            }catch{
-              toast("⚠️ No se pudo copiar (permiso del navegador).");
-            }
-          });
-        }
-
-      }
-
-      // ====== Modal ======
-      const modalOverlay = $("#modalOverlay");
-      const closeModal = $("#closeModal");
-      const modalTitle = $("#modalTitle");
-      const modalMeta = $("#modalMeta");
-      const modalSteps = $("#modalSteps");
-      const modalReport = $("#modalReport");
-      const saveReportBtn = $("#saveReportBtn");
-      const clearReportBtn = $("#clearReportBtn");
-      const modalSavedMeta = $("#modalSavedMeta");
-
-      let modalProtocolId = null;
-
-      function getProtocolById(id){
-        return indexed.find(p => p.id === id);
-      }
-
-      function loadSavedReport(id){
-        const key = "lab_protocol_reports_v1";
-        try{
-          const raw = localStorage.getItem(key);
-          const data = raw ? JSON.parse(raw) : {};
-          return data?.[id] ?? "";
-        }catch{
-          return "";
-        }
-      }
-
-      function saveSavedReport(id, text){
-        const key = "lab_protocol_reports_v1";
-        const raw = localStorage.getItem(key);
-        const data = raw ? JSON.parse(raw) : {};
-        data[id] = text;
-        localStorage.setItem(key, JSON.stringify(data));
-      }
-
-      function openModal(id){
-        const p = getProtocolById(id);
-        if(!p) return;
-        modalProtocolId = id;
-
-        modalTitle.textContent = p.title;
-        modalMeta.innerHTML = `
-          <span class="badge" style="background:rgba(255,255,255,.04);">
-            <span class="pill" aria-hidden="true" style="background:rgba(110,231,255,.55); border-color:rgba(110,231,255,.35)"></span>
-            ${p.category}
-          </span>
-          <span class="badge">
-            <span class="pill" aria-hidden="true" style="background:rgba(251,191,36,.55); border-color:rgba(251,191,36,.35)"></span>
-            Urgencia: ${p.urgency}
-          </span>
-          <span class="badge"><span class="pill" aria-hidden="true" style="background:rgba(167,139,250,.55); border-color:rgba(167,139,250,.35)"></span>
-            ID: <span style="font-family:var(--mono)">${p.id}</span>
-          </span>
-        `;
-
-        modalSteps.innerHTML = (p.steps || []).map(s => `<li>${s}</li>`).join("");
-
-        modalReport.value = loadSavedReport(id);
-        modalSavedMeta.textContent = modalReport.value
-          ? `🟢 Ya tenías un reporte guardado localmente para este protocolo.`
-          : "—";
-
-        modalOverlay.setAttribute("aria-hidden", "false");
-        modalReport.focus();
-      }
-
-      function closeModalFn(){
-        modalOverlay.setAttribute("aria-hidden", "true");
-        modalProtocolId = null;
-      }
-
-      closeModal.addEventListener("click", closeModalFn);
-      modalOverlay.addEventListener("click", (e) => {
-        if(e.target === modalOverlay) closeModalFn();
-      });
-      document.addEventListener("keydown", (e) => {
-        if(e.key === "Escape" && modalOverlay.getAttribute("aria-hidden") === "false"){
-          closeModalFn();
-        }
-      });
-
-      saveReportBtn.addEventListener("click", () => {
-        if(!modalProtocolId) return;
-
-        const p = getProtocolById(modalProtocolId);
-        const text = (modalReport.value || "").trim();
-
-        if(text.length < 5){
-          modalSavedMeta.textContent = "⚠️ Escribe un poco más (mínimo ~5 caracteres).";
-          return;
-        }
-
-        saveSavedReport(modalProtocolId, text);
-        modalSavedMeta.textContent = `✅ Reporte guardado (demo) para: ${p.id}`;
-        toast("📝 Reporte enviado (demo) ✅");
-      });
-
-      clearReportBtn.addEventListener("click", () => {
-        modalReport.value = "";
-        modalSavedMeta.textContent = "—";
-        modalReport.focus();
-      });
-
-      // ====== Búsqueda + filtros ======
-      function syncChips(){
-        for(const chip of chips){
-          const pressed = chip.dataset.filter === activeCategory;
-          chip.setAttribute("aria-pressed", pressed ? "true" : "false");
-        }
-      }
-
-      function applyFilters(){
-        const query = q.value.trim();
-        const normQuery = normalize(query);
-
-        const filtered = indexed
-          .filter(p => {
-            const categoryOk = (activeCategory === "__all__") || (p.category === activeCategory) || p.tags.includes(activeCategory.toLowerCase());
-            if(!categoryOk) return false;
-
-            if(!normQuery) return true;
-
-            // Filtra por título, tags y contenido interno (haystack)
-            return p.haystack.includes(normQuery);
-          })
-          .map(p => {
-            const score = computeRelevance(p, query);
-            return { p, score };
-          });
-
-        let list = filtered;
-
-        if(sortMode === "relevance"){
-          list.sort((a,b) => (b.score - a.score) || (urgencyRank(b.p.urgency) - urgencyRank(a.p.urgency)) || a.p.id.localeCompare(b.p.id));
-        }else{
-          list.sort((a,b) => (urgencyRank(b.p.urgency) - urgencyRank(a.p.urgency)) || (b.score - a.score) || a.p.id.localeCompare(b.p.id));
-        }
-
-        const resultList = list.map(x => x.p);
-
-        const countText = `${resultList.length} protocolo${resultList.length === 1 ? "" : "s"}`;
-        const categoryText = activeCategory === "__all__" ? "todas las categorías" : `categoría: ${activeCategory}`;
-        const queryText = query ? `· búsqueda: “${query}”` : "· sin búsqueda";
-        resultsMeta.textContent = `${countText} · ${categoryText} ${queryText}`;
-        renderCards(resultList);
-      }
-
-      for(const chip of chips){
-        chip.addEventListener("click", () => {
-          activeCategory = chip.dataset.filter;
-          syncChips();
-          applyFilters();
-          q.focus();
-        });
-      }
-
-      q.addEventListener("input", () => applyFilters());
-
-      toggleUrgency.addEventListener("click", () => {
-        sortMode = (sortMode === "relevance") ? "urgency" : "relevance";
-        sortLabel.textContent = (sortMode === "relevance") ? "Relevancia" : "Urgencia";
-        applyFilters();
-      });
-
-      // Atajo: "/" enfoca búsqueda
-      document.addEventListener("keydown", (e) => {
-        const isTyping = ["INPUT","TEXTAREA"].includes(document.activeElement?.tagName);
-        if(isTyping) return;
-        if(e.key === "/"){
-          e.preventDefault();
-          q.focus();
-        }
-      });
-
-      // ====== Floating actions ======
-      $("#jumpToFirst").addEventListener("click", () => {
-        // abre el primer resultado actual si existe
-        const firstBtn = grid.querySelector("button[data-open]");
-        if(firstBtn){
-          const id = firstBtn.getAttribute("data-open");
-          openModal(id);
-        }else{
-          toast("⚠️ No hay resultados para abrir.");
-        }
-      });
-
-      $("#openHelpModal").addEventListener("click", () => {
-        toast("💡 Tip: busca por palabras (ej. “derrame”), usa chips por categoría y abre “Leer / editar” para reportar (demo).");
-      });
-
-      // ====== Toast simple ======
-      const toastEl = document.createElement("div");
-      toastEl.setAttribute("aria-live","polite");
-      toastEl.style.cssText = `
-        position: fixed; left: 50%; transform: translateX(-50%);
-        bottom: 18px; z-index: 80;
-        max-width: min(720px, 92vw);
-        background: rgba(12,18,35,.80);
-        border: 1px solid rgba(255,255,255,.18);
-        color: rgba(234,240,255,.95);
-        padding: 10px 12px; border-radius: 14px;
-        box-shadow: 0 18px 55px rgba(0,0,0,.45);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        display:none;
-        font-size: 13px;
-      `;
-      document.body.appendChild(toastEl);
-
-      let toastT = null;
-      function toast(msg){
-        toastEl.textContent = msg;
-        toastEl.style.display = "block";
-        clearTimeout(toastT);
-        toastT = setTimeout(() => { toastEl.style.display = "none"; }, 2400);
-      }
-
-      // ====== Init ======
-      function init(){
-        syncChips();
-        applyFilters();
-      }
-      init();
-    })();
-  </script>
-</body>
+"use strict";
+const $=id=>document.getElementById(id), uid=p=>p+"_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7), now=()=>new Date().toISOString();
+const STOP=new Set("a ante bajo cabe con contra de desde durante en entre hacia hasta mediante para por según sin sobre tras y o u e el la los las un una unos unas que como del al se su sus es son fue eran era ser estar this that the and or of to in on for with from is are was were be".split(/\s+/));
+const norm=s=>String(s??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const tok=s=>norm(s).replace(/[^\p{L}\p{N}_-]+/gu," ").split(/\s+/).filter(x=>x&&x.length>1&&!STOP.has(x));
+const uniq=a=>[...new Set(a)];
+const esc=s=>String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function vector(text,n=256){const v=new Float32Array(n);for(const t of tok(text)){const h=hash(t);for(let k=0;k<4;k++){let i=(h+k*7919)%n;v[i]+=((h>>>(k+3))&1?1:-1)*(1+Math.min(t.length,12)/12)}}let m=Math.hypot(...v)||1;return [...v].map(x=>x/m)}
+function cosine(a,b){let d=0,aa=0,bb=0;for(let i=0;i<Math.min(a.length,b.length);i++){d+=a[i]*b[i];aa+=a[i]*a[i];bb+=b[i]*b[i]}return aa&&bb?d/Math.sqrt(aa*bb):0}
+function log(m,t="INFO"){let x=document.createElement("div");x.innerHTML=`<span class="muted">[${new Date().toLocaleTimeString()}]</span> <b class="green">${esc(t)}</b> ${esc(m)}`;$("log").prepend(x);while($("log").children.length>180)$("log").lastChild.remove()}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+const DB="NEXUS_X_OMEGA_TITAN",VER=1;let db;
+function openDB(){return new Promise((res,rej)=>{let r=indexedDB.open(DB,VER);r.onupgradeneeded=e=>{let d=e.target.result;for(let s of ["docs","chunks","claims","links","investigations","memory","hypotheses"])if(!d.objectStoreNames.contains(s))d.createObjectStore(s,{keyPath:"id"});};r.onsuccess=e=>{db=e.target.result;res()};r.onerror=()=>rej(r.error)})}
+function all(s){return new Promise((res,rej)=>{let r=db.transaction(s).objectStore(s).getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)})}
+function put(s,o){return new Promise((res,rej)=>{let r=db.transaction(s,"readwrite").objectStore(s).put(o);r.onsuccess=()=>res(o);r.onerror=()=>rej(r.error)})}
+function clearStore(s){return new Promise((res,rej)=>{let r=db.transaction(s,"readwrite").objectStore(s).clear();r.onsuccess=res;r.onerror=()=>rej(r.error)})}
+let S={docs:[],chunks:[],claims:[],links:[],investigations:[],memory:[],hypotheses:[],last:null};
+async function load(){for(let k of ["docs","chunks","claims","links","investigations","memory","hypotheses"])S[k]=await all(k);refresh();renderMemory();renderHypotheses();log(`${S.docs.length} docs / ${S.chunks.length} chunks / ${S.claims.length} claims`,"BOOT")}
+function split(text,n){let p=text.replace(/\r/g,"").replace(/[ \t]+\n/g,"\n").trim().split(/\n\s*\n/).filter(Boolean),out=[],cur="";for(let x of p){if((cur+" "+x).length<=n)cur=cur?cur+"\n\n"+x:x;else{if(cur)out.push(cur);if(x.length<=n)cur=x;else for(let i=0;i<x.length;i+=n)out.push(x.slice(i,i+n));}}if(cur)out.push(cur);return out}
+function concepts(t){let f={};for(let x of tok(t))f[x]=(f[x]||0)+1;return Object.entries(f).sort((a,b)=>b[1]-a[1]).slice(0,30).map(x=>x[0])}
+function polarity(t){let n=norm(t);if(/\b(no|not|never|cannot|false|impossible|without)\b/.test(n))return"negative";if(/\b(must|should|required|always|all)\b/.test(n))return"assertive";return"neutral"}
+async function ingest(name,text,size=1100){let c=split(text,size),d={id:uid("doc"),name,size:text.length,chars:text.length,created:now(),modified:now(),hash:hash(text),chunks:c.length,tags:concepts(text).slice(0,18)};await put("docs",d);for(let i=0;i<c.length;i++)await put("chunks",{id:uid("chunk"),docId:d.id,index:i,text:c[i],tokens:tok(c[i]),vector:vector(c[i]),length:c[i].length});let ss=text.replace(/\n+/g," ").split(/(?<=[.!?])\s+/).filter(x=>x.length>35);for(let x of ss.slice(0,160))await put("claims",{id:uid("claim"),docId:d.id,text:x,tokens:uniq(tok(x)),concepts:concepts(x).slice(0,12),polarity:polarity(x),created:now()});log(`${name}: ${c.length} chunks`,"INGEST")}
+async function demo(){let ds=[
+["01_safety.md",`LAB SAFETY\nChemical work requires appropriate protective equipment. Unknown mixtures should not be treated as safe merely because no immediate reaction is visible.\nWhen exposure occurs, the affected area should be flushed with water according to the emergency procedure. The exact response depends on the substance and exposure.\nSafety documentation should identify hazards, emergency procedures, storage requirements and compatibility information.`],
+["02_quality.md",`REAGENT QUALITY\nReagents should be identified with name, concentration, lot number and expiration information whenever applicable.\nUnexpected analytical results should trigger verification of reagent identity, preparation, storage and instrument condition.\nA single measurement is insufficient to establish the cause of an unexpected result. Independent confirmation increases confidence.`],
+["03_equipment.md",`EQUIPMENT MAINTENANCE\nEquipment should follow a documented maintenance schedule. Calibration status must be checked before measurements where accuracy matters.\nIf an instrument produces anomalous results, operators should inspect maintenance status, calibration records and known-good controls.\nReplacing a component without diagnosing the underlying cause can hide a recurring problem.`],
+["04_quality_system.md",`QUALITY SYSTEM\nImportant conclusions should be traceable to records. Evidence from independent sources is generally more useful than multiple copies of the same observation.\nConflicting observations should not simply be discarded. They should be flagged and investigated. Documentation should preserve dates, source identity and context.`],
+["05_adversarial.md",`LIMITATIONS AND COUNTEREVIDENCE\nA plausible explanation is not proof of causality. Measurements can be affected by calibration drift, contamination, sampling error or transcription mistakes.\nAbsence of a recorded incident does not prove that an incident never occurred. Repeated observations can still share a common hidden source.`]
+];for(let [n,t] of ds)await ingest(n,t);await load();await rebuild();await load();log("TITAN DEMO FABRIC ONLINE","SYSTEM")}
+async function rebuild(){for(let i=0;i<S.docs.length;i++)for(let j=i+1;j<S.docs.length;j++){let a=S.docs[i],b=S.docs[j],ca=concepts(S.chunks.filter(x=>x.docId===a.id).map(x=>x.text).join(" ")),cb=concepts(S.chunks.filter(x=>x.docId===b.id).map(x=>x.text).join(" ")),u=uniq([...ca,...cb]),inter=ca.filter(x=>cb.includes(x));let score=u.length?inter.length/u.length:0;if(score>.07)await put("links",{id:`${a.id}_${b.id}`,a:a.id,b:b.id,score})}S.links=await all("links")}
+function parse(q){let quoted=[...(q.match(/"[^"]+"/g)||[])].map(x=>x.slice(1,-1)),x=q.replace(/"[^"]+"/g," "),ex=[...(x.match(/-\S+/g)||[])].map(x=>x.slice(1));x=x.replace(/-\S+/g,"");return{raw:q,terms:tok(x),quoted,excludes:ex,intent:/compare|versus|vs|compar/i.test(norm(q))?"comparison":/why|porque|causa|cause/i.test(norm(q))?"causal":/evidence|evidencia|proof|respalda/i.test(norm(q))?"evidence":"research"}}
+function overlap(a,b){let A=new Set(tok(a)),B=new Set(tok(b));if(!A.size||!B.size)return 0;let n=0;for(let x of A)if(B.has(x))n++;return n/Math.sqrt(A.size*B.size)}
+function bm25(chunks,terms){let N=chunks.length,df=new Map(),avg=0;for(let c of chunks){avg+=c.tokens.length;for(let t of uniq(c.tokens))df.set(t,(df.get(t)||0)+1)}avg/=N||1;return c=>{let f={},s=0;for(let t of c.tokens)f[t]=(f[t]||0)+1;for(let t of terms){if(!f[t])continue;let d=df.get(t)||0,idf=Math.log(1+(N-d+.5)/(d+.5)),k=1.5,b=.75,tf=f[t]*(k+1)/(f[t]+k*(1-b+b*c.tokens.length/avg));s+=idf*tf}return s}}
+async function retrieve(p){let start=performance.now(),chunks=S.chunks,score=bm25(chunks,p.terms),qv=vector(p.raw),arr=[];for(let c of chunks){let b=score(c),v=(cosine(qv,c.vector)+1)/2,o=overlap(p.raw,c.text),ph=p.quoted.length?p.quoted.filter(x=>norm(c.text).includes(norm(x))).length/p.quoted.length:0,ex=p.excludes.filter(x=>c.tokens.includes(norm(x))).length,s=b*.38+v*.30+o*.18+ph*.14-ex*.45;if(p.terms.length&&p.terms.every(t=>c.tokens.includes(t))===false&&p.raw.match(/\bAND\b/i))s*=.35;arr.push({...c,score:s,parts:{bm:b,vec:v,overlap:o,phrase:ph}})}arr.sort((a,b)=>b.score-a.score);$("cand").textContent=arr.length;let out=arr.filter(x=>x.score>=+$("min").value).slice(0,+$("topk").value);$("latency").textContent=Math.round(performance.now()-start)+" ms";$("ev").textContent=out.length;return rerank(out,p.raw)}
+function rerank(a,q){let qt=new Set(tok(q));return a.map(x=>{let cov=[...qt].filter(t=>x.tokens.includes(t)).length/(qt.size||1),d=S.docs.find(d=>d.id===x.docId),fresh=d?.modified?1/(1+Math.max(0,(Date.now()-new Date(d.modified))/86400000)/365):.8;return{...x,coverage:cov,final:x.score*.62+cov*.28+fresh*.10}}).sort((a,b)=>b.final-a.final)}
+function contradictions(){let out=[];for(let i=0;i<S.claims.length;i++)for(let j=i+1;j<S.claims.length;j++){let a=S.claims[i],b=S.claims[j];if(a.docId===b.docId)continue;let o=overlap(a.text,b.text);if(o<.15)continue;let na=norm(a.text),nb=norm(b.text),pairs=[["safe","unsafe"],["increase","decrease"],["positive","negative"],["possible","impossible"],["required","optional"],["present","absent"]],hit=pairs.some(([x,y])=>(na.includes(x)&&nb.includes(y))||(na.includes(y)&&nb.includes(x)));if(hit||(a.polarity==="negative")!==(b.polarity==="negative")&&o>.3)out.push({a,b,score:o})}return out.sort((a,b)=>b.score-a.score).slice(0,60)}
+function redteam(q,pos){let terms=tok(q),neg=["not","never","cannot","false","contrary","however","although","conflict","exception","fails","risk","limitation","uncertain","without"],set=new Set(pos.map(x=>x.docId));return S.chunks.map(c=>({...c,red:overlap(q,c.text)*.6+neg.filter(x=>c.tokens.includes(x)).length/Math.max(3,neg.length)*.4})).filter(x=>!set.has(x.docId)||x.red>.35).sort((a,b)=>b.red-a.red).slice(0,8)}
+function pipe(n){document.querySelectorAll("#pipeline i").forEach((x,i)=>x.style.width=i<=n?"100%":"0%")}
+function evidenceText(r,i){let d=S.docs.find(x=>x.id===r.docId);return`[E${i+1}] ${d?.name||"unknown"} / chunk ${r.index+1}\n${r.text}`}
+function synth(q,res,adv,cons){if(!res.length)return"No se encontró evidencia suficiente en la base local.";let docs=uniq(res.slice(0,5).map(x=>S.docs.find(d=>d.id===x.docId)?.name||"unknown"));let s=["TITAN INVESTIGATION RESULT","",`Pregunta: ${q}`,"",`CONCLUSIÓN PROVISIONAL`,`La evidencia recuperada procede de ${docs.length} fuente(s): ${docs.join(", ")}.`,docs.length>1?"Existe convergencia documental parcial.":"La señal depende de una única fuente documental.","","EVIDENCE CHAIN"];res.slice(0,7).forEach((r,i)=>s.push(evidenceText(r,i).replace(/\n/,"\n").slice(0,650)));if(cons.length){s.push("","CONTRADICTIONS",`Se detectaron ${cons.length} conflicto(s) potencial(es). No deben ignorarse.`);cons.slice(0,2).forEach((c,i)=>s.push(`[C${i+1}] ${c.a.text} ↔ ${c.b.text}`))}if(adv.length){s.push("","RED TEAM",`La búsqueda adversarial encontró ${adv.length} fragmentos para desafiar la interpretación.`);adv.slice(0,3).forEach((x,i)=>s.push(`[A${i+1}] ${x.text.slice(0,300)}`))}s.push("","LIMITATIONS","El motor opera sobre el corpus local. Ausencia de evidencia no equivale a evidencia de ausencia.");return s.join("\n")}
+async function investigate(mode="normal"){let q=$("query").value.trim();if(!q)return;let t=performance.now();pipe(0);let p=parse(q);await sleep(20);pipe(1);let res=await retrieve(p);pipe(2);let cons=contradictions();pipe(3);let adv=mode==="red"||mode==="hyp"?redteam(q,res):[];pipe(4);if(mode==="red"||mode==="hyp")await sleep(20);pipe(5);let answer=await model(q,res,adv);pipe(6);let sources=uniq(res.map(x=>x.docId)),coverage=Math.min(1,res.length/(+$("topk").value||12)),consistency=Math.max(0,1-cons.length/Math.max(1,S.claims.length)),independence=Math.min(1,sources.length/Math.max(1,Math.min(5,res.length))),confidence=res.length?Math.min(1,res.slice(0,5).reduce((a,x)=>a+x.final,0)/Math.min(5,res.length)):0;for(let [id,v] of [["confidence",confidence],["coverage",coverage],["consistency",consistency],["independence",independence]])$(id).textContent=Math.round(v*100)+"%";$("conflicts").textContent=cons.length;$("answer").innerHTML=`<span class="label">TITAN OUTPUT</span><div style="margin-top:10px">${esc(answer)}</div>`;renderResults(res,adv);renderEvidence(res,adv,cons);renderClaims(cons);let inv={id:uid("inv"),created:now(),query:q,mode,parsed:p,resultIds:res.map(x=>x.id),adversarialIds:adv.map(x=>x.id),conflicts:cons.length,metrics:{confidence,coverage,consistency,independence},latency:performance.now()-t};S.last=inv;await put("investigations",inv);await remember(q,answer);renderTimeline();renderAudit();log(`Investigation complete · ${Math.round(inv.latency)}ms`,"CORE")}
+async function model(q,res,adv){if($("provider").value==="det")return synth(q,res,adv,contradictions());let body={model:$("model").value,messages:[{role:"system",content:"Eres OMEGA TITAN. Usa exclusivamente la evidencia suministrada. No inventes. Separa evidencia, inferencia, contradicción y limitación. Cita [E1], [A1]."}, {role:"user",content:`QUERY:\n${q}\n\nEVIDENCE:\n${res.map(evidenceText).join("\n\n")}\n\nADVERSARIAL:\n${adv.map((x,i)=>`[A${i+1}] ${x.text}`).join("\n\n")}`}],temperature:.1};let r=await fetch($("url").value,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});if(!r.ok)throw Error("Model HTTP "+r.status);let d=await r.json();return d?.choices?.[0]?.message?.content||"Sin respuesta del modelo."}
+function renderResults(res,adv){$("results").innerHTML=res.map((r,i)=>{let d=S.docs.find(x=>x.id===r.docId);return`<div class="card"><div class="head"><b class="cyan">[E${i+1}] ${esc(d?.name)}</b><b class="green">${r.final.toFixed(3)}</b></div><span class="badge good">BM25 ${(r.parts?.bm||0).toFixed(2)}</span><span class="badge">VECTOR ${(r.parts?.vec||0).toFixed(2)}</span><span class="badge">COVERAGE ${Math.round(r.coverage*100)}%</span><div class="body">${esc(r.text)}</div></div>`}).join("")+(adv.length?`<div class="title" style="margin-top:12px">ADVERSARIAL EVIDENCE</div>`+adv.map((x,i)=>`<div class="card"><b class="red">[A${i+1}]</b><div class="body">${esc(x.text)}</div></div>`).join(""):"")}
+function renderEvidence(res,adv,cons){$("evidence").innerHTML=`<div class="g2"><div class="metric"><b>${res.length}</b><span>SUPPORT</span></div><div class="metric"><b>${adv.length}</b><span>ADVERSARIAL</span></div><div class="metric"><b>${cons.length}</b><span>CONFLICTS</span></div><div class="metric"><b>${uniq(res.map(x=>x.docId)).length}</b><span>SOURCES</span></div></div><div class="cards">${res.map((r,i)=>`<div class="card"><b class="cyan">[E${i+1}] ${esc(S.docs.find(d=>d.id===r.docId)?.name)}</b><div class="body">Retrieval: BM25 ${(r.parts?.bm||0).toFixed(3)} · vector ${(r.parts?.vec||0).toFixed(3)} · overlap ${(r.parts?.overlap||0).toFixed(3)} · final ${r.final.toFixed(3)}</div></div>`).join("")}</div><div class="title" style="margin-top:12px">CONTRADICTION MATRIX</div>${cons.slice(0,15).map(c=>`<div class="card"><span class="badge bad">CONFLICT ${(c.score*100).toFixed(0)}%</span><div class="body"><b>A:</b> ${esc(c.a.text)}<br><br><b>B:</b> ${esc(c.b.text)}</div></div>`).join("")||`<div class="card muted">No strong conflicts detected.</div>`}`}
+function renderClaims(cons=[]){let c=S.claims.slice(-100).reverse();$("claimLab").innerHTML=`<div class="metric"><b>${S.claims.length}</b><span>TOTAL CLAIMS</span></div><div class="cards">${c.map(x=>`<div class="card"><span class="badge ${x.polarity==="negative"?"bad":x.polarity==="assertive"?"good":""}">${x.polarity}</span><span class="badge">${esc(S.docs.find(d=>d.id===x.docId)?.name)}</span><div class="body">${esc(x.text)}</div><div>${x.concepts.map(y=>`<span class="badge">${esc(y)}</span>`).join("")}</div></div>`).join("")}</div>`}
+async function remember(q,a){let x={id:uid("mem"),created:now(),query:q,answer:a.slice(0,1000)};await put("memory",x);S.memory.push(x);if(S.memory.length>60){S.memory.sort((a,b)=>new Date(a.created)-new Date(b.created));let old=S.memory.shift();let r=db.transaction("memory","readwrite").objectStore("memory").delete(old.id);}}
+function renderMemory(){let a=[...S.memory].sort((x,y)=>new Date(y.created)-new Date(x.created)).slice(0,8);$("memory").innerHTML=a.map(x=>`<div class="card" style="cursor:pointer" data-mid="${x.id}"><b class="cyan">${esc(x.query.slice(0,90))}</b><div class="muted" style="font-size:8px">${new Date(x.created).toLocaleString()}</div></div>`).join("")||`<span class="muted">No memory.</span>`}
+function renderHypotheses(){let h=[...S.hypotheses].sort((a,b)=>new Date(b.created)-new Date(a.created));$("hypLab").innerHTML=`<button id="newHyp" class="violet">CREATE HYPOTHESIS FROM QUERY</button><div class="cards">${h.map(x=>`<div class="card"><div class="head"><b class="violet">${esc(x.text)}</b><span class="green">${Math.round(x.score*100)}%</span></div><div class="body">Support ${x.support} · Adversarial ${x.adversarial} · ${new Date(x.created).toLocaleString()}</div></div>`).join("")}</div>`;$("newHyp").onclick=async()=>{let q=$("query").value.trim();if(!q)return;let r=await retrieve(parse(q)),a=redteam(q,r),score=Math.max(0,Math.min(1,(r.length/(+$("topk").value||12))*.65-(a.length/(r.length+a.length||1))*.25));await put("hypotheses",{id:uid("hyp"),created:now(),text:q,support:r.length,adversarial:a.length,score});await load();log("Hypothesis scored","HYPOTHESIS")}}
+function renderTimeline(){let a=[...S.investigations].sort((x,y)=>new Date(x.created)-new Date(y.created););$("timeline").innerHTML=`<div class="timeline">${a.slice(-25).map(x=>`<div class="event"><b class="cyan">${new Date(x.created).toLocaleString()}</b> <span class="badge">${x.mode}</span><div class="body">${esc(x.query)}<br>confidence ${Math.round((x.metrics?.confidence||0)*100)}% · conflicts ${x.conflicts||0}</div></div>`).join("")}</div>`}
+function renderAudit(){$("audit").textContent=JSON.stringify(S.last,null,2)}
+function draw(){let c=$("graph"),r=c.getBoundingClientRect(),dpr=devicePixelRatio||1;c.width=r.width*dpr;c.height=r.height*dpr;let x=c.getContext("2d");x.scale(dpr,dpr);let W=r.width,H=r.height;x.clearRect(0,0,W,H),x.font="8px monospace";let ds=S.docs.slice(0,40),nodes=ds.map((d,i)=>{let a=i/ds.length*Math.PI*2;return{id:d.id,name:d.name,x:W/2+Math.cos(a)*Math.min(W,H)*.36,y:H/2+Math.sin(a)*Math.min(W,H)*.36}}),m=new Map(nodes.map(n=>[n.id,n]));for(let l of S.links){let a=m.get(l.a),b=m.get(l.b);if(!a||!b)continue;x.strokeStyle="#00e5ff33";x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke()}for(let n of nodes){x.fillStyle="#00e5ff";x.beginPath();x.arc(n.x,n.y,5,0,7);x.fill();x.fillStyle="#8fbac3";x.fillText(n.name.slice(0,24),n.x+8,n.y+3)}}
+function renderDocs(){let q=norm($("docSearch").value),d=S.docs.filter(x=>!q||norm(x.name).includes(q));$("docList").innerHTML=d.map(x=>`<div class="card" style="cursor:pointer"><b class="cyan">${esc(x.name)}</b><div class="muted">${x.chunks} chunks · ${x.chars} chars</div></div>`).join("")||`<span class="muted">Empty fabric.</span>`}
+function refresh(){$("docs").textContent=S.docs.length;$("chunks").textContent=S.chunks.length;$("claims").textContent=S.claims.length;$("links").textContent=S.links.length;let cur=$("source").value;$("source").innerHTML=`<option value="">ALL</option>`+S.docs.map(d=>`<option value="${esc(d.id)}">${esc(d.name)}</option>`).join("");$("source").value=cur;renderDocs();renderHypotheses();draw()}
+async function exportBrain(){let b={version:"OMEGA-TITAN-1",exported:now(),...S};delete b.last;let blob=new Blob([JSON.stringify(b,null,2)],{type:"application/json"}),u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download="nexus-x-titan-brain.json";a.click();URL.revokeObjectURL(u);log("Brain exported","EXPORT")}
+$("import").onclick=()=>$("files").click();$("files").onchange=async e=>{for(let f of e.target.files)try{await ingest(f.name,await f.text(),+$("size").value)}catch(err){log(err.message,"IMPORT ERROR")}await load();await rebuild();await load();e.target.value=""};
+$("demo").onclick=demo;$("export").onclick=exportBrain;$("purge").onclick=async()=>{if(!confirm("Eliminar todos los datos locales?"))return;for(let s of["docs","chunks","claims","links","investigations","memory","hypotheses"])await clearStore(s);S={docs:[],chunks:[],claims:[],links:[],investigations:[],memory:[],hypotheses:[],last:null};refresh();renderMemory();$("answer").innerHTML=`<span class="label">TITAN OUTPUT</span><div style="margin-top:10px">Fabric purged.</div>`;log("ALL DATA PURGED","PURGE")};
+$("investigate").onclick=()=>investigate("normal");$("adversarial").onclick=()=>investigate("red");$("hypothesis").onclick=()=>investigate("hyp");
+$("test").onclick=async()=>{if($("provider").value==="det")return log("Deterministic multi-agent stack ready","MODEL");try{let a=await model("Reply only: TITAN LINK OK",[],[]);log(a,"MODEL")}catch(e){log(e.message,"MODEL ERROR")}};
+$("docSearch").oninput=renderDocs;$("query").onkeydown=e=>{if(e.ctrlKey&&e.key==="Enter"){e.preventDefault();investigate("normal")}if(e.ctrlKey&&e.shiftKey&&e.key==="Enter"){e.preventDefault();investigate("red")}};
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.querySelectorAll("main>section").forEach(x=>x.classList.add("hidden"));$("tab-"+b.dataset.tab).classList.remove("hidden");if(b.dataset.tab==="graph")draw()});
+$("showcase").onclick=()=>{document.body.requestFullscreen?.();log("SHOWCASE MODE ACTIVATED","DEMO")};
+$("source").onchange=()=>{let id=$("source").value;if(!id)return;let d=S.docs.find(x=>x.id===id);if(d)$("query").value=`"${d.name}"`};
+$("memory").onclick=e=>{let card=e.target.closest("[data-mid]");if(!card)return;let x=S.memory.find(m=>m.id===card.dataset.mid);if(x){$("query").value=x.query;$("answer").innerHTML=`<span class="label">MEMORY RECALL</span><div style="margin-top:10px">${esc(x.answer)}</div>`}};
+setInterval(()=>$("clock").textContent=new Date().toLocaleTimeString(),1000);
+(async()=>{try{await openDB();await load();$("dbState").textContent="IDB ONLINE";log("TITAN cognitive substrate initialized","SYSTEM")}catch(e){$("dbState").textContent="DB ERROR";log(e.message,"FATAL")}})();
+</script>
+ </body>
 </html>
-```
