@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#010308">
-  <title>NEXUS-X // QUANTUM CORE v6.4</title>
+  <title>NEXUS-X // QUANTUM CORE v8.0</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
 if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}
@@ -68,6 +68,150 @@ header{padding:16px 28px;border-bottom:1px solid var(--stroke);background:var(--
 @keyframes bootGrid{to{transform:translateY(42px)}}@keyframes consoleIn{to{opacity:1}}@keyframes titleIn{to{opacity:1}}@keyframes subtitleIn{to{opacity:1}}@keyframes statusIn{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}@keyframes statusOut{to{opacity:0;transform:translateX(-50%) translateY(-6px)}}@keyframes statusPulse{0%,100%{opacity:.65}50%{opacity:1;text-shadow:0 0 20px var(--accent)}}@keyframes robotFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}@keyframes shadowPulse{50%{transform:translateX(-50%) scale(.85);opacity:.55}}@keyframes panelFlicker{0%,92%,100%{opacity:1}95%{opacity:.35}}@keyframes antennaPulse{50%{transform:translateX(-50%) scale(1.35);opacity:.6}}@keyframes eyeScan{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.45)}}@keyframes headAnalyze{0%{transform:translateX(-50%) rotate(0)}20%{transform:translateX(-50%) rotate(-5deg)}38%{transform:translateX(-50%) rotate(4deg)}56%{transform:translateX(-50%) rotate(-3deg)}72%{transform:translateX(-50%) rotate(2deg)}100%{transform:translateX(-50%) rotate(0)}}@keyframes formulaIn{to{opacity:1}}@keyframes formulaOut{to{opacity:0;transform:translate(-50%,-50%) scale(1.12)}}@keyframes scanBeam{0%{opacity:0;transform:translate(-50%,-50%) scaleX(.15)}35%{opacity:1}100%{opacity:0;transform:translate(-50%,120px) scaleX(1.15)}}@keyframes armRaise{0%{transform:rotate(-13deg)}45%{transform:rotate(-48deg)}100%{transform:rotate(-58deg)}}@keyframes magnifyAim{0%{opacity:0;transform:translate(130px,40px) scale(.35) rotate(-18deg)}45%{opacity:1}100%{opacity:1;transform:translate(-6vw,4px) scale(1.18) rotate(0)}}@keyframes magnifierScan{50%{transform:scale(.75);opacity:.4}}@keyframes labelIn{to{opacity:1}}@keyframes particle{0%{opacity:0;transform:translateY(12px)}30%{opacity:.8}100%{opacity:0;transform:translateY(-40px)}}@keyframes skipIn{to{opacity:1}}
 @media(max-width:600px){.boot-console{left:12px;top:12px;font-size:8px}.boot-stage{height:72vh}.robot{transform:scale(.82)}.magnifier{right:0}.boot-title{letter-spacing:3px}.boot-subtitle{font-size:8px}.boot-status{font-size:7px;letter-spacing:1px}}
 @media(prefers-reduced-motion:reduce){#nexusBoot *{animation-duration:.01ms!important;animation-iteration-count:1!important}.boot-skip{opacity:1!important}.boot-title,.boot-subtitle{opacity:1!important}}
+
+
+/* =========================================================
+   KNOWLEDGE GRAPH / RELATION CARDS
+========================================================= */
+.knowledge-links{
+  margin-top:8px;
+  padding-top:10px;
+  border-top:1px solid rgba(0,242,254,.12);
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.knowledge-title{
+  color:var(--accent);
+  font-size:10px;
+  font-weight:bold;
+  letter-spacing:1px;
+}
+.knowledge-link{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 9px;
+  border:1px solid rgba(0,242,254,.16);
+  background:rgba(0,242,254,.025);
+  border-radius:5px;
+}
+.knowledge-link-info{
+  min-width:0;
+}
+.knowledge-link-type{
+  display:block;
+  color:var(--success);
+  font-size:9px;
+  font-weight:bold;
+  margin-bottom:2px;
+}
+.knowledge-link-name{
+  display:block;
+  color:#cbd5e1;
+  font-size:10px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.knowledge-link-page{
+  color:var(--muted);
+  font-size:9px;
+  margin-top:2px;
+}
+.knowledge-open{
+  flex:0 0 auto;
+  border:1px solid var(--accent);
+  background:rgba(0,242,254,.08);
+  color:var(--accent);
+  border-radius:4px;
+  padding:5px 7px;
+  font:700 9px var(--mono);
+  cursor:pointer;
+}
+.knowledge-open:hover{
+  background:var(--accent);
+  color:#000;
+}
+.graph-mini{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:7px;
+  margin-top:8px;
+  padding:9px;
+  border:1px solid rgba(16,185,129,.18);
+  border-radius:6px;
+  background:rgba(16,185,129,.025);
+}
+.graph-node{
+  min-width:0;
+  padding:7px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:4px;
+  background:rgba(255,255,255,.025);
+}
+.graph-node small{
+  display:block;
+  color:var(--muted);
+  font-size:8px;
+  margin-bottom:3px;
+}
+.graph-node b{
+  display:block;
+  color:#cbd5e1;
+  font-size:9px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.graph-arrow{
+  color:var(--accent);
+  font-size:14px;
+  text-align:center;
+}
+@media(max-width:600px){
+  .graph-mini{grid-template-columns:1fr}
+  .graph-arrow{transform:rotate(90deg)}
+  .knowledge-link{align-items:flex-start}
+}
+
+
+/* NEXUS-X v8 // Knowledge Matrix */
+.knowledge-matrix{
+  margin-top:10px;
+  padding:10px;
+  border:1px solid rgba(0,242,254,.16);
+  border-radius:7px;
+  background:linear-gradient(135deg,rgba(0,242,254,.035),rgba(16,185,129,.025));
+}
+.km-title{
+  color:var(--accent);font-size:10px;font-weight:800;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.km-badge{color:var(--success);font-size:9px;font-weight:700}
+.km-links{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.km-link{
+  display:flex;align-items:center;gap:8px;padding:7px 8px;
+  border:1px solid rgba(255,255,255,.07);border-radius:5px;
+  background:rgba(255,255,255,.018)
+}
+.km-link-info{min-width:0;flex:1}
+.km-type{display:block;color:var(--success);font-size:8px;font-weight:800}
+.km-name{display:block;color:#cbd5e1;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.km-meta{display:block;color:var(--muted);font-size:8px;margin-top:2px}
+.km-open{
+  flex:0 0 auto;border:1px solid var(--accent);background:rgba(0,242,254,.07);
+  color:var(--accent);border-radius:4px;padding:5px 7px;font:700 9px var(--mono);cursor:pointer
+}
+.km-open:hover{background:var(--accent);color:#000}
+.km-empty{color:var(--muted);font-size:9px;padding-top:6px}
+.viewer-context{
+  margin:4px 0 2px;padding:7px;border:1px solid rgba(0,242,254,.12);
+  border-radius:5px;background:rgba(0,242,254,.02);font-size:9px;color:#94a3b8
+}
+@media(max-width:600px){.km-link{align-items:flex-start}.km-open{margin-top:1px}}
 
 </style>
  </head>
@@ -199,7 +343,226 @@ function getQueryTokens(q){return [...new Set(normalizeStr(q).split(/\s+/).filte
 function scorePage(pageText,query){const p=normalizeStr(pageText),q=normalizeStr(query),words=getQueryTokens(query);if(!p||!words.length)return 0;let score=p.includes(q)?100:0;for(const w of words){if(p.includes(w))score+=10;const n=p.split(w).length-1;if(n>1)score+=Math.min(n*2,10);}return score;}
 async function fetchGitHubPath(path=''){const suffix=path?`/${path.split('/').map(encodeURIComponent).join('/')}`:'';const url=`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents${suffix}`;const res=await fetch(url,{headers:{Accept:'application/vnd.github+json'}});if(!res.ok){let msg=`GitHub HTTP ${res.status}`;try{const d=await res.json();if(d.message)msg+=`: ${d.message}`;}catch{}throw new Error(msg);}return res.json();}
 async function discoverPDFs(path='',out=[]){const data=await fetchGitHubPath(path);if(!Array.isArray(data))return out;for(const item of data){if(item.type==='file'&&item.name.toLowerCase().endsWith('.pdf'))out.push({name:item.name,path:item.path,download_url:item.download_url});else if(item.type==='dir'&&item.path.split('/').length<=5){try{await discoverPDFs(item.path,out);}catch(e){console.warn('No se pudo explorar',item.path,e);}}}return out;}
-async function indexAllPdfs(){let ok=0;$('#sysState').textContent=`Indexando 0/${repositoryFiles.length}...`;for(let i=0;i<repositoryFiles.length;i++){const file=repositoryFiles[i];$('#sysState').textContent=`Indexando ${i+1}/${repositoryFiles.length}...`;try{const pdf=await pdfjsLib.getDocument({url:file.download_url,disableAutoFetch:false,disableStream:false}).promise;const original=[],normalized=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();const text=content.items.map(x=>x.str||'').join(' ').replace(/\s+/g,' ').trim();original.push(text);normalized.push(normalizeStr(text));}repositoryTexts[file.path]={original,normalized,numPages:pdf.numPages};ok++;}catch(e){console.warn('No se pudo indexar',file.path,e);repositoryTexts[file.path]={original:[],normalized:[],numPages:0,error:true};}}$('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;addMsg('#mainChatBox',`>> Sistema listo.\n>> ${ok}/${repositoryFiles.length} manuales indexados.\n>> Podés buscar conceptos, fórmulas o palabras clave.`,'system');}
+async function indexAllPdfs(){let ok=0;$('#sysState').textContent=`Indexando 0/${repositoryFiles.length}...`;for(let i=0;i<repositoryFiles.length;i++){const file=repositoryFiles[i];$('#sysState').textContent=`Indexando ${i+1}/${repositoryFiles.length}...`;try{const pdf=await pdfjsLib.getDocument({url:file.download_url,disableAutoFetch:false,disableStream:false}).promise;const original=[],normalized=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p);const content=await page.getTextContent();const text=content.items.map(x=>x.str||'').join(' ').replace(/\s+/g,' ').trim();original.push(text);normalized.push(normalizeStr(text));}repositoryTexts[file.path]={original,normalized,numPages:pdf.numPages};ok++;}catch(e){console.warn('No se pudo indexar',file.path,e);repositoryTexts[file.path]={original:[],normalized:[],numPages:0,error:true};}}$('#sysState').textContent='Construyendo matriz...';
+  try{ buildKnowledgeMatrix(); }catch(e){ console.warn('Matriz:',e); }
+  $('#sysState').textContent='Sistema sincronizado';mainQueryInput.disabled=false;mainSendBtn.disabled=false;addMsg('#mainChatBox',`>> NEXUS-X v8.0 listo.\n>> ${ok}/${repositoryFiles.length} manuales indexados.\n>> Podés buscar conceptos, fórmulas o palabras clave.`,'system');}
+
+/* =========================================================
+   NEXUS-X v8 // KNOWLEDGE MATRIX
+   Relaciona automáticamente PDFs por:
+   - conceptos compartidos
+   - fórmulas
+   - tipo de documento
+   - ruta/carpeta
+   - coincidencias de texto
+========================================================= */
+
+const KNOWLEDGE_TYPES = [
+  {id:"protocol", label:"PROTOCOLO", icon:"🧪",
+   words:["protocolo","procedimiento","procedimientos","practica","práctica","ensayo","metodo","método","laboratorio"]},
+  {id:"formula", label:"FÓRMULA", icon:"🔢",
+   words:["formula","fórmula","ecuacion","ecuación","calculo","cálculo","formulario"]},
+  {id:"materials", label:"MATERIALES", icon:"🧰",
+   words:["materiales","material","instrumentos","equipos","equipo","reactivos"]},
+  {id:"safety", label:"SEGURIDAD", icon:"⚠️",
+   words:["seguridad","riesgo","peligro","precaucion","precaución","proteccion","protección","residuos"]},
+  {id:"theory", label:"TEORÍA", icon:"📚",
+   words:["teoria","teoría","concepto","conceptos","definicion","definición","fundamento","principio"]},
+  {id:"document", label:"DOCUMENTO", icon:"📄", words:[]}
+];
+
+function docText(file){
+  const data = repositoryTexts[file.path] || {};
+  return normalizeStr([
+    file.name || "",
+    file.path || "",
+    ...(data.original || [])
+  ].join(" "));
+}
+
+function detectDocType(file){
+  const hay = normalizeStr(`${file.path} ${file.name}`);
+  let best = KNOWLEDGE_TYPES[KNOWLEDGE_TYPES.length-1], score = 0;
+  for(const type of KNOWLEDGE_TYPES){
+    if(!type.words.length) continue;
+    const s = type.words.reduce((n,w)=>n+(hay.includes(normalizeStr(w))?1:0),0);
+    if(s > score){score=s;best=type;}
+  }
+  return best;
+}
+
+function extractFormulaHints(text){
+  if(!text) return [];
+  const out = [];
+  const patterns = [
+    /\b[A-Za-z][A-Za-z0-9]{0,4}\s*=\s*[A-Za-z0-9()[\]+\-*/^., ]{2,55}/g,
+    /\b(?:pH|C|M|m|V|n|P|T|Q)\s*=\s*[A-Za-z0-9()[\]+\-*/^., ]{2,35}/g,
+    /\b[A-Z][a-z]?\d+(?:[A-Z][a-z]?\d*)+/g
+  ];
+  for(const re of patterns){
+    for(const raw of (text.match(re)||[])){
+      const x = raw.replace(/\s+/g," ").trim().replace(/[.,;:]+$/,"");
+      if(x.length>=3 && x.length<=60 &&
+         !out.some(v=>normalizeStr(v)===normalizeStr(x))) out.push(x);
+    }
+  }
+  return out.slice(0,16);
+}
+
+function conceptTokens(text){
+  const stop = new Set([
+    "para","como","este","esta","estos","estas","desde","entre","sobre",
+    "donde","cuando","porque","puede","debe","tambien","también","segun",
+    "según","los","las","una","uno","unos","unas","del","por","con","sin",
+    "que","sus","son","fue","han","hay","cada","muy","más","mas","este"
+  ]);
+  return [...new Set(
+    getQueryTokens(text||"")
+      .filter(w=>w.length>=4 && !stop.has(w))
+  )].slice(0,80);
+}
+
+function pageFor(file, query){
+  const pages = repositoryTexts[file.path]?.original || [];
+  if(!pages.length) return 1;
+  let best=0, bestScore=-1;
+  for(let i=0;i<pages.length;i++){
+    const score = scorePage(pages[i], query||"");
+    if(score>bestScore){bestScore=score;best=i;}
+  }
+  return best+1;
+}
+
+function buildKnowledgeMatrix(){
+  const docs = repositoryFiles.map(file=>{
+    const data = repositoryTexts[file.path] || {};
+    const text = (data.original||[]).join(" ");
+    return {
+      file,
+      type: detectDocType(file),
+      text: normalizeStr(`${file.name} ${file.path} ${text}`),
+      concepts: conceptTokens(text),
+      formulas: extractFormulaHints(text),
+      formulasNorm: extractFormulaHints(text).map(normalizeStr)
+    };
+  });
+
+  const edges = [];
+  for(let i=0;i<docs.length;i++){
+    for(let j=i+1;j<docs.length;j++){
+      const a=docs[i], b=docs[j];
+      const shared = a.concepts.filter(c=>b.text.includes(c)).slice(0,10);
+      const sharedFormulas = a.formulas.filter(f=>b.text.includes(normalizeStr(f))).slice(0,6);
+      let score = shared.length*1.5 + sharedFormulas.length*8;
+
+      // Relación semántica por estructura de carpetas/nombre.
+      if(a.type.id!==b.type.id){
+        const pair = new Set([a.type.id,b.type.id]);
+        if(pair.has("formula") && pair.has("protocol")) score += 8;
+        if(pair.has("protocol") && pair.has("materials")) score += 5;
+        if(pair.has("protocol") && pair.has("safety")) score += 5;
+        if(pair.has("theory") && pair.has("formula")) score += 6;
+      }
+
+      // Palabras significativas del nombre/ruta compartidas.
+      const ap = conceptTokens(`${a.file.name} ${a.file.path}`);
+      const bp = normalizeStr(`${b.file.name} ${b.file.path}`);
+      const pathShared = ap.filter(w=>bp.includes(w)).slice(0,6);
+      score += pathShared.length*3;
+
+      if(score>=4){
+        edges.push({
+          a:a.file.path,b:b.file.path,score,
+          concepts:shared,pathShared,formulas:sharedFormulas
+        });
+      }
+    }
+  }
+
+  const byPath = new Map(docs.map(d=>[d.file.path,d]));
+  window.NEXUS_KNOWLEDGE = {docs,edges,byPath};
+  return window.NEXUS_KNOWLEDGE;
+}
+
+function relatedDocs(file, query="", limit=6){
+  const kg = window.NEXUS_KNOWLEDGE;
+  if(!kg) return [];
+  const source = kg.byPath.get(file.path);
+  if(!source) return [];
+  const q=normalizeStr(query), words=getQueryTokens(query);
+
+  return kg.docs.filter(d=>d.file.path!==file.path).map(d=>{
+    const edge=kg.edges.find(e=>
+      (e.a===source.file.path&&e.b===d.file.path) ||
+      (e.b===source.file.path&&e.a===d.file.path)
+    );
+    let score=edge?.score||0;
+    if(q && d.text.includes(q)) score+=24;
+    for(const w of words) if(d.text.includes(w)) score+=4;
+    for(const c of source.concepts.slice(0,25)) if(d.text.includes(c)) score+=.5;
+    return {doc:d,edge,score};
+  }).filter(x=>x.score>=4).sort((a,b)=>b.score-a.score).slice(0,limit);
+}
+
+function appendKnowledgeMatrix(container, file, query=""){
+  const results=relatedDocs(file,query,6);
+  const box=document.createElement("div");
+  box.className="knowledge-matrix";
+
+  const title=document.createElement("div");
+  title.className="km-title";
+  title.innerHTML=`<span>🔗 MATRIZ DE CONOCIMIENTO</span><span class="km-badge">${results.length} conexiones</span>`;
+  box.appendChild(title);
+
+  const links=document.createElement("div");
+  links.className="km-links";
+
+  if(!results.length){
+    const empty=document.createElement("div");
+    empty.className="km-empty";
+    empty.textContent="Todavía no hay una conexión suficientemente fuerte con otro documento.";
+    links.appendChild(empty);
+  } else {
+    for(const r of results){
+      const row=document.createElement("div");
+      row.className="km-link";
+
+      const info=document.createElement("div");
+      info.className="km-link-info";
+
+      const type=document.createElement("span");
+      type.className="km-type";
+      type.textContent=`${r.doc.type.icon} ${r.doc.type.label}`;
+
+      const name=document.createElement("span");
+      name.className="km-name";
+      name.textContent=r.doc.file.path;
+
+      const page=pageFor(r.doc.file,query);
+      const reasons=[];
+      if(r.edge?.formulas?.length) reasons.push("fórmula compartida");
+      if(r.edge?.concepts?.length) reasons.push(`${r.edge.concepts.length} conceptos`);
+      if(r.edge?.pathShared?.length) reasons.push("ruta/contenido relacionado");
+      const meta=document.createElement("span");
+      meta.className="km-meta";
+      meta.textContent=`Página ${page}${reasons.length?" · "+reasons.join(" · "):""}`;
+
+      info.append(type,name,meta);
+
+      const open=document.createElement("button");
+      open.className="km-open";
+      open.type="button";
+      open.textContent="ABRIR";
+      open.addEventListener("click",()=>loadPdfInModal(r.doc.file,page));
+
+      row.append(info,open);
+      links.appendChild(row);
+    }
+  }
+  box.appendChild(links);
+  container.appendChild(box);
+}
+
 async function fetchFiles(){try{$('#sysState').textContent='Conectando con GitHub...';repositoryFiles=await discoverPDFs();if(!repositoryFiles.length){$('#sysState').textContent='Sin manuales';addMsg('#mainChatBox','>> No se encontraron archivos PDF en el repositorio.','error');return;}await indexAllPdfs();}catch(e){console.error(e);$('#sysState').textContent='Error de conexión';addMsg('#mainChatBox',`>> No se pudo sincronizar GitHub.\n${e.message}`,'error');}}
 
 /* Detecta automáticamente un modelo que la API Key realmente pueda usar. */
@@ -207,11 +570,30 @@ async function listAvailableModels(key){const res=await fetch(`${API_BASE}/model
 async function initGemini(){const key=localStorage.getItem('nexus_gemini_key')||globalApiKey;if(!key){activeModel='';return false;}try{const models=await listAvailableModels(key);const usable=new Map();for(const m of models){const name=String(m.name||'').replace(/^models\//,'');const methods=m.supportedGenerationMethods||[];if(methods.includes('generateContent'))usable.set(name,m);}activeModel=MODEL_PREFERENCE.find(n=>usable.has(n))||[...usable.keys()].find(n=>/^gemini-.*flash/i.test(n))||'';if(!activeModel)throw new Error('La API Key funciona, pero no encontré un modelo Gemini compatible con generateContent.');$('#sysState').textContent=`IA: ${activeModel}`;return true;}catch(e){console.error(e);$('#sysState').textContent='API no disponible';addMsg('#mainChatBox',`>> API Gemini: ${e.message}`,'error');return false;}}
 async function callGeminiAPI(prompt,key){if(!key)throw new Error('No hay API Key configurada.');if(!activeModel){await initGemini();}if(!activeModel)throw new Error('No hay un modelo Gemini disponible para esta API Key.');const url=`${API_BASE}/models/${encodeURIComponent(activeModel)}:generateContent`;const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({contents:[{role:'user',parts:[{text:prompt}]}]})});let data={};try{data=await res.json();}catch{}if(!res.ok){if(res.status===400)throw new Error(data.error?.message||'Solicitud inválida.');if(res.status===401||res.status===403)throw new Error('La API Key no es válida o no tiene permisos.');if(res.status===404){activeModel='';throw new Error('El modelo dejó de estar disponible. Guardá nuevamente la API Key o reintentá para seleccionar otro modelo.');}if(res.status===429)throw new Error('Se alcanzó el límite de solicitudes. Esperá unos segundos.');throw new Error(data.error?.message||`Error HTTP ${res.status}`);}const text=data.candidates?.[0]?.content?.parts?.map(p=>p.text||'').join('').trim();if(!text)throw new Error('Gemini no devolvió texto.');return text;}
 function searchRepository(query){const results=[];for(const file of repositoryFiles){const data=repositoryTexts[file.path];if(!data)continue;for(let i=0;i<data.normalized.length;i++){const score=scorePage(data.original[i],query);if(score>0)results.push({file,page:i+1,score,text:data.original[i]});}}results.sort((a,b)=>b.score-a.score);return results;}
-async function loadPdfInModal(file,targetPage=1){activeFileName=file.path;activePagesCache=repositoryTexts[file.path]?.original||[];$('#modalDocTitle').textContent=`📄 ${file.path}`;modal.style.display='flex';$('#modalChatHistory').innerHTML='';addViewerMessage(`Manual "${file.name}" cargado.\nPáginas: ${activePagesCache.length}\n\nConsultame sobre cualquier parte del manual.`,'bot');try{activePdfDoc=await pdfjsLib.getDocument({url:file.download_url}).promise;activePageNum=Math.min(Math.max(1,targetPage),activePdfDoc.numPages);await renderCurrentPage();}catch(e){addViewerMessage(`⚠️ No se pudo cargar el PDF.\n${e.message}`,'bot');}}
+async function loadPdfInModal(file,targetPage=1){activeFileName=file.path;activePagesCache=repositoryTexts[file.path]?.original||[];$('#modalDocTitle').textContent=`📄 ${file.path}`;modal.style.display='flex';$('#modalChatHistory').innerHTML='';addViewerMessage(`Manual "${file.name}" cargado.\nPáginas: ${activePagesCache.length}\n\nConsultame sobre cualquier parte del manual.`,'bot');
+  appendKnowledgeMatrix($('#modalChatHistory'),file,"");try{activePdfDoc=await pdfjsLib.getDocument({url:file.download_url}).promise;activePageNum=Math.min(Math.max(1,targetPage),activePdfDoc.numPages);await renderCurrentPage();}catch(e){addViewerMessage(`⚠️ No se pudo cargar el PDF.\n${e.message}`,'bot');}}
 async function renderCurrentPage(){if(!activePdfDoc)return;const id=++renderRequestId;try{$('#pageIndicator').textContent=`Pág. ${activePageNum} / ${activePdfDoc.numPages}`;$('#prevPageBtn').disabled=activePageNum<=1;$('#nextPageBtn').disabled=activePageNum>=activePdfDoc.numPages;const page=await activePdfDoc.getPage(activePageNum);if(id!==renderRequestId)return;const canvas=$('#pdfCanvas'),ctx=canvas.getContext('2d'),container=document.querySelector('.canvas-container'),base=page.getViewport({scale:1}),width=Math.max(250,(container.clientWidth||700)-24),scale=Math.max(.5,Math.min(2.5,width/base.width)),vp=page.getViewport({scale});canvas.width=Math.ceil(vp.width);canvas.height=Math.ceil(vp.height);await page.render({canvasContext:ctx,viewport:vp}).promise;}catch(e){console.error(e);}}
 function addViewerMessage(text,type){const h=$('#modalChatHistory'),d=document.createElement('div');d.className=`v-msg ${type}`;d.textContent=text;h.appendChild(d);h.scrollTop=h.scrollHeight;return d;}
 async function handleModalAIQuery(){if(aiBusy)return;const value=modalQueryInput.value.trim();if(!value)return;const key=localStorage.getItem('nexus_gemini_key')||globalApiKey;addViewerMessage(value,'user');modalQueryInput.value='';const bot=addViewerMessage('Analizando el manual...','bot');if(!key){bot.textContent='⚠️ Primero guardá tu API Key.';return;}aiBusy=true;modalSendBtn.disabled=true;try{const ranked=[];for(let i=0;i<activePagesCache.length;i++){const score=scorePage(activePagesCache[i],value);if(score>0)ranked.push({page:i+1,score,text:activePagesCache[i]});}ranked.sort((a,b)=>b.score-a.score);const selected=ranked.slice(0,8);let context=selected.length?selected.map(x=>`--- PÁGINA ${x.page} ---\n${x.text.slice(0,7000)}`).join('\n\n'):activePagesCache.slice(0,3).map((x,i)=>`--- PÁGINA ${i+1} ---\n${x.slice(0,5000)}`).join('\n\n');const prompt=`Sos el asistente académico de NEXUS-X. Respondé en español claro, natural y directo.\n\nMANUAL: ${activeFileName}\n\nCONSULTA: ${value}\n\nCONTEXTO RELEVANTE:\n${context}\n\nREGLAS:\n- Basate principalmente en el contenido proporcionado.\n- No inventes información que contradiga el manual.\n- Indicá las páginas cuando puedas.\n- Si la información no aparece claramente, decilo.\n- Explicá como un buen tutor.\n- No uses LaTeX ni símbolos $.\n- Para fórmulas químicas escribí H2O, CO2, SO2, etc.`;const response=await callGeminiAPI(prompt,key);bot.innerHTML=formatAIText(response);}catch(e){bot.textContent=`⚠️ Error al consultar Gemini:\n${e.message}`;}finally{aiBusy=false;modalSendBtn.disabled=false;}}
-async function handleMainGlobalQuery(){if(searchBusy)return;const value=mainQueryInput.value.trim();if(!value)return;searchBusy=true;mainSendBtn.disabled=true;addMsg('#mainChatBox',value,'user');mainQueryInput.value='';addMsg('#mainChatBox',`>> Buscando: "${value}"...`,'system');try{const results=searchRepository(value),grouped=new Map();for(const r of results){if(!grouped.has(r.file.path))grouped.set(r.file.path,{file:r.file,pages:[],score:0});const g=grouped.get(r.file.path);g.pages.push(r.page);g.score+=r.score;}const docs=[...grouped.values()].sort((a,b)=>b.score-a.score);if(!docs.length){addMsg('#mainChatBox',`>> No encontré coincidencias para "${value}".\n>> Probá con otra palabra o concepto.`,'error');return;}const aiMsg=addMsg('#mainChatBox',`Se encontraron ${docs.length} manuales relacionados:`,'ai');for(const d of docs.slice(0,10)){const f=d.file,pages=[...new Set(d.pages)].sort((a,b)=>a-b).slice(0,8),card=document.createElement('div');card.className='doc-action-card';card.innerHTML=`<div class="doc-header-row"><span class="doc-action-title">📄 ${escapeHtml(f.name)}</span></div><div style="font-size:10px;color:var(--muted)">Páginas relevantes: ${pages.join(', ')}</div><div class="actions-row"><button class="action-btn open-file-btn" type="button">🔍 ABRIR EN VISOR</button><a class="action-btn download" href="${escapeHtml(f.download_url)}" target="_blank" rel="noopener noreferrer">💾 DESCARGAR PDF</a></div>`;aiMsg.appendChild(card);card.querySelector('.open-file-btn').addEventListener('click',()=>loadPdfInModal(f,pages[0]||1));}}catch(e){addMsg('#mainChatBox',`>> Error durante la búsqueda:\n${e.message}`,'error');}finally{searchBusy=false;mainSendBtn.disabled=false;}}
+async function handleMainGlobalQuery(){if(searchBusy)return;const value=mainQueryInput.value.trim();if(!value)return;searchBusy=true;mainSendBtn.disabled=true;addMsg('#mainChatBox',value,'user');mainQueryInput.value='';addMsg('#mainChatBox',`>> Buscando: "${value}"...`,'system');try{let results=searchRepository(value);
+    if(!results.length && window.NEXUS_KNOWLEDGE){
+      const q=normalizeStr(value), words=getQueryTokens(value);
+      results=[];
+      for(const d of window.NEXUS_KNOWLEDGE.docs){
+        let s=0;
+        if(d.text.includes(q)) s+=30;
+        for(const w of words) if(d.text.includes(w)) s+=5;
+        if(s>0){
+          const pages=repositoryTexts[d.file.path]?.original||[];
+          const pg=pageFor(d.file,value);
+          results.push({file:d.file,page:pg,score:s,text:pages[pg-1]||""});
+        }
+      }
+      results.sort((a,b)=>b.score-a.score);
+    }
+    const grouped=new Map();for(const r of results){if(!grouped.has(r.file.path))grouped.set(r.file.path,{file:r.file,pages:[],score:0});const g=grouped.get(r.file.path);g.pages.push(r.page);g.score+=r.score;}const docs=[...grouped.values()].sort((a,b)=>b.score-a.score);if(!docs.length){addMsg('#mainChatBox',`>> No encontré coincidencias para "${value}".\n>> Probá con otra palabra o concepto.`,'error');return;}const aiMsg=addMsg('#mainChatBox',`Se encontraron ${docs.length} manuales relacionados:`,'ai');for(const d of docs.slice(0,10)){const f=d.file,pages=[...new Set(d.pages)].sort((a,b)=>a-b).slice(0,8),card=document.createElement('div');card.className='doc-action-card';card.innerHTML=`<div class="doc-header-row"><span class="doc-action-title">📄 ${escapeHtml(f.name)}</span></div><div style="font-size:10px;color:var(--muted)">Páginas relevantes: ${pages.join(', ')}</div><div class="actions-row"><button class="action-btn open-file-btn" type="button">🔍 ABRIR EN VISOR</button><a class="action-btn download" href="${escapeHtml(f.download_url)}" target="_blank" rel="noopener noreferrer">💾 DESCARGAR PDF</a></div>`;aiMsg.appendChild(card);
+      appendKnowledgeMatrix(card,f,value);
+      card.querySelector('.open-file-btn').addEventListener('click',()=>loadPdfInModal(f,pages[0]||1));}}catch(e){addMsg('#mainChatBox',`>> Error durante la búsqueda:\n${e.message}`,'error');}finally{searchBusy=false;mainSendBtn.disabled=false;}}
 $('#prevPageBtn').addEventListener('click',async()=>{if(activePdfDoc&&activePageNum>1){activePageNum--;await renderCurrentPage();}});$('#nextPageBtn').addEventListener('click',async()=>{if(activePdfDoc&&activePageNum<activePdfDoc.numPages){activePageNum++;await renderCurrentPage();}});$('#closeModalBtn').addEventListener('click',()=>{modal.style.display='none';renderRequestId++;activePdfDoc=null;});mainSendBtn.addEventListener('click',handleMainGlobalQuery);mainQueryInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();handleMainGlobalQuery();}});modalSendBtn.addEventListener('click',handleModalAIQuery);modalQueryInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();handleModalAIQuery();}});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.style.display==='flex'){$('#closeModalBtn').click();}});let resizeTimer;window.addEventListener('resize',()=>{if(modal.style.display!=='flex')return;clearTimeout(resizeTimer);resizeTimer=setTimeout(renderCurrentPage,150);});
 (async()=>{if(!window.pdfjsLib){$('#sysState').textContent='PDF.js no disponible';addMsg('#mainChatBox','>> No se pudo cargar PDF.js. Revisá tu conexión.','error');return;}if(globalApiKey)await initGemini();await fetchFiles();})();
 })();
