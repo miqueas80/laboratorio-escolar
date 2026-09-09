@@ -92,6 +92,17 @@ header{
 .map-node:hover{border-color:var(--accent);box-shadow:0 0 22px rgba(0,242,254,.30);transform:translate(-50%,-50%) scale(1.03)}
 .map-node strong{display:block;color:#f8fafc;font-size:13px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .map-node span{display:block;margin-top:5px;color:var(--muted);font-size:11px}
+.map-node{transition:.18s ease}
+.map-node.graph-document{border-color:rgba(0,242,254,.65)}
+.map-node.graph-formula{border-color:rgba(167,139,250,.75);box-shadow:0 0 18px rgba(167,139,250,.12)}
+.map-node.graph-protocol{border-color:rgba(16,185,129,.75);box-shadow:0 0 18px rgba(16,185,129,.12)}
+.map-node.graph-inventory{border-color:rgba(251,191,36,.78);box-shadow:0 0 18px rgba(251,191,36,.12)}
+.map-node.graph-concept{border-color:rgba(79,172,254,.70)}
+.map-node .node-type{display:inline-block;margin-top:7px;padding:3px 6px;border-radius:4px;background:rgba(255,255,255,.06);color:#cbd5e1;font-size:9px;font-weight:900;letter-spacing:.5px}
+.graph-legend{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;border-top:1px solid rgba(255,255,255,.06);color:var(--muted);font-size:11px}
+.graph-legend span{padding:5px 8px;border:1px solid rgba(255,255,255,.09);border-radius:5px;background:rgba(255,255,255,.025)}
+.graph-legend b{color:#fff}
+
 .map-empty{height:100%;display:grid;place-items:center;color:var(--muted);text-align:center;padding:30px;font-size:14px}
 
 .input-box-area{flex:0 0 auto;padding:14px 16px;display:flex;gap:10px;align-items:center;border-top:1px solid var(--stroke);background:rgba(0,0,0,.48)}
@@ -346,7 +357,8 @@ const GITHUB_CONFIG = {
  */
 const GEMINI_MODELS = [
   "gemini-3.8-flash",
-  "gemini-3.7-flash"
+  "gemini-3.7-flash",
+  "gemini-3.6-flash"
 ];
 
 const GEMINI_API_BASE =
@@ -791,9 +803,10 @@ async function startQrScanner() {
   qrScanner = new Html5Qrcode("qr-reader");
   try {
     await qrScanner.start(
-      {facingMode:"environment"},
+      {facingMode:{ideal:"environment"}},
       {fps:10,qrbox:{width:260,height:260}},
       decodedText => {
+        if (!qrScannerRunning) return;
         processQr(decodedText);
         stopQrScanner();
       },
@@ -926,7 +939,7 @@ async function indexAllPdfs() {
   $("#mainSendBtn").disabled=false;
 
   addMsg("#mainChatBox",
-    `>> ${ok} manuales indexados. Subcarpetas incluidas. Las relaciones se calculan por contenido, no por carpeta.`,
+    `>> ${ok} manuales indexados. Subcarpetas incluidas. Grafo semántico activo: documentos + fórmulas + protocolos + conceptos.`,
     "system");
 
   if (activeInventoryId) {
@@ -951,98 +964,206 @@ function findBestPages(profile,query) {
   return results.sort((a,b)=>b.hits-a.hits).slice(0,8);
 }
 
-function renderKnowledgeMap(centerPath,relations) {
+function extractProtocols(text) {
+  const n = normalizeStr(text);
+  const rules = [
+    [/seguridad|seguridad quimica|seguridad en laboratorio/, "Seguridad de laboratorio"],
+    [/derrame|derrames|contencion/, "Gestión de derrames"],
+    [/residuo|residuos|desecho|desechos/, "Gestión de residuos"],
+    [/emergencia|primeros auxilios/, "Emergencias"],
+    [/epp|equipo de proteccion|proteccion personal|guantes|gafas/, "EPP / protección personal"],
+    [/almacenamiento|guardar|conservacion/, "Almacenamiento"],
+    [/etiquetado|rotulado|etiqueta/, "Etiquetado"],
+    [/calibracion|calibrar|calibrado/, "Calibración"],
+    [/medicion|medir|volumen|masa|pesaje/, "Medición"],
+    [/neutralizacion|neutralizar/, "Neutralización"],
+    [/ph|acido|base|acidos|bases/, "Ácidos y bases"],
+    [/titulacion|titulacion acido base/, "Titulación"],
+    [/reactivo|reactivos|preparacion de soluciones|solucion/, "Reactivos / soluciones"]
+  ];
+  const out=[];
+  for(const [rx,label] of rules) if(rx.test(n)) out.push(label);
+  return [...new Set(out)].slice(0,7);
+}
+
+function semanticGraph(centerPath, connected, activeItem=null, query="") {
+  const nodes=[];
+  const edges=[];
+  const nodeMap=new Map();
+  const addNode=(id,type,label,meta={})=>{
+    if(nodeMap.has(id)) return nodeMap.get(id);
+    const node={id,type,label,...meta}; nodes.push(node); nodeMap.set(id,node); return node;
+  };
+  const addEdge=(a,b,label,score=0)=>{
+    const key=[a,b].sort().join("::")+"::"+label;
+    if(!edges.some(e=>e.key===key)) edges.push({key,a,b,label,score});
+  };
+
+  const centerDoc=repositoryTexts[centerPath];
+  if(!centerDoc) return {nodes,edges};
+  const center=addNode("doc:"+centerPath,"document",centerDoc.name,{path:centerPath,center:true});
+
+  if(activeItem){
+    const inv=addNode("inv:"+activeItem.id,"inventory",activeItem.name,{item:activeItem});
+    addEdge(inv.id,center.id,"identifica",100);
+    if(activeItem.formula){
+      const f=addNode("formula:"+normalizeStr(activeItem.formula),"formula",activeItem.formula,{formula:activeItem.formula});
+      addEdge(inv.id,f.id,"fórmula",100);
+      addEdge(f.id,center.id,"aparece en",90);
+    }
+  }
+
+  const docs=[center,...connected.map(x=>addNode("doc:"+x.doc.path,"document",x.doc.name,{path:x.doc.path,score:x.relation.score}))];
+  const seenFormula=new Map();
+  const seenProtocol=new Map();
+
+  for(const docNode of docs){
+    const doc=repositoryTexts[docNode.path];
+    if(!doc) continue;
+    const formulas=[...doc.profile.formulas].filter(f=>/\d/.test(f)).slice(0,10);
+    for(const formula of formulas){
+      const fid="formula:"+normalizeStr(formula);
+      const f=addNode(fid,"formula",formula,{formula});
+      addEdge(docNode.id,f.id,"usa fórmula",75);
+      seenFormula.set(fid,(seenFormula.get(fid)||0)+1);
+    }
+    for(const protocol of extractProtocols(doc.profile.normalized)){
+      const pid="protocol:"+normalizeStr(protocol);
+      const pr=addNode(pid,"protocol",protocol,{protocol});
+      addEdge(docNode.id,pr.id,"relacionado con",60);
+      seenProtocol.set(pid,(seenProtocol.get(pid)||0)+1);
+    }
+  }
+
+  // Conecta documentos entre sí con evidencia de contenido.
+  for(const rel of connected){
+    const a="doc:"+centerPath, b="doc:"+rel.doc.path;
+    addEdge(a,b,rel.relation.reasons.join(" · "),rel.relation.score);
+  }
+
+  // Agrega conceptos relevantes de la consulta, pero solo si realmente aparecen.
+  const qWords=[...tokenize(query)].slice(0,5);
+  for(const word of qWords){
+    if(word.length<5) continue;
+    if(centerDoc.profile.normalized.includes(word)){
+      const c=addNode("concept:"+word,"concept",word,{concept:word});
+      addEdge(center.id,c.id,"concepto",55);
+    }
+  }
+  return {nodes,edges};
+}
+
+function renderKnowledgeMap(centerPath,relations,activeItem=null,query="") {
   const matrix=document.createElement("div");
   matrix.className="matrix";
-  const connected=relations.filter(x=>x.relation.connected);
+  const connected=relations.filter(x=>x.relation.connected)
+    .sort((a,b)=>b.relation.score-a.relation.score).slice(0,14);
+  const graph=semanticGraph(centerPath,connected,activeItem,query);
 
   matrix.innerHTML=`
     <div class="section-head">
-      <span>🔗 MATRIZ DE CONOCIMIENTO</span>
-      <small>${connected.length} conexión(es) reales</small>
+      <span>🧠 GRAFO SEMÁNTICO NEXUS-X</span>
+      <small>${graph.nodes.length} nodos · ${graph.edges.length} relaciones</small>
+    </div>
+    <div class="relation-list" style="padding-bottom:4px">
+      <div class="relation">
+        <div>
+          <div class="relation-name">Mapa de documentos, protocolos y fórmulas</div>
+          <div class="relation-reason">Las conexiones se calculan desde el contenido indexado. Las carpetas y nombres no crean relaciones por sí solos.</div>
+        </div>
+      </div>
     </div>`;
 
-  if(!connected.length){
-    matrix.insertAdjacentHTML("beforeend",`
-      <div class="relation-list"><div class="relation">
-        <div><div class="relation-name">Sin conexiones suficientemente fuertes</div>
-        <div class="relation-reason">NEXUS-X descartó relaciones débiles en lugar de inventarlas.</div></div>
-      </div></div>`);
+  if(!graph.nodes.length){
+    matrix.insertAdjacentHTML("beforeend",`<div class="map-empty">No hay evidencia suficiente para construir el grafo.</div>`);
     return matrix;
   }
 
-  const list=document.createElement("div");
-  list.className="relation-list";
-  connected.sort((a,b)=>b.relation.score-a.relation.score).forEach(item=>{
-    const r=document.createElement("div");
-    r.className="relation";
-    r.innerHTML=`
-      <div><div class="relation-name">📄 ${escapeHtml(item.doc.name)}</div>
-      <div class="relation-reason">
-        ${escapeHtml(item.relation.reasons.join(" · "))}
-        ${item.relation.sharedFormulas.length
-          ? ` · Fórmulas: ${escapeHtml(item.relation.sharedFormulas.join(", "))}`:""}
-      </div></div><div class="score">${item.relation.score}%</div>`;
-    list.appendChild(r);
-  });
-  matrix.appendChild(list);
-  matrix.appendChild(buildMap(centerPath,connected));
+  matrix.appendChild(buildSemanticMap(graph));
+  matrix.insertAdjacentHTML("beforeend",`
+    <div class="graph-legend">
+      <span>🎯 <b>Documento</b></span>
+      <span>⚗️ <b>Fórmula</b></span>
+      <span>📋 <b>Protocolo</b></span>
+      <span>🧪 <b>Inventario</b></span>
+      <span>🔹 <b>Concepto</b></span>
+    </div>`);
   return matrix;
 }
 
-function buildMap(centerPath,connected) {
+function buildSemanticMap(graph){
   const wrap=document.createElement("div");
   wrap.className="map-wrap";
   const canvas=document.createElement("div");
   canvas.className="map-canvas";
-
-  const all=[{
-    path:centerPath,name:repositoryTexts[centerPath]?.name||centerPath,center:true
-  },...connected.map(x=>({path:x.doc.path,name:x.doc.name,score:x.relation.score}))];
-
-  const unique=[];const seen=new Set();
-  for(const x of all) if(!seen.has(x.path)){seen.add(x.path);unique.push(x)}
-
-  const positions=[{x:50,y:48}];
-  const rx=Math.min(37,12+unique.length*4.5);
-  const ry=Math.min(34,12+unique.length*3.5);
-
-  for(let i=1;i<unique.length;i++){
-    const angle=((i-1)/Math.max(1,unique.length-1))*Math.PI*2-Math.PI/2;
-    positions.push({x:50+Math.cos(angle)*rx,y:48+Math.sin(angle)*ry});
-  }
+  const width=Math.max(1100,graph.nodes.length*150);
+  canvas.style.width=width+"px";
 
   const svgNS="http://www.w3.org/2000/svg";
   const svg=document.createElementNS(svgNS,"svg");
-  svg.classList.add("map-svg");svg.setAttribute("viewBox","0 0 1000 520");svg.preserveAspectRatio="none";
+  svg.classList.add("map-svg");
+  svg.setAttribute("viewBox",`0 0 ${width} 520`);
+  svg.setAttribute("preserveAspectRatio","none");
 
-  unique.forEach((node,i)=>{
-    if(i===0)return;
+  const docs=graph.nodes.filter(n=>n.type==="document");
+  const formulas=graph.nodes.filter(n=>n.type==="formula");
+  const protocols=graph.nodes.filter(n=>n.type==="protocol");
+  const invs=graph.nodes.filter(n=>n.type==="inventory");
+  const concepts=graph.nodes.filter(n=>n.type==="concept");
+  const pos=new Map();
+  const place=(nodes,y,cols)=>nodes.forEach((n,i)=>{
+    const col=i%cols,row=Math.floor(i/cols);
+    const x=150+col*((width-300)/Math.max(1,cols-1));
+    pos.set(n.id,{x,y:Math.min(485,y+row*105)});
+  });
+
+  place(invs,60,Math.max(1,invs.length));
+  place(docs,155,Math.max(1,Math.min(4,docs.length)));
+  place(formulas,300,Math.max(1,Math.min(5,formulas.length)));
+  place(protocols,430,Math.max(1,Math.min(5,protocols.length)));
+  place(concepts,475,Math.max(1,Math.min(5,concepts.length)));
+
+  // Fallback placement for any node not placed.
+  graph.nodes.forEach((n,i)=>{if(!pos.has(n.id))pos.set(n.id,{x:150+(i*190)%Math.max(500,width-150),y:250});});
+
+  graph.edges.forEach(edge=>{
+    const a=pos.get(edge.a),b=pos.get(edge.b); if(!a||!b)return;
     const line=document.createElementNS(svgNS,"line");
     line.classList.add("map-edge");
-    line.setAttribute("x1",positions[0].x*10);line.setAttribute("y1",positions[0].y*5.2);
-    line.setAttribute("x2",positions[i].x*10);line.setAttribute("y2",positions[i].y*5.2);
+    line.setAttribute("x1",a.x);line.setAttribute("y1",a.y);
+    line.setAttribute("x2",b.x);line.setAttribute("y2",b.y);
+    line.style.strokeOpacity=String(Math.max(.35,Math.min(1,(edge.score||45)/100)));
     svg.appendChild(line);
-
-    const score=document.createElementNS(svgNS,"text");
-    score.classList.add("map-edge-label");
-    score.setAttribute("x",((positions[0].x+positions[i].x)/2)*10);
-    score.setAttribute("y",((positions[0].y+positions[i].y)/2)*5.2-6);
-    score.textContent=`${node.score}%`;svg.appendChild(score);
+    if(edge.label){
+      const t=document.createElementNS(svgNS,"text");
+      t.classList.add("map-edge-label");
+      t.setAttribute("x",(a.x+b.x)/2);t.setAttribute("y",(a.y+b.y)/2-5);
+      t.textContent=edge.score?`${edge.label} · ${edge.score}%`:edge.label;
+      svg.appendChild(t);
+    }
   });
   canvas.appendChild(svg);
 
-  unique.forEach((node,i)=>{
+  const icons={document:"📄",formula:"⚗️",protocol:"📋",inventory:"🧪",concept:"🔹"};
+  const labels={document:"DOCUMENTO",formula:"FÓRMULA",protocol:"PROTOCOLO",inventory:"INVENTARIO",concept:"CONCEPTO"};
+  graph.nodes.forEach(n=>{
     const el=document.createElement("div");
-    el.className="map-node";
-    el.style.left=`${positions[i].x}%`;el.style.top=`${positions[i].y}%`;
-    el.innerHTML=`<strong>${node.center?"🎯":"📄"} ${escapeHtml(node.name)}</strong>
-      <span>${node.center?"DOCUMENTO CONSULTADO":`RELACIÓN ${node.score}%`}</span>`;
-    el.addEventListener("click",()=>loadPdfInModal(node.path,1));
+    el.className=`map-node graph-${n.type}`;
+    const p=pos.get(n.id);
+    el.style.left=`${p.x}px`;el.style.top=`${p.y}px`;
+    el.innerHTML=`<strong>${icons[n.type]} ${escapeHtml(n.label)}</strong><span class="node-type">${labels[n.type]}</span>`;
+    el.title=`${labels[n.type]}: ${n.label}`;
+    el.addEventListener("click",()=>{
+      if(n.type==="document"&&n.path) loadPdfInModal(n.path,1);
+      else if(n.type==="inventory"&&n.item){fillInventoryForm(n.item);$("#inventoryOverlay").classList.add("open");}
+      else if(n.type==="formula") showToast(`Fórmula detectada: ${n.label}`);
+      else if(n.type==="protocol") showToast(`Protocolo detectado: ${n.label}`);
+      else showToast(`Concepto: ${n.label}`);
+    });
     canvas.appendChild(el);
   });
-
-  wrap.appendChild(canvas);return wrap;
+  wrap.appendChild(canvas);
+  return wrap;
 }
 
 function handleMainGlobalQuery() {
@@ -1114,7 +1235,14 @@ function handleMainGlobalQuery() {
     }
   }
 
-  aiMsg.appendChild(renderKnowledgeMap(center,relationCandidates));
+  const matchedInventory = inventory.find(item => {
+    const q=normalizeStr(val);
+    return q && normalizeStr(buildInventorySearchText(item)).includes(q);
+  }) || inventory.find(item => {
+    const words=[...tokenize(val)];
+    return words.length && words.filter(w=>normalizeStr(buildInventorySearchText(item)).includes(w)).length>=Math.min(2,words.length);
+  });
+  aiMsg.appendChild(renderKnowledgeMap(center,relationCandidates,matchedInventory,val));
   $("#mainChatBox").scrollTop=$("#mainChatBox").scrollHeight;
 }
 
@@ -1175,11 +1303,11 @@ async function callGeminiAPI(prompt,key){
   let lastError=null;
 
   for(const model of GEMINI_MODELS){
-    const url=`${GEMINI_API_BASE}${model}:generateContent?key=${encodeURIComponent(key)}`;
+    const url=`${GEMINI_API_BASE}${model}:generateContent`;
     try{
       const res=await fetch(url,{
         method:"POST",
-        headers:{"Content-Type":"application/json"},
+        headers:{"Content-Type":"application/json","x-goog-api-key":key},
         body:JSON.stringify({
           contents:[{role:"user",parts:[{text:prompt}]}],
           generationConfig:{
