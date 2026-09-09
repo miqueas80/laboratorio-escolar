@@ -5,30 +5,184 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>NEXUS-X // QUANTUM CORE</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode" defer></script>
   <script>
-if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+if (window.pdfjsLib) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+}
 </script>
   <style>
-:root{--bg:#010308;--panel:rgba(5,10,20,.94);--stroke:rgba(0,242,254,.25);--text:#f4f8ff;--muted:#94a3b8;--accent:#00f2fe;--accent2:#4facfe;--success:#10b981;--danger:#f43f5e;--warning:#fbbf24;--mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg)}body{color:var(--text);font-family:var(--mono);font-size:15px;background:radial-gradient(circle at 50% 0%,#0b2340 0%,#020610 48%,#010308 100%);overflow-x:hidden}button,input{font:inherit}
-header{min-height:72px;padding:14px 24px;border-bottom:1px solid var(--stroke);background:var(--panel);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;box-shadow:0 5px 24px rgba(0,0,0,.55);backdrop-filter:blur(12px)}
-.logo{font-size:16px;font-weight:900;letter-spacing:3px;color:var(--accent);text-shadow:0 0 14px rgba(0,242,254,.45);display:flex;align-items:center;gap:10px}.logo:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
-.header-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.api-config-bar{display:flex;align-items:center;gap:8px;min-height:40px;padding:5px 9px 5px 12px;border:1px solid var(--stroke);border-radius:7px;background:rgba(0,0,0,.45);font-size:13px}.api-config-bar input{width:170px;background:transparent;border:0;outline:0;color:var(--text);font-size:13px}.api-config-bar button,.page-nav-btn,.viewer-close{min-height:34px;padding:7px 12px;border-radius:5px;cursor:pointer;font-weight:900;font-size:12px}.api-config-bar button,.page-nav-btn{color:var(--accent);border:1px solid var(--accent);background:rgba(0,242,254,.10)}.api-config-bar button:hover,.page-nav-btn:hover:not(:disabled){color:#000;background:var(--accent)}
-.status-pill{min-height:36px;padding:7px 12px;border:1px solid rgba(255,255,255,.10);border-radius:20px;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px}.pulse{width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 10px var(--success);animation:blink 2s infinite}@keyframes blink{50%{opacity:.25}}
-.workspace{width:min(98vw,1400px);margin:14px auto}.main-panel{min-height:calc(100vh - 100px);border:1px solid var(--stroke);border-radius:12px;background:var(--panel);overflow:hidden;box-shadow:0 10px 45px rgba(0,0,0,.72);display:flex;flex-direction:column}.chat-scroll{flex:1;min-height:0;padding:18px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
-.msg{padding:13px 16px;border-radius:8px;font-size:14px;line-height:1.65;max-width:96%;word-break:break-word}.msg.system{color:var(--accent);background:rgba(0,242,254,.04);border:1px solid rgba(0,242,254,.16)}.msg.user{align-self:flex-end;color:#fff;background:rgba(79,172,254,.10);border:1px solid rgba(79,172,254,.28)}.msg.ai{width:100%;max-width:100%;color:#e2e8f0;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.10)}.msg.error{color:#fecdd3;background:rgba(244,63,94,.07);border:1px solid rgba(244,63,94,.24)}
-.doc-action-card{margin-top:12px;padding:14px;border:1px solid rgba(16,185,129,.28);border-radius:8px;background:rgba(16,185,129,.035)}.doc-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.doc-action-title{color:#6ee7b7;font-size:14px;font-weight:900}.doc-meta{margin-top:5px;color:var(--muted);font-size:12px}.actions-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}.action-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:8px 13px;border:0;border-radius:6px;color:#000;background:linear-gradient(135deg,var(--accent),var(--accent2));font-size:12px;font-weight:900;cursor:pointer;text-decoration:none}.action-btn.download{background:linear-gradient(135deg,#10b981,#00b0ff)}.action-btn:hover{filter:brightness(1.12)}
-.matrix{margin-top:12px;border:1px solid rgba(0,242,254,.25);border-radius:9px;overflow:hidden;background:rgba(0,20,45,.48)}.section-head{min-height:44px;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid rgba(0,242,254,.16);color:var(--accent);font-size:13px;font-weight:900}.section-head small{color:var(--muted);font-size:11px;font-weight:700}.relation-list{padding:8px 12px 12px}.relation{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 8px;border-bottom:1px solid rgba(255,255,255,.06)}.relation:last-child{border-bottom:0}.relation-name{font-size:13px;color:#dbeafe;word-break:break-word}.relation-reason{margin-top:3px;color:var(--muted);font-size:11px}.score{color:#67e8f9;font-weight:900;font-size:12px}
-.map-wrap{position:relative;width:100%;height:520px;overflow:auto;background:linear-gradient(rgba(0,242,254,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,254,.045) 1px,transparent 1px),radial-gradient(circle at 50% 50%,rgba(0,70,140,.35),rgba(0,10,24,.95) 75%);background-size:28px 28px,28px 28px,100% 100%}.map-canvas{position:relative;width:max(100%,900px);min-width:900px;height:100%}.map-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.map-edge{stroke:rgba(0,242,254,.60);stroke-width:2;filter:drop-shadow(0 0 4px rgba(0,242,254,.35))}.map-edge-label{fill:#b6f8ff;font-size:11px;font-weight:900}.map-node{position:absolute;transform:translate(-50%,-50%);width:175px;min-height:72px;padding:10px;border:1px solid rgba(0,242,254,.45);border-radius:9px;background:rgba(2,9,22,.95);box-shadow:0 0 18px rgba(0,242,254,.10);cursor:pointer;z-index:2}.map-node:hover{border-color:var(--accent);box-shadow:0 0 22px rgba(0,242,254,.30);transform:translate(-50%,-50%) scale(1.03)}.map-node strong{display:block;color:#f8fafc;font-size:12px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.map-node span{display:block;margin-top:4px;color:var(--muted);font-size:10px}
-.input-box-area{flex:0 0 auto;padding:14px 16px;display:flex;gap:10px;align-items:center;border-top:1px solid var(--stroke);background:rgba(0,0,0,.48)}.input-box-area input{flex:1;min-width:0;height:50px;padding:10px 15px;color:var(--text);background:rgba(0,0,0,.65);border:1px solid var(--stroke);border-radius:7px;outline:0;font-size:15px}.input-box-area input:focus{border-color:var(--accent);box-shadow:0 0 14px rgba(0,242,254,.22)}.btn-action{height:50px;min-width:120px;padding:0 20px;border:0;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;font-size:13px;font-weight:900;cursor:pointer}.btn-action:disabled{opacity:.4;cursor:not-allowed}
-.quick-tools{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}.quick-btn{min-height:40px;padding:8px 13px;border:1px solid var(--stroke);border-radius:7px;color:var(--accent);background:rgba(0,242,254,.06);font-weight:900;font-size:12px;cursor:pointer}.quick-btn:hover{background:var(--accent);color:#000}
-.inventory-card{margin-top:12px;border:1px solid rgba(0,242,254,.24);border-radius:9px;background:rgba(0,20,45,.42);padding:14px}.inventory-title{font-weight:900;color:var(--accent);font-size:14px}.inventory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.inventory-field{padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:7px;background:rgba(0,0,0,.2)}.inventory-field b{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}.inventory-field span{font-size:13px}.expiry-ok{color:#6ee7b7}.expiry-warning{color:#fbbf24}.expiry-danger{color:#fb7185}.expiry-none{color:#94a3b8}
-#pdfViewerModal{display:none;position:fixed;inset:0;z-index:2000;padding:8px;flex-direction:column;background:rgba(1,3,8,.97);backdrop-filter:blur(10px)}.viewer-top{min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 12px;border:1px solid var(--stroke);border-radius:8px 8px 0 0;background:var(--panel)}.viewer-title-text{color:var(--accent);font-size:14px;font-weight:900;max-width:42vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.viewer-nav-controls{display:flex;align-items:center;gap:8px}#pageIndicator{color:var(--accent);font-size:12px;font-weight:900}.viewer-close{border:0;background:var(--danger);color:#fff}.viewer-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 390px;overflow:hidden;border:1px solid var(--stroke);border-top:0;border-radius:0 0 8px 8px;background:#040812}.canvas-container{min-width:0;min-height:0;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:14px;background:#080d1a}canvas{display:block;max-width:none;height:auto;background:#fff;box-shadow:0 0 22px rgba(0,0,0,.9)}.viewer-sidebar-chat{min-width:0;min-height:0;display:flex;flex-direction:column;gap:10px;padding:14px;border-left:1px solid var(--stroke);background:rgba(3,7,14,.98)}.v-chat-history{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:5px}.v-msg{padding:11px 12px;border-radius:7px;font-size:13px;line-height:1.55;white-space:pre-line;word-break:break-word}.v-msg.bot{color:#dbeafe;background:rgba(0,242,254,.055);border:1px solid rgba(0,242,254,.20)}.v-msg.user{align-self:flex-end;color:#fff;background:rgba(79,172,254,.12);border:1px solid rgba(79,172,254,.30)}.v-input-row{display:flex;gap:8px}.v-input-row input{flex:1;min-width:0;height:46px;padding:9px 11px;color:var(--text);background:#02050a;border:1px solid var(--stroke);border-radius:6px;outline:0;font-size:13px}.v-send{min-width:100px;border:0;border-radius:6px;background:var(--accent);color:#000;font-size:12px;font-weight:900;cursor:pointer}
-#qrModal{display:none;position:fixed;inset:0;z-index:3000;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.78);backdrop-filter:blur(8px)}.qr-panel{width:min(96vw,520px);border:1px solid var(--stroke);border-radius:12px;background:var(--panel2);box-shadow:0 20px 70px #000;padding:16px}.qr-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.qr-title{color:var(--accent);font-weight:900}.qr-close{border:0;background:var(--danger);color:#fff;border-radius:6px;padding:8px 12px;font-weight:900;cursor:pointer}.qr-reader{width:100%;border:1px solid var(--stroke);border-radius:9px;overflow:hidden;background:#000}.qr-hint{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.5}.qr-manual{display:flex;gap:8px;margin-top:12px}.qr-manual input{flex:1;min-width:0;height:44px;padding:8px 10px;background:#02050a;color:#fff;border:1px solid var(--stroke);border-radius:6px;outline:0}.qr-manual button{height:44px;padding:0 14px;border:0;border-radius:6px;background:var(--accent);color:#000;font-weight:900;cursor:pointer}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:5000;max-width:min(90vw,700px);padding:12px 16px;border:1px solid var(--accent);border-radius:8px;background:rgba(2,8,18,.96);color:#dffcff;box-shadow:0 0 24px rgba(0,242,254,.18);font-size:13px;display:none}
-@media(max-width:900px){body{font-size:14px}header{padding:12px 14px}.workspace{width:100vw;margin:0}.main-panel{border-radius:0;min-height:calc(100vh - 72px)}.map-wrap{height:430px}.viewer-body{display:flex;flex-direction:column}.viewer-sidebar-chat{height:42%;border-left:0;border-top:1px solid var(--stroke)}.canvas-container{height:58%}.viewer-title-text{max-width:65vw}}
-@media(max-width:560px){.api-config-bar input{width:110px}.status-pill{display:none}.input-box-area{padding:10px}.btn-action{min-width:90px;padding:0 12px}.map-canvas{min-width:760px}.map-node{width:155px}.inventory-grid{grid-template-columns:1fr}}
+:root{
+  --bg:#010308;--panel:rgba(5,10,20,.96);--panel2:rgba(4,12,27,.98);
+  --stroke:rgba(0,242,254,.28);--text:#f4f8ff;--muted:#94a3b8;
+  --accent:#00f2fe;--accent2:#4facfe;--success:#10b981;
+  --danger:#f43f5e;--warning:#fbbf24;--purple:#a78bfa;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg)}
+body{
+  color:var(--text);font-family:var(--mono);font-size:16px;
+  background:radial-gradient(circle at 50% 0%,#0b2340 0%,#020610 48%,#010308 100%);
+  overflow-x:hidden;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+header{
+  min-height:76px;padding:14px 24px;border-bottom:1px solid var(--stroke);
+  background:var(--panel);display:flex;justify-content:space-between;align-items:center;
+  gap:16px;flex-wrap:wrap;box-shadow:0 5px 24px rgba(0,0,0,.55);
+  backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;
+}
+.logo{font-size:17px;font-weight:900;letter-spacing:3px;color:var(--accent);text-shadow:0 0 14px rgba(0,242,254,.45);display:flex;align-items:center;gap:10px}
+.logo:before{content:"";width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+.header-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.api-config-bar{display:flex;align-items:center;gap:8px;min-height:42px;padding:5px 9px 5px 12px;border:1px solid var(--stroke);border-radius:7px;background:rgba(0,0,0,.45);font-size:14px}
+.api-config-bar input{width:210px;background:transparent;border:0;outline:0;color:var(--text);font-size:14px}
+.api-config-bar button,.page-nav-btn,.viewer-close,.small-btn{
+  min-height:38px;padding:7px 13px;border-radius:6px;cursor:pointer;font-weight:900;font-size:13px
+}
+.api-config-bar button,.page-nav-btn,.small-btn{color:var(--accent);border:1px solid var(--accent);background:rgba(0,242,254,.10)}
+.api-config-bar button:hover,.page-nav-btn:hover:not(:disabled),.small-btn:hover{color:#000;background:var(--accent)}
+.status-pill{min-height:38px;padding:7px 13px;border:1px solid rgba(255,255,255,.10);border-radius:20px;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}
+.pulse{width:9px;height:9px;border-radius:50%;background:var(--success);box-shadow:0 0 10px var(--success);animation:blink 2s infinite}
+@keyframes blink{50%{opacity:.25}}
+
+.workspace{width:min(98vw,1500px);margin:14px auto}
+.main-panel{min-height:calc(100vh - 104px);border:1px solid var(--stroke);border-radius:12px;background:var(--panel);overflow:hidden;box-shadow:0 10px 45px rgba(0,0,0,.72);display:flex;flex-direction:column}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--stroke);background:rgba(0,0,0,.35)}
+.toolbar button{min-height:46px;padding:8px 16px;border:1px solid var(--stroke);border-radius:7px;background:rgba(0,242,254,.06);color:var(--text);font-weight:900;font-size:14px}
+.toolbar button:hover{border-color:var(--accent);background:rgba(0,242,254,.14)}
+.toolbar .primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:0}
+.toolbar .danger{border-color:rgba(244,63,94,.45);color:#fecdd3}
+
+.chat-scroll{flex:1;min-height:0;padding:18px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
+.msg{padding:14px 17px;border-radius:8px;font-size:15px;line-height:1.65;max-width:96%;word-break:break-word}
+.msg.system{color:var(--accent);background:rgba(0,242,254,.04);border:1px solid rgba(0,242,254,.16)}
+.msg.user{align-self:flex-end;color:#fff;background:rgba(79,172,254,.10);border:1px solid rgba(79,172,254,.28)}
+.msg.ai{width:100%;max-width:100%;color:#e2e8f0;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.10)}
+.msg.error{color:#fecdd3;background:rgba(244,63,94,.07);border:1px solid rgba(244,63,94,.24)}
+
+.doc-action-card{margin-top:12px;padding:15px;border:1px solid rgba(16,185,129,.28);border-radius:8px;background:rgba(16,185,129,.035)}
+.doc-header-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.doc-action-title{color:#6ee7b7;font-size:15px;font-weight:900}
+.doc-meta{margin-top:6px;color:var(--muted);font-size:13px}
+.actions-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}
+.action-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:43px;padding:8px 14px;border:0;border-radius:6px;color:#000;background:linear-gradient(135deg,var(--accent),var(--accent2));font-size:13px;font-weight:900;cursor:pointer;text-decoration:none}
+.action-btn.download{background:linear-gradient(135deg,#10b981,#00b0ff)}
+.action-btn:hover{filter:brightness(1.12)}
+
+.matrix{margin-top:12px;border:1px solid rgba(0,242,254,.25);border-radius:9px;overflow:hidden;background:rgba(0,20,45,.48)}
+.section-head{min-height:48px;padding:11px 15px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid rgba(0,242,254,.16);color:var(--accent);font-size:14px;font-weight:900}
+.section-head small{color:var(--muted);font-size:12px;font-weight:700}
+.relation-list{padding:8px 12px 12px}
+.relation{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.relation:last-child{border-bottom:0}
+.relation-name{font-size:14px;color:#dbeafe;word-break:break-word}
+.relation-reason{margin-top:4px;color:var(--muted);font-size:12px;line-height:1.5}
+.score{color:#67e8f9;font-weight:900;font-size:13px}
+
+.map-wrap{position:relative;width:100%;height:520px;overflow:auto;background:linear-gradient(rgba(0,242,254,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,254,.045) 1px,transparent 1px),radial-gradient(circle at 50% 50%,rgba(0,70,140,.35),rgba(0,10,24,.95) 75%);background-size:28px 28px,28px 28px,100% 100%}
+.map-canvas{position:relative;width:max(100%,900px);min-width:900px;height:100%}
+.map-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.map-edge{stroke:rgba(0,242,254,.60);stroke-width:2;filter:drop-shadow(0 0 4px rgba(0,242,254,.35))}
+.map-edge-label{fill:#b6f8ff;font-size:11px;font-weight:900}
+.map-node{position:absolute;transform:translate(-50%,-50%);width:190px;min-height:78px;padding:11px;border:1px solid rgba(0,242,254,.45);border-radius:9px;background:rgba(2,9,22,.95);box-shadow:0 0 18px rgba(0,242,254,.10);cursor:pointer;z-index:2}
+.map-node:hover{border-color:var(--accent);box-shadow:0 0 22px rgba(0,242,254,.30);transform:translate(-50%,-50%) scale(1.03)}
+.map-node strong{display:block;color:#f8fafc;font-size:13px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.map-node span{display:block;margin-top:5px;color:var(--muted);font-size:11px}
+.map-empty{height:100%;display:grid;place-items:center;color:var(--muted);text-align:center;padding:30px;font-size:14px}
+
+.input-box-area{flex:0 0 auto;padding:14px 16px;display:flex;gap:10px;align-items:center;border-top:1px solid var(--stroke);background:rgba(0,0,0,.48)}
+.input-box-area input{flex:1;min-width:0;height:54px;padding:10px 16px;color:var(--text);background:rgba(0,0,0,.65);border:1px solid var(--stroke);border-radius:7px;outline:0;font-size:16px}
+.input-box-area input:focus{border-color:var(--accent);box-shadow:0 0 14px rgba(0,242,254,.22)}
+.btn-action{height:54px;min-width:135px;padding:0 22px;border:0;border-radius:7px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;font-size:14px;font-weight:900;cursor:pointer}
+.btn-action:disabled{opacity:.4;cursor:not-allowed}
+
+.panel-overlay{display:none;position:fixed;inset:0;z-index:2500;background:rgba(1,3,8,.96);backdrop-filter:blur(10px);padding:12px}
+.panel-overlay.open{display:flex;flex-direction:column}
+.overlay-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 13px;border:1px solid var(--stroke);background:var(--panel);border-radius:9px}
+.overlay-title{color:var(--accent);font-weight:900;font-size:16px}
+.close-btn{border:0;border-radius:6px;background:var(--danger);color:#fff;font-weight:900;padding:10px 15px}
+.inventory-body{overflow:auto;display:grid;grid-template-columns:1.15fr .85fr;gap:14px;padding:14px}
+.inventory-card{border:1px solid var(--stroke);border-radius:10px;background:var(--panel2);padding:16px}
+.inventory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12px;color:var(--muted);font-weight:900}
+.field input,.field select,.field textarea{width:100%;min-height:44px;padding:9px 11px;border:1px solid var(--stroke);border-radius:6px;background:#02050a;color:var(--text);outline:0;font-size:14px}
+.field textarea{min-height:90px;resize:vertical}
+.field.full{grid-column:1/-1}
+.inventory-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.inventory-actions button{min-height:46px;padding:9px 15px;border-radius:7px;border:1px solid var(--accent);background:rgba(0,242,254,.08);color:var(--accent);font-weight:900}
+.inventory-actions .save{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:0}
+.inventory-list{display:flex;flex-direction:column;gap:9px;max-height:65vh;overflow:auto}
+.inv-item{padding:12px;border:1px solid rgba(255,255,255,.10);border-radius:8px;background:rgba(255,255,255,.025);cursor:pointer}
+.inv-item:hover{border-color:var(--accent)}
+.inv-item strong{display:block;font-size:14px}
+.inv-meta{color:var(--muted);font-size:12px;margin-top:5px;line-height:1.5}
+.badge{display:inline-block;padding:3px 7px;border-radius:10px;font-size:11px;font-weight:900;margin-left:5px}
+.badge.ok{background:rgba(16,185,129,.14);color:#6ee7b7}
+.badge.warn{background:rgba(251,191,36,.14);color:#fde68a}
+.badge.danger{background:rgba(244,63,94,.14);color:#fecdd3}
+.badge.neutral{background:rgba(148,163,184,.12);color:#cbd5e1}
+
+.qr-body{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px;overflow:auto}
+.qr-card{border:1px solid var(--stroke);border-radius:10px;background:var(--panel2);padding:16px}
+#qr-reader{width:100%;max-width:620px;margin:auto}
+#qr-reader video{border-radius:8px}
+.scan-result{margin-top:12px;padding:14px;border:1px solid var(--stroke);border-radius:8px;background:rgba(0,242,254,.04);font-size:14px;line-height:1.6}
+.manual-scan{display:flex;gap:9px;margin-top:12px}
+.manual-scan input{flex:1;min-width:0;height:48px;padding:8px 11px;background:#02050a;border:1px solid var(--stroke);border-radius:6px;color:#fff}
+.manual-scan button{min-width:110px;border:0;border-radius:6px;background:var(--accent);color:#000;font-weight:900}
+
+#pdfViewerModal{display:none;position:fixed;inset:0;z-index:3000;padding:8px;flex-direction:column;background:rgba(1,3,8,.97);backdrop-filter:blur(10px)}
+.viewer-top{min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:8px 12px;border:1px solid var(--stroke);border-radius:8px 8px 0 0;background:var(--panel)}
+.viewer-title-text{color:var(--accent);font-size:15px;font-weight:900;max-width:42vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.viewer-nav-controls{display:flex;align-items:center;gap:8px}
+#pageIndicator{color:var(--accent);font-size:13px;font-weight:900}
+.viewer-close{border:0;background:var(--danger);color:#fff}
+.viewer-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 420px;overflow:hidden;border:1px solid var(--stroke);border-top:0;border-radius:0 0 8px 8px;background:#040812}
+.canvas-container{min-width:0;min-height:0;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:14px;background:#080d1a}
+canvas{display:block;max-width:none;height:auto;background:#fff;box-shadow:0 0 22px rgba(0,0,0,.9)}
+.viewer-sidebar-chat{min-width:0;min-height:0;display:flex;flex-direction:column;gap:10px;padding:14px;border-left:1px solid var(--stroke);background:rgba(3,7,14,.98)}
+.v-chat-history{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-right:5px}
+.v-msg{padding:12px 13px;border-radius:7px;font-size:14px;line-height:1.55;white-space:pre-line;word-break:break-word}
+.v-msg.bot{color:#dbeafe;background:rgba(0,242,254,.055);border:1px solid rgba(0,242,254,.20)}
+.v-msg.user{align-self:flex-end;color:#fff;background:rgba(79,172,254,.12);border:1px solid rgba(79,172,254,.30)}
+.v-input-row{display:flex;gap:8px}
+.v-input-row input{flex:1;min-width:0;height:48px;padding:9px 11px;color:var(--text);background:#02050a;border:1px solid var(--stroke);border-radius:6px;outline:0;font-size:14px}
+.v-send{min-width:110px;border:0;border-radius:6px;background:var(--accent);color:#000;font-size:13px;font-weight:900;cursor:pointer}
+
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:5000;max-width:min(90vw,750px);padding:13px 17px;border:1px solid var(--accent);border-radius:8px;background:rgba(2,8,18,.97);color:#dffcff;box-shadow:0 0 24px rgba(0,242,254,.18);font-size:14px;display:none}
+.loading{color:var(--muted);font-size:13px;padding:12px}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.stat{padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.025)}
+.stat b{display:block;font-size:20px;color:var(--accent)}
+.stat span{font-size:11px;color:var(--muted)}
+
+@media(max-width:950px){
+  .inventory-body,.qr-body{grid-template-columns:1fr}
+  .viewer-body{display:flex;flex-direction:column}
+  .viewer-sidebar-chat{height:42%;border-left:0;border-top:1px solid var(--stroke)}
+  .canvas-container{height:58%}
+}
+@media(max-width:650px){
+  body{font-size:15px}
+  header{padding:11px 12px}
+  .workspace{width:100vw;margin:0}
+  .main-panel{border-radius:0;min-height:calc(100vh - 72px)}
+  .api-config-bar input{width:125px}
+  .status-pill{display:none}
+  .inventory-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .stat-row{grid-template-columns:repeat(2,1fr)}
+  .input-box-area{padding:10px}
+  .btn-action{min-width:100px;padding:0 12px}
+  .map-canvas{min-width:800px}
+  .map-node{width:165px}
+  .viewer-title-text{max-width:60vw}
+}
 </style>
  </head>
  <body>
@@ -36,10 +190,9 @@ header{min-height:72px;padding:14px 24px;border-bottom:1px solid var(--stroke);b
    <div class="logo">NEXUS-X // QUANTUM CORE</div>
    <div class="header-controls">
     <div class="api-config-bar">
-     <span>API Key:</span><input id="apiKeyInput" type="password" placeholder="Pegá tu clave..." autocomplete="off">
+     <span>API Key:</span> <input id="apiKeyInput" type="password" placeholder="Pegá tu clave..." autocomplete="off">
      <button id="saveApiKeyBtn">GUARDAR</button>
     </div>
-    <button class="quick-btn" id="openQrBtn">📷 ESCANEAR QR</button>
     <div class="status-pill">
      <div class="pulse"></div>
      <span id="sysState">Iniciando...</span>
@@ -48,8 +201,14 @@ header{min-height:72px;padding:14px 24px;border-bottom:1px solid var(--stroke);b
   </header>
   <div class="workspace">
    <main class="main-panel">
+    <div class="toolbar">
+     <button class="primary" id="openQrBtn">📷 ESCANEAR QR</button>
+     <button id="openInventoryBtn">🧪 INVENTARIO</button>
+     <button id="newInventoryBtn">＋ NUEVO REGISTRO</button>
+     <button id="refreshRepoBtn">↻ ACTUALIZAR DOCUMENTOS</button>
+    </div>
     <div class="chat-scroll" id="mainChatBox">
-     <div class="msg system">&gt;&gt; Núcleo listo. Analizando carpetas y documentos...</div>
+     <div class="msg system">&gt;&gt; Núcleo listo. Preparando documentos, inventario QR y asistente IA...</div>
     </div>
     <div class="input-box-area">
      <input id="mainQueryInput" type="text" placeholder="Buscá un concepto en los manuales..." autocomplete="off" disabled>
@@ -57,22 +216,90 @@ header{min-height:72px;padding:14px 24px;border-bottom:1px solid var(--stroke);b
     </div>
    </main>
   </div>
-  <div id="qrModal">
-   <div class="qr-panel">
-    <div class="qr-head">
-     <div class="qr-title">📷 IDENTIFICACIÓN NEXUS-X</div>
-     <button class="qr-close" id="closeQrBtn">CERRAR [X]</button>
-    </div>
-    <div id="qrReader" class="qr-reader"></div>
-    <div class="qr-hint">
-     Apuntá la cámara al QR pegado en la sustancia o material. El QR debería contener un identificador estable, por ejemplo <b>NEXUS:H2SO4-003</b>.
-    </div>
-    <div class="qr-manual">
-     <input id="qrManualInput" placeholder="O ingresá el código manualmente">
-     <button id="qrManualBtn">ABRIR</button>
-    </div>
+  <!-- INVENTARIO -->
+  <div class="panel-overlay" id="inventoryOverlay">
+   <div class="overlay-top">
+    <span class="overlay-title">🧪 NEXUS-X // INVENTARIO DE LABORATORIO</span>
+    <button class="close-btn" id="closeInventoryBtn">CERRAR [X]</button>
+   </div>
+   <div class="inventory-body">
+    <section class="inventory-card">
+     <div class="section-head" style="padding:0 0 12px;border:0">
+      <span>REGISTRO</span><small>El QR identifica el objeto; el PDF se relaciona por contenido.</small>
+     </div>
+     <div class="inventory-grid">
+      <div class="field">
+       <label>ID NEXUS *</label> <input id="invId" placeholder="NEXUS:H2SO4-001">
+      </div>
+      <div class="field">
+       <label>NOMBRE *</label> <input id="invName" placeholder="Ácido sulfúrico">
+      </div>
+      <div class="field">
+       <label>FÓRMULA / CÓDIGO TÉCNICO</label> <input id="invFormula" placeholder="H2SO4">
+      </div>
+      <div class="field">
+       <label>CATEGORÍA</label> <select id="invCategory"> <option>Sustancia</option><option>Material</option><option>Equipo</option><option>Reactivo</option><option>Otro</option> </select>
+      </div>
+      <div class="field">
+       <label>VENCIMIENTO</label> <input id="invExpiry" type="date">
+      </div>
+      <div class="field">
+       <label>CANTIDAD</label> <input id="invQuantity" placeholder="500 mL">
+      </div>
+      <div class="field">
+       <label>UBICACIÓN</label> <input id="invLocation" placeholder="Armario A-03">
+      </div>
+      <div class="field">
+       <label>FABRICANTE / MARCA</label> <input id="invManufacturer" placeholder="Fabricante">
+      </div>
+      <div class="field full">
+       <label>PALABRAS CLAVE PARA RELACIONAR DOCUMENTOS</label> <input id="invKeywords" placeholder="ácido, sulfúrico, corrosivo, H2SO4">
+      </div>
+      <div class="field full">
+       <label>NOTAS</label> <textarea id="invNotes" placeholder="Observaciones del laboratorio..."></textarea>
+      </div>
+     </div>
+     <div class="inventory-actions">
+      <button class="save" id="saveInventoryBtn">💾 GUARDAR REGISTRO</button>
+      <button id="clearInventoryBtn">LIMPIAR</button>
+      <button id="deleteInventoryBtn" class="danger">ELIMINAR</button>
+     </div>
+     <div id="inventoryMatchBox" class="doc-meta" style="margin-top:12px"></div>
+    </section>
+    <section class="inventory-card">
+     <div class="stat-row" id="inventoryStats"></div>
+     <input id="inventoryFilter" placeholder="Filtrar inventario..." style="width:100%;height:46px;padding:9px 11px;background:#02050a;border:1px solid var(--stroke);border-radius:6px;color:#fff;margin-bottom:11px">
+     <div class="inventory-list" id="inventoryList"></div>
+    </section>
    </div>
   </div>
+  <!-- QR -->
+  <div class="panel-overlay" id="qrOverlay">
+   <div class="overlay-top">
+    <span class="overlay-title">📷 NEXUS-X // ESCÁNER QR</span>
+    <button class="close-btn" id="closeQrBtn">CERRAR [X]</button>
+   </div>
+   <div class="qr-body">
+    <section class="qr-card">
+     <div class="section-head" style="padding:0 0 12px;border:0">
+      <span>CÁMARA</span><small>Permití el acceso a la cámara.</small>
+     </div>
+     <div id="qr-reader"></div>
+     <div class="manual-scan">
+      <input id="manualQrInput" placeholder="O pegá: NEXUS:H2SO4-001">
+      <button id="manualQrBtn">LEER ID</button>
+     </div>
+     <div class="scan-result" id="qrResult">Esperando un QR...</div>
+    </section>
+    <section class="qr-card">
+     <div class="section-head" style="padding:0 0 12px;border:0">
+      <span>RESULTADO</span><small>Ficha + documentos relacionados</small>
+     </div>
+     <div id="qrObjectResult" class="loading">Escaneá un código para comenzar.</div>
+    </section>
+   </div>
+  </div>
+  <!-- PDF -->
   <div id="pdfViewerModal">
    <div class="viewer-top">
     <span class="viewer-title-text" id="modalDocTitle">📄 Lector Activo</span>
@@ -88,7 +315,7 @@ header{min-height:72px;padding:14px 24px;border-bottom:1px solid var(--stroke);b
      <canvas id="pdfCanvas"></canvas>
     </div>
     <div class="viewer-sidebar-chat">
-     <div style="font-size:13px;color:var(--success);font-weight:900;border-bottom:1px solid var(--stroke);padding-bottom:8px">🤖 ASISTENTE DE GEMINI</div>
+     <div style="font-size:14px;color:var(--success);font-weight:900;border-bottom:1px solid var(--stroke);padding-bottom:9px">🤖 ASISTENTE GEMINI</div>
      <div class="v-chat-history" id="modalChatHistory"></div>
      <div class="v-input-row">
       <input id="modalQueryInput" type="text" placeholder="Preguntale a Gemini sobre este manual..." autocomplete="off">
@@ -99,85 +326,1082 @@ header{min-height:72px;padding:14px 24px;border-bottom:1px solid var(--stroke);b
   </div>
   <div class="toast" id="toast"></div>
   <script>
-(()=>{"use strict";
-const GITHUB_CONFIG={owner:"miqueas80",repo:"laboratorio-escolar",branch:"main"};
-const GEMINI_MODEL="gemini-2.5-flash";
-let globalApiKey=localStorage.getItem("nexus_gemini_key")||"",repositoryFiles=[],repositoryTexts={},activePdfDoc=null,activePageNum=1,activeFileName="",activePagesCache=[],isRenderingPage=false,qrScanner=null;
-const $=s=>document.querySelector(s);
-const STOPWORDS=new Set(`para desde entre sobre como este esta estos estas una uno unas unos con sin por del las los que son fue han hay donde cuando cual cualquiera puede pueden debe deben ser sea sean tener tiene hacer hace hacia mediante durante parte partes pagina páginas manual material materiales protocolo protocolos procedimiento procedimientos unidad tema contenido documento documentos alumno estudiante ejemplo ejemplos forma formas tipo tipos segun según cada mismo misma mismos mismas luego también tambien muy más mas menos solo sólo todos todas todo toda`.trim().split(/\s+/));
-function escapeHtml(str){return String(str??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
-function showToast(text){const t=$("#toast");t.textContent=text;t.style.display="block";clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>t.style.display="none",3000)}
-function addMsg(sel,text,type){const box=$(sel),d=document.createElement("div");d.className=`msg ${type}`;d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight;return d}
-function normalizeStr(str){return String(str||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\p{L}\p{N}\s./+\-]/gu," ").replace(/\s+/g," ").trim()}
-function tokenize(str){return new Set(normalizeStr(str).split(/\s+/).filter(w=>w.length>=4&&!STOPWORDS.has(w)))}
-function extractFormulas(text){const raw=String(text||"").replace(/\s+/g," ");const matches=raw.match(/\b(?:[A-Z][a-z]?\d*(?:\([A-Z][a-z]?\d*\)\d*)*(?:[+-]\d*)?|[A-Z][a-z]?\d*[A-Z][a-z]?\d*)\b/g)||[];const valid=new Set();for(const x of matches){if(x.length<2||x.length>18||!/[A-Z]/.test(x)||(!/\d/.test(x)&&x.length<=2))continue;valid.add(x)}return valid}
-function extractNexusIds(text){
-const ids=new Set(),s=String(text||"");
-const re=/\bNEXUS\s*:\s*([A-Z0-9][A-Z0-9._/-]{1,80})\b/gi;let m;
-while((m=re.exec(s)))ids.add(m[1].toUpperCase());
-return ids
-}
-function extractExpiryDate(text){
-const s=String(text||"");
-const patterns=[
-/(?:fecha\s+de\s+vencimiento|fecha\s+de\s+caducidad|vencimiento|caducidad|vence|caduca|expiraci[oó]n|expira)\s*[:\-]?\s*(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/i,
-/(?:fecha\s+de\s+vencimiento|fecha\s+de\s+caducidad|vencimiento|caducidad|vence|caduca|expiraci[oó]n|expira)[^\d]{0,30}(20\d{2})[\/.-](\d{1,2})[\/.-](\d{1,2})/i
+(() => {
+"use strict";
+
+/* =========================================================
+   CONFIGURACIÓN
+   ========================================================= */
+
+const GITHUB_CONFIG = {
+  owner: "miqueas80",
+  repo: "laboratorio-escolar",
+  branch: "main"
+};
+
+/*
+ * Gemini 3.8 Flash es el modelo actual usado por esta versión.
+ * Se mantiene un fallback de 3.7 por compatibilidad de cuentas.
+ * La API sigue usando generateContent, documentado por Google.
+ */
+const GEMINI_MODELS = [
+  "gemini-3.8-flash",
+  "gemini-3.7-flash"
 ];
-for(const re of patterns){
-const m=s.match(re);if(!m)continue;
-let y,mo,d;
-if(m[1].length===4){y=+m[1];mo=+m[2];d=+m[3]}else{d=+m[1];mo=+m[2];y=+m[3];if(y<100)y+=2000}
-const dt=new Date(y,mo-1,d);
-if(dt.getFullYear()===y&&dt.getMonth()===mo-1&&dt.getDate()===d)return dt
+
+const GEMINI_API_BASE =
+  "https://generativelanguage.googleapis.com/v1beta/models/";
+
+let globalApiKey = localStorage.getItem("nexus_gemini_key") || "";
+let repositoryFiles = [];
+let repositoryTexts = {};
+let inventory = loadInventory();
+
+let activePdfDoc = null;
+let activePageNum = 1;
+let activeFileName = "";
+let activePagesCache = [];
+let isRenderingPage = false;
+let activeInventoryId = "";
+let qrScanner = null;
+let qrScannerRunning = false;
+let indexingInProgress = false;
+
+const $ = s => document.querySelector(s);
+
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+
+function escapeHtml(str) {
+  return String(str ?? "")
+    .replaceAll("&","&amp;").replaceAll("<","&lt;")
+    .replaceAll(">","&gt;").replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
-return null
+
+function showToast(text) {
+  const t = $("#toast");
+  t.textContent = text;
+  t.style.display = "block";
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => t.style.display = "none", 3200);
 }
-function buildDocumentProfile(pages){
-const full=pages.join(" ");
-return{
-words:tokenize(full),
-formulas:extractFormulas(full),
-nexusIds:extractNexusIds(full),
-expiry:extractExpiryDate(full),
-normalized:normalizeStr(full),
-pageNormalized:pages.map(normalizeStr)
-}}
-function compareDocuments(a,b){const sharedWords=[...a.words].filter(x=>b.words.has(x)),sharedFormulas=[...a.formulas].filter(x=>b.formulas.has(x));const minWords=Math.max(1,Math.min(a.words.size,b.words.size)),j=sharedWords.length/Math.max(1,a.words.size+b.words.size-sharedWords.length),cov=sharedWords.length/minWords;let score=0,reasons=[];if(sharedFormulas.length){score+=Math.min(70,sharedFormulas.length*25);reasons.push(`${sharedFormulas.length} fórmula(s) compartida(s)`)}if(sharedWords.length>=3){score+=Math.min(30,cov*28+j*18);reasons.push(`${sharedWords.length} conceptos específicos compartidos`)}const connected=(sharedFormulas.length>=1&&sharedWords.length>=1)||(sharedWords.length>=5&&j>=.025&&cov>=.08);if(!connected)score=0;return{score:Math.min(100,Math.round(score)),connected,sharedWords:sharedWords.slice(0,10),sharedFormulas:sharedFormulas.slice(0,8),reasons}}
-async function githubContents(path=""){const ep=path.split("/").filter(Boolean).map(encodeURIComponent).join("/"),url=`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${ep}?ref=${encodeURIComponent(GITHUB_CONFIG.branch)}`,ctl=new AbortController();setTimeout(()=>ctl.abort(),12000);let res;try{res=await fetch(url,{headers:{"Accept":"application/vnd.github+json"},signal:ctl.signal})}catch(e){throw new Error(e.name==="AbortError"?"Tiempo de espera agotado al conectar con GitHub.":e.message)}if(!res.ok)throw new Error(`GitHub ${res.status}: ${(await res.text().catch(()=>"" )).slice(0,180)}`);return res.json()}
-async function fetchPdfTree(path=""){const data=await githubContents(path);if(!Array.isArray(data))return[];const found=[];for(const item of data){if(item.type==="file"&&/\.pdf$/i.test(item.name))found.push({name:item.name,path:item.path,url:`https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${item.path.split("/").map(encodeURIComponent).join("/")}`});else if(item.type==="dir")found.push(...await fetchPdfTree(item.path))}return found}
-async function indexAllPdfs(){let ok=0;for(let i=0;i<repositoryFiles.length;i++){const f=repositoryFiles[i];try{const pdf=await pdfjsLib.getDocument({url:f.url,disableAutoFetch:false}).promise,pages=[];for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),content=await page.getTextContent();pages.push(content.items.map(x=>x.str||"").join(" "))}repositoryTexts[f.path]={original:pages,profile:buildDocumentProfile(pages),name:f.name,path:f.path,url:f.url};ok++}catch(e){console.warn(e);repositoryTexts[f.path]={original:[],profile:buildDocumentProfile([]),name:f.name,path:f.path,url:f.url,error:true}}$("#sysState").textContent=`Indexando ${i+1}/${repositoryFiles.length}...`}$("#sysState").textContent=`Sistema listo · ${ok}/${repositoryFiles.length} PDFs`;$("#mainQueryInput").disabled=false;$("#mainSendBtn").disabled=false;addMsg("#mainChatBox",`>> ${ok} manuales indexados. Motor de relaciones y gestión documental activo.`,"system")}
-function findBestPages(profile,q){const words=[...tokenize(q)],r=[];profile.pageNormalized.forEach((t,i)=>{let hits=0;for(const w of words)if(t.includes(w))hits++;if(hits)r.push({page:i+1,hits})});return r.sort((a,b)=>b.hits-a.hits).slice(0,8)}
-function renderKnowledgeMap(centerPath,matches){const m=document.createElement("div");m.className="matrix";const c=matches.filter(x=>x.relation.connected);m.innerHTML=`<div class="section-head"><span>🔗 MATRIZ DE CONOCIMIENTO</span><small>${c.length} conexión(es) reales</small></div>`;if(!c.length){m.insertAdjacentHTML("beforeend",`<div class="relation-list"><div class="relation"><div><div class="relation-name">Sin conexiones suficientemente fuertes</div><div class="relation-reason">NEXUS-X descartó relaciones débiles en lugar de inventarlas.</div></div></div></div>`);return m}const list=document.createElement("div");list.className="relation-list";c.sort((a,b)=>b.relation.score-a.relation.score).forEach(x=>{const r=document.createElement("div");r.className="relation";r.innerHTML=`<div><div class="relation-name">📄 ${escapeHtml(x.doc.name)}</div><div class="relation-reason">${escapeHtml(x.relation.reasons.join(" · "))}${x.relation.sharedFormulas.length?` · Fórmulas: ${escapeHtml(x.relation.sharedFormulas.join(", "))}`:""}</div></div><div class="score">${x.relation.score}%</div>`;list.appendChild(r)});m.appendChild(list);m.appendChild(buildMap(centerPath,c));return m}
-function buildMap(centerPath,connected){const wrap=document.createElement("div");wrap.className="map-wrap";const canvas=document.createElement("div");canvas.className="map-canvas";const all=[{path:centerPath,name:repositoryTexts[centerPath]?.name||centerPath,center:true},...connected.map(x=>({path:x.doc.path,name:x.doc.name,score:x.relation.score}))],unique=[],seen=new Set();for(const x of all)if(!seen.has(x.path)){seen.add(x.path);unique.push(x)}const pos=[{x:50,y:48}],rx=Math.min(37,12+unique.length*4.5),ry=Math.min(34,12+unique.length*3.5);for(let i=1;i<unique.length;i++){const a=(i-1)/Math.max(1,unique.length-1)*Math.PI*2-Math.PI/2;pos.push({x:50+Math.cos(a)*rx,y:48+Math.sin(a)*ry})}const ns="http://www.w3.org/2000/svg",svg=document.createElementNS(ns,"svg");svg.classList.add("map-svg");svg.setAttribute("viewBox","0 0 1000 520");svg.preserveAspectRatio="none";unique.forEach((n,i)=>{if(i===0)return;const line=document.createElementNS(ns,"line");line.classList.add("map-edge");line.setAttribute("x1",pos[0].x*10);line.setAttribute("y1",pos[0].y*5.2);line.setAttribute("x2",pos[i].x*10);line.setAttribute("y2",pos[i].y*5.2);svg.appendChild(line);const sc=document.createElementNS(ns,"text");sc.classList.add("map-edge-label");sc.setAttribute("x",(pos[0].x+pos[i].x)/2*10);sc.setAttribute("y",(pos[0].y+pos[i].y)/2*5.2-6);sc.textContent=`${n.score}%`;svg.appendChild(sc)});canvas.appendChild(svg);unique.forEach((n,i)=>{const el=document.createElement("div");el.className="map-node";el.style.left=`${pos[i].x}%`;el.style.top=`${pos[i].y}%`;el.innerHTML=`<strong>${n.center?"🎯 ":"📄 "}${escapeHtml(n.name)}</strong><span>${n.center?"DOCUMENTO CONSULTADO":`RELACIÓN ${n.score}%`}</span>`;el.addEventListener("click",()=>loadPdfInModal(n.path,1));canvas.appendChild(el)});wrap.appendChild(canvas);return wrap}
-function handleMainGlobalQuery(){const val=$("#mainQueryInput").value.trim();if(!val)return;addMsg("#mainChatBox",val,"user");$("#mainQueryInput").value="";addMsg("#mainChatBox",`>> Analizando contenido real para: "${val}"...`,"system");const q=normalizeStr(val),qw=[...tokenize(val)],matches=[];for(const f of repositoryFiles){const d=repositoryTexts[f.path];if(!d||d.error)continue;const pages=findBestPages(d.profile,val),hits=pages.reduce((n,p)=>n+p.hits,0);if(d.profile.normalized.includes(q)||(qw.length&&hits>=Math.min(2,qw.length)))matches.push({doc:d,pages})}if(!matches.length){addMsg("#mainChatBox",`>> No se encontraron manuales con evidencia suficiente para "${val}".`,"error");return}const ai=addMsg("#mainChatBox",`Se encontraron ${matches.length} manuales relacionados con "${val}":`,"ai");for(const item of matches){const d=item.doc,folder=d.path.includes("/")?d.path.split("/").slice(0,-1).join("/")+"/":"raíz/",card=document.createElement("div");card.className="doc-action-card";card.innerHTML=`<div class="doc-header-row"><div><div class="doc-action-title">📄 ${escapeHtml(d.name)}</div><div class="doc-meta">📁 ${escapeHtml(folder)}</div></div></div><div class="doc-meta">Páginas relevantes: ${item.pages.length?item.pages.map(x=>x.page).join(", "):"—"}</div><div class="actions-row"><button class="action-btn open-file-btn">🔍 ABRIR EN VISOR</button><a class="action-btn download" href="${d.url}" target="_blank" rel="noopener">💾 ABRIR PDF</a></div>`;card.querySelector(".open-file-btn").addEventListener("click",()=>loadPdfInModal(d.path,item.pages[0]?.page||1));ai.appendChild(card)}const center=matches[0].doc.path,cp=repositoryTexts[center]?.profile,rels=[];if(cp)for(const f of repositoryFiles){if(f.path===center)continue;const o=repositoryTexts[f.path];if(!o||o.error)continue;const r=compareDocuments(cp,o.profile);if(r.connected)rels.push({doc:o,relation:r})}ai.appendChild(renderKnowledgeMap(center,rels));$("#mainChatBox").scrollTop=$("#mainChatBox").scrollHeight}
-function expiryInfo(profile){
-const d=profile?.expiry;
-if(!d)return{label:"SIN FECHA",cls:"expiry-none",date:"No identificada"};
-const now=new Date();now.setHours(0,0,0,0);
-const days=Math.ceil((d-now)/86400000);
-if(days<0)return{label:"VENCIDO",cls:"expiry-danger",date:d.toLocaleDateString("es-AR")};
-if(days<=30)return{label:"PRÓXIMO A VENCER",cls:"expiry-warning",date:d.toLocaleDateString("es-AR")};
-return{label:"VIGENTE",cls:"expiry-ok",date:d.toLocaleDateString("es-AR")}
+
+function addMsg(boxSelector, text, type) {
+  const box = $(boxSelector);
+  const div = document.createElement("div");
+  div.className = `msg ${type}`;
+  div.textContent = text;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
 }
-function findInventoryDocs(code){
-const raw=String(code||"").trim();
-const m=raw.match(/NEXUS\s*:\s*([A-Z0-9][A-Z0-9._/-]{1,80})/i);
-const id=(m?m[1]:raw).trim().toUpperCase();
-return repositoryFiles.map(f=>repositoryTexts[f.path])
-.filter(d=>d&&!d.error&&d.profile?.nexusIds?.has(id))
-.map(d=>({doc:d,score:100}))
+
+function normalizeStr(str) {
+  return String(str || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^\p{L}\p{N}\s./+\-]/gu," ")
+    .replace(/\s+/g," ")
+    .trim();
 }
-function showInventory(code){const clean=String(code||"").trim();if(!clean)return;const matches=findInventoryDocs(clean);const ai=addMsg("#mainChatBox",`>> IDENTIFICACIÓN: ${clean}`,"system");const box=document.createElement("div");box.className="inventory-card";if(!matches.length){box.innerHTML=`<div class="inventory-title">⚠️ IDENTIFICADOR NO REGISTRADO</div><div class="doc-meta">No encontré el ID exacto en el contenido indexado. La ficha debe contener explícitamente el identificador, por ejemplo NEXUS:H2SO4-003.</div>`;ai.appendChild(box);return}const best=matches[0].doc,exp=expiryInfo(best.profile),formula=[...best.profile.formulas].find(x=>/[A-Z].*\d/.test(x))||"No detectada";box.innerHTML=`<div class="inventory-title">🧪 FICHA NEXUS-X</div><div class="inventory-grid"><div class="inventory-field"><b>IDENTIFICADOR</b><span>${escapeHtml(clean)}</span></div><div class="inventory-field"><b>DOCUMENTO PRINCIPAL</b><span>${escapeHtml(best.name)}</span></div><div class="inventory-field"><b>FÓRMULA DETECTADA</b><span>${escapeHtml(formula)}</span></div><div class="inventory-field"><b>ESTADO</b><span class="${exp.cls}">${exp.label}</span></div><div class="inventory-field"><b>FECHA DETECTADA</b><span>${exp.date}</span></div><div class="inventory-field"><b>DOCUMENTOS COINCIDENTES</b><span>${matches.length}</span></div></div><div class="actions-row"><button class="action-btn" id="openInventoryDoc">🔍 ABRIR FICHA</button><button class="action-btn" id="inventoryMapBtn">🧠 ANALIZAR RELACIONES</button></div>`;ai.appendChild(box);$("#openInventoryDoc").onclick=()=>loadPdfInModal(best.path,1);$("#inventoryMapBtn").onclick=()=>{$("#mainQueryInput").value=clean;handleMainGlobalQuery()};$("#mainChatBox").scrollTop=$("#mainChatBox").scrollHeight}
-async function startQr(){if(!window.Html5Qrcode){showToast("No se pudo cargar el lector QR.");return}$("#qrModal").style.display="flex";if(qrScanner)return;qrScanner=new Html5Qrcode("qrReader");try{await qrScanner.start({facingMode:"environment"},{fps:10,qrbox:{width:250,height:250}},async text=>{await stopQr();showInventory(text)})}catch(e){console.error(e);showToast("La cámara no está disponible. Podés ingresar el código manualmente.");}}
-async function stopQr(){if(qrScanner){try{await qrScanner.stop()}catch(e){}try{qrScanner.clear()}catch(e){}qrScanner=null}$("#qrModal").style.display="none"}
-async function loadPdfInModal(path,target=1){const d=repositoryTexts[path];if(!d)return;activeFileName=path;activePagesCache=d.original||[];$("#modalDocTitle").textContent=`📄 ${d.name}`;$("#pdfViewerModal").style.display="flex";$("#modalChatHistory").innerHTML=`<div class="v-msg bot">Manual "${escapeHtml(d.name)}" cargado. Podés preguntarme por una página, un concepto o pedir un resumen.</div>`;try{activePdfDoc=await pdfjsLib.getDocument(d.url).promise;activePageNum=Math.max(1,Math.min(target,activePdfDoc.numPages));await renderCurrentPage()}catch(e){console.error(e);showToast("No se pudo cargar el PDF.")}}
-async function renderCurrentPage(){if(!activePdfDoc||isRenderingPage)return;isRenderingPage=true;try{$("#pageIndicator").textContent=`Pág. ${activePageNum} / ${activePdfDoc.numPages}`;$("#prevPageBtn").disabled=activePageNum<=1;$("#nextPageBtn").disabled=activePageNum>=activePdfDoc.numPages;const page=await activePdfDoc.getPage(activePageNum),canvas=$("#pdfCanvas"),ctx=canvas.getContext("2d"),container=document.querySelector(".canvas-container"),base=page.getViewport({scale:1}),available=Math.max(320,(container.clientWidth||800)-30),scale=Math.max(.9,available/base.width),viewport=page.getViewport({scale});canvas.width=viewport.width;canvas.height=viewport.height;await page.render({canvasContext:ctx,viewport}).promise}catch(e){console.error(e)}finally{isRenderingPage=false}}
-async function callGeminiAPI(prompt,key){if(!key)throw new Error("Falta la API Key.");const url=`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(key)}`,res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{temperature:.25,maxOutputTokens:1800}})}),data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data?.error?.message||`HTTP ${res.status}`);const text=data?.candidates?.[0]?.content?.parts?.map(p=>p.text||"").join("").trim();if(!text)throw new Error("Gemini no devolvió texto.");return text}
-function formatAiText(t){return escapeHtml(t).replace(/\*\*(.*?)\*\*/g,"$1").replace(/\n/g,"<br>")}
-async function handleModalAIQuery(){const val=$("#modalQueryInput").value.trim();if(!val)return;const hist=$("#modalChatHistory"),u=document.createElement("div");u.className="v-msg user";u.textContent=val;hist.appendChild(u);$("#modalQueryInput").value="";const b=document.createElement("div");b.className="v-msg bot";b.textContent="Analizando el contenido del manual...";hist.appendChild(b);hist.scrollTop=hist.scrollHeight;$("#modalSendBtn").disabled=true;const key=localStorage.getItem("nexus_gemini_key")||globalApiKey;if(!key){b.textContent="⚠️ Guardá primero tu API Key arriba.";$("#modalSendBtn").disabled=false;return}try{const pages=activePagesCache||[],qw=[...tokenize(val)],ranked=pages.map((text,index)=>{let hits=0,n=normalizeStr(text);for(const w of qw)if(n.includes(w))hits++;return{text,index,hits}}).sort((a,b)=>b.hits-a.hits),selected=pages.length<=18?pages.map((text,index)=>({text,index})):ranked.slice(0,12),context=selected.map(x=>`--- PÁGINA ${x.index+1} ---\n${x.text}`).join("\n\n").slice(0,50000),answer=await callGeminiAPI(`Sos el asistente técnico de NEXUS-X. Respondé en español claro.\nDOCUMENTO: ${activeFileName}\nCONTENIDO:\n${context}\nCONSULTA: ${val}\nREGLAS: Basate únicamente en el contenido. Indicá Página X cuando corresponda. No inventes datos. No uses LaTeX. Para fórmulas usá texto simple.` ,key);b.innerHTML=formatAiText(answer)}catch(e){b.textContent=`⚠️ Error al consultar Gemini: ${e.message}`}finally{$("#modalSendBtn").disabled=false;hist.scrollTop=hist.scrollHeight}}
-$("#apiKeyInput").value=globalApiKey;$("#saveApiKeyBtn").onclick=()=>{const v=$("#apiKeyInput").value.trim();if(!v)return showToast("Pegá una API Key válida.");localStorage.setItem("nexus_gemini_key",v);globalApiKey=v;showToast("API Key guardada en este navegador.")};$("#mainSendBtn").onclick=handleMainGlobalQuery;$("#mainQueryInput").onkeydown=e=>{if(e.key==="Enter")handleMainGlobalQuery()};$("#modalSendBtn").onclick=handleModalAIQuery;$("#modalQueryInput").onkeydown=e=>{if(e.key==="Enter")handleModalAIQuery()};$("#prevPageBtn").onclick=async()=>{if(activePageNum>1){activePageNum--;await renderCurrentPage()}};$("#nextPageBtn").onclick=async()=>{if(activePdfDoc&&activePageNum<activePdfDoc.numPages){activePageNum++;await renderCurrentPage()}};$("#closeModalBtn").onclick=()=>$("#pdfViewerModal").style.display="none";$("#openQrBtn").onclick=startQr;$("#closeQrBtn").onclick=stopQr;$("#qrManualBtn").onclick=()=>{const v=$("#qrManualInput").value.trim();if(v){stopQr();showInventory(v)}};$("#qrManualInput").onkeydown=e=>{if(e.key==="Enter")$("#qrManualBtn").click()};window.addEventListener("resize",()=>{if($("#pdfViewerModal").style.display==="flex")renderCurrentPage()});
-async function boot(){try{if(!window.pdfjsLib){throw new Error("No se pudo cargar PDF.js. Verificá la conexión a Internet y recargá la página.")}$("#sysState").textContent="Leyendo repositorio...";repositoryFiles=(await fetchPdfTree("")).sort((a,b)=>a.path.localeCompare(b.path));if(!repositoryFiles.length){$("#sysState").textContent="Sin PDFs";addMsg("#mainChatBox",">> No encontré PDFs en el repositorio ni en sus subcarpetas.","error");return}addMsg("#mainChatBox",`>> Encontrados ${repositoryFiles.length} PDFs en todo el árbol. Indexando contenido...`,"system");await indexAllPdfs()}catch(e){console.error(e);$("#sysState").textContent="Error de sincronización";addMsg("#mainChatBox",`>> Error al leer GitHub: ${e.message}`,"error")}}
+
+const STOPWORDS = new Set(`
+para desde entre sobre como este esta estos estas una uno unas unos
+con sin por del las los que una son fue han hay donde cuando cual
+cualquiera puede pueden debe deben ser sea sean tener tiene hacer
+hace hacia mediante durante parte partes pagina páginas manual
+material materiales protocolo protocolos procedimiento procedimientos
+unidad tema contenido documento documentos alumno estudiante ejemplo
+ejemplos forma formas tipo tipos segun según cada mismo misma mismos
+mismas luego tambien también muy mas más menos solo sólo todos todas
+todo toda para desde sobre
+`.trim().split(/\s+/));
+
+function tokenize(str) {
+  return new Set(
+    normalizeStr(str).split(/\s+/)
+      .filter(w => w.length >= 4 && !STOPWORDS.has(w))
+  );
+}
+
+function extractFormulas(text) {
+  const raw = String(text || "").replace(/\s+/g," ");
+  const matches = raw.match(
+    /\b(?:[A-Z][a-z]?\d*(?:\([A-Z][a-z]?\d*\)\d*)*(?:[+-]\d*)?|[A-Z][a-z]?\d*[A-Z][a-z]?\d*)\b/g
+  ) || [];
+  const valid = new Set();
+  for (const x of matches) {
+    if (x.length < 2 || x.length > 18) continue;
+    if (!/[A-Z]/.test(x)) continue;
+    if (!/\d/.test(x) && x.length <= 2) continue;
+    valid.add(x);
+  }
+  return valid;
+}
+
+function buildDocumentProfile(pages) {
+  const full = pages.join(" ");
+  return {
+    words: tokenize(full),
+    formulas: extractFormulas(full),
+    normalized: normalizeStr(full),
+    pageNormalized: pages.map(normalizeStr)
+  };
+}
+
+function compareDocuments(a,b) {
+  const sharedWords = [...a.words].filter(x => b.words.has(x));
+  const sharedFormulas = [...a.formulas].filter(x => b.formulas.has(x));
+  const minWords = Math.max(1, Math.min(a.words.size,b.words.size));
+  const jaccard = sharedWords.length /
+    Math.max(1,a.words.size+b.words.size-sharedWords.length);
+  const coverage = sharedWords.length/minWords;
+
+  let score = 0;
+  const reasons = [];
+
+  if (sharedFormulas.length) {
+    score += Math.min(65,sharedFormulas.length*22);
+    reasons.push(`${sharedFormulas.length} fórmula(s) compartida(s)`);
+  }
+  if (sharedWords.length >= 3) {
+    score += Math.min(35,coverage*30+jaccard*18);
+    reasons.push(`${sharedWords.length} conceptos específicos`);
+  }
+
+  const connected =
+    (sharedFormulas.length >= 1 && sharedWords.length >= 1) ||
+    (sharedWords.length >= 5 && jaccard >= .025 && coverage >= .08);
+
+  if (!connected) score = 0;
+
+  return {
+    score:Math.min(100,Math.round(score)),
+    connected,
+    sharedWords:sharedWords.slice(0,12),
+    sharedFormulas:sharedFormulas.slice(0,8),
+    reasons
+  };
+}
+
+/* =========================================================
+   INVENTARIO
+   ========================================================= */
+
+function loadInventory() {
+  try {
+    const data = JSON.parse(localStorage.getItem("nexus_inventory") || "[]");
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveInventoryStore() {
+  localStorage.setItem("nexus_inventory",JSON.stringify(inventory));
+}
+
+function inventoryStatus(item) {
+  if (!item.expiry) return {key:"neutral",label:"SIN VENCIMIENTO"};
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const d = new Date(item.expiry + "T00:00:00");
+  const days = Math.ceil((d-today)/86400000);
+  if (days < 0) return {key:"danger",label:`VENCIDO · ${Math.abs(days)} d`};
+  if (days <= 30) return {key:"danger",label:`URGENTE · ${days} d`};
+  if (days <= 90) return {key:"warn",label:`PRÓXIMO · ${days} d`};
+  return {key:"ok",label:`VIGENTE · ${days} d`};
+}
+
+function clearInventoryForm() {
+  ["invId","invName","invFormula","invExpiry","invQuantity","invLocation",
+   "invManufacturer","invKeywords","invNotes"].forEach(id => $( "#"+id ).value = "");
+  $("#invCategory").value = "Sustancia";
+  activeInventoryId = "";
+  $("#inventoryMatchBox").textContent = "";
+}
+
+function getInventoryForm() {
+  return {
+    id:$("#invId").value.trim(),
+    name:$("#invName").value.trim(),
+    formula:$("#invFormula").value.trim(),
+    category:$("#invCategory").value,
+    expiry:$("#invExpiry").value,
+    quantity:$("#invQuantity").value.trim(),
+    location:$("#invLocation").value.trim(),
+    manufacturer:$("#invManufacturer").value.trim(),
+    keywords:$("#invKeywords").value.trim(),
+    notes:$("#invNotes").value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+}
+
+function fillInventoryForm(item) {
+  if (!item) return;
+  activeInventoryId = item.id;
+  $("#invId").value=item.id||"";
+  $("#invName").value=item.name||"";
+  $("#invFormula").value=item.formula||"";
+  $("#invCategory").value=item.category||"Sustancia";
+  $("#invExpiry").value=item.expiry||"";
+  $("#invQuantity").value=item.quantity||"";
+  $("#invLocation").value=item.location||"";
+  $("#invManufacturer").value=item.manufacturer||"";
+  $("#invKeywords").value=item.keywords||"";
+  $("#invNotes").value=item.notes||"";
+  renderInventoryList();
+  updateInventoryMatches(item);
+}
+
+function saveInventoryItem() {
+  const item = getInventoryForm();
+  if (!item.id || !item.name) {
+    showToast("Completá ID NEXUS y nombre.");
+    return;
+  }
+  if (!/^NEXUS:[A-Za-z0-9._:-]+$/i.test(item.id)) {
+    showToast("El ID debe tener formato NEXUS:XXXX-001.");
+    return;
+  }
+
+  const idx = inventory.findIndex(x => x.id.toLowerCase() === item.id.toLowerCase());
+  if (idx >= 0) inventory[idx] = {...inventory[idx],...item};
+  else inventory.push(item);
+
+  saveInventoryStore();
+  activeInventoryId = item.id;
+  renderInventoryList();
+  updateInventoryMatches(item);
+  showToast("Registro guardado.");
+}
+
+function deleteInventoryItem() {
+  if (!activeInventoryId) {
+    showToast("Seleccioná primero un registro.");
+    return;
+  }
+  inventory = inventory.filter(x => x.id !== activeInventoryId);
+  saveInventoryStore();
+  clearInventoryForm();
+  renderInventoryList();
+  showToast("Registro eliminado.");
+}
+
+function renderInventoryList() {
+  const list = $("#inventoryList");
+  const filter = normalizeStr($("#inventoryFilter").value);
+  const rows = inventory.filter(item => {
+    if (!filter) return true;
+    return normalizeStr([
+      item.id,item.name,item.formula,item.category,item.location,item.keywords
+    ].join(" ")).includes(filter);
+  });
+
+  list.innerHTML = "";
+  if (!rows.length) {
+    list.innerHTML = `<div class="loading">No hay registros todavía.</div>`;
+  } else {
+    rows.forEach(item => {
+      const st = inventoryStatus(item);
+      const div = document.createElement("div");
+      div.className = "inv-item";
+      div.innerHTML = `
+        <strong>🧪 ${escapeHtml(item.name)}
+          <span class="badge ${st.key}">${escapeHtml(st.label)}</span>
+        </strong>
+        <div class="inv-meta">
+          ${escapeHtml(item.id)}
+          ${item.formula ? " · " + escapeHtml(item.formula) : ""}
+          ${item.location ? " · 📍 " + escapeHtml(item.location) : ""}
+        </div>
+      `;
+      div.addEventListener("click",()=>fillInventoryForm(item));
+      list.appendChild(div);
+    });
+  }
+
+  const expired = inventory.filter(x=>inventoryStatus(x).key==="danger").length;
+  const soon = inventory.filter(x=>inventoryStatus(x).key==="warn").length;
+
+  $("#inventoryStats").innerHTML = `
+    <div class="stat"><b>${inventory.length}</b><span>REGISTROS</span></div>
+    <div class="stat"><b>${inventory.filter(x=>x.category==="Sustancia"||x.category==="Reactivo").length}</b><span>SUSTANCIAS</span></div>
+    <div class="stat"><b>${soon}</b><span>PRÓXIMOS</span></div>
+    <div class="stat"><b>${expired}</b><span>URGENTES</span></div>
+  `;
+}
+
+function buildInventorySearchText(item) {
+  return [
+    item.id,item.name,item.formula,item.category,item.manufacturer,
+    item.keywords,item.notes,item.location
+  ].filter(Boolean).join(" ");
+}
+
+function findRelatedDocumentsForItem(item) {
+  const query = buildInventorySearchText(item);
+  const qWords = [...tokenize(query)];
+  const qNorm = normalizeStr(query);
+  const results = [];
+
+  for (const file of repositoryFiles) {
+    const doc = repositoryTexts[file.path];
+    if (!doc || doc.error) continue;
+
+    const shared = qWords.filter(w => doc.profile.words.has(w));
+    const formula = item.formula
+      ? [...doc.profile.formulas].some(f =>
+          normalizeStr(f) === normalizeStr(item.formula))
+      : false;
+
+    let score = 0;
+    if (formula) score += 55;
+    score += Math.min(35,shared.length*5);
+
+    const directName = normalizeStr(item.name);
+    if (directName && doc.profile.normalized.includes(directName)) score += 25;
+
+    if (qNorm && doc.profile.normalized.includes(qNorm)) score += 15;
+
+    if (score >= 25) {
+      results.push({doc,score:Math.min(100,Math.round(score)),shared,formula});
+    }
+  }
+
+  return results.sort((a,b)=>b.score-a.score).slice(0,10);
+}
+
+function updateInventoryMatches(item) {
+  const box = $("#inventoryMatchBox");
+  if (!item || !repositoryFiles.length) {
+    box.textContent = "Los documentos relacionados aparecerán cuando el repositorio esté indexado.";
+    return;
+  }
+  const matches = findRelatedDocumentsForItem(item);
+  if (!matches.length) {
+    box.innerHTML = "📚 <b>Sin ficha relacionada todavía.</b> NEXUS no inventará una relación.";
+    return;
+  }
+  box.innerHTML = `📚 <b>${matches.length} documento(s) relacionado(s):</b> ` +
+    matches.slice(0,5).map(x=>`${escapeHtml(x.doc.name)} (${x.score}%)`).join(" · ");
+}
+
+/* =========================================================
+   QR
+   ========================================================= */
+
+function normalizeQrPayload(raw) {
+  const text = String(raw || "").trim();
+  if (!text) return "";
+
+  // Soporta:
+  // NEXUS:H2SO4-001
+  // nexus://H2SO4-001
+  // https://...?...id=NEXUS:H2SO4-001
+  if (/^NEXUS:/i.test(text)) return "NEXUS:"+text.slice(6).trim();
+  if (/^nexus:\/\//i.test(text)) return "NEXUS:"+text.slice(8).trim();
+
+  try {
+    const url = new URL(text);
+    const id = url.searchParams.get("id") || url.searchParams.get("nexus");
+    if (id) return /^NEXUS:/i.test(id) ? id : "NEXUS:"+id;
+  } catch {}
+
+  return text;
+}
+
+async function processQr(raw) {
+  const id = normalizeQrPayload(raw);
+  $("#qrResult").innerHTML = `Código leído: <b>${escapeHtml(id)}</b>`;
+
+  const item = inventory.find(x => x.id.toLowerCase() === id.toLowerCase());
+
+  if (!item) {
+    $("#qrObjectResult").innerHTML = `
+      <div class="msg error" style="margin:0">
+        <b>⚠️ ID NO REGISTRADO</b><br><br>
+        NEXUS leyó correctamente <b>${escapeHtml(id)}</b>,
+        pero ese código todavía no existe en el inventario.
+        <div class="actions-row">
+          <button class="action-btn" id="registerScannedBtn">＋ REGISTRAR ESTE ID</button>
+        </div>
+      </div>
+    `;
+    $("#registerScannedBtn").addEventListener("click",()=>{
+      closeQrOverlay();
+      clearInventoryForm();
+      $("#inventoryOverlay").classList.add("open");
+      $("#invId").value = id;
+      $("#invName").focus();
+    });
+    return;
+  }
+
+  const st = inventoryStatus(item);
+  const matches = findRelatedDocumentsForItem(item);
+
+  $("#qrObjectResult").innerHTML = `
+    <div style="padding:14px;border:1px solid var(--stroke);border-radius:8px;background:rgba(0,242,254,.04)">
+      <div style="font-size:18px;font-weight:900;color:var(--accent)">${escapeHtml(item.name)}</div>
+      <div style="margin-top:7px;color:var(--muted)">${escapeHtml(item.id)}</div>
+      <div style="margin-top:13px">
+        <span class="badge ${st.key}" style="margin-left:0">${escapeHtml(st.label)}</span>
+      </div>
+      <div style="margin-top:14px;line-height:1.8;font-size:14px">
+        ${item.formula ? `<b>Fórmula:</b> ${escapeHtml(item.formula)}<br>` : ""}
+        <b>Categoría:</b> ${escapeHtml(item.category||"—")}<br>
+        <b>Cantidad:</b> ${escapeHtml(item.quantity||"—")}<br>
+        <b>Ubicación:</b> ${escapeHtml(item.location||"—")}<br>
+        <b>Fabricante:</b> ${escapeHtml(item.manufacturer||"—")}<br>
+        <b>Vencimiento:</b> ${escapeHtml(item.expiry||"—")}
+      </div>
+      ${item.notes ? `<div style="margin-top:12px;color:var(--muted)">${escapeHtml(item.notes)}</div>` : ""}
+    </div>
+
+    <div class="doc-action-card">
+      <div class="doc-action-title">📚 DOCUMENTOS RELACIONADOS POR CONTENIDO</div>
+      <div class="doc-meta">
+        ${matches.length
+          ? matches.map(x=>`
+              <div style="margin-top:9px;padding:9px;border-bottom:1px solid rgba(255,255,255,.07)">
+                <b>${escapeHtml(x.doc.name)}</b> · ${x.score}%
+                <button class="small-btn qr-open-doc" data-path="${escapeHtml(x.doc.path)}" style="float:right">ABRIR</button>
+              </div>`).join("")
+          : "No se encontraron relaciones suficientemente fuertes."}
+      </div>
+    </div>
+  `;
+
+  document.querySelectorAll(".qr-open-doc").forEach(btn=>{
+    btn.addEventListener("click",()=>loadPdfInModal(btn.dataset.path,1));
+  });
+}
+
+async function startQrScanner() {
+  if (qrScannerRunning) return;
+  if (!window.Html5Qrcode) {
+    $("#qrResult").textContent = "El módulo de cámara todavía está cargando. Probá nuevamente en unos segundos.";
+    return;
+  }
+
+  qrScanner = new Html5Qrcode("qr-reader");
+  try {
+    await qrScanner.start(
+      {facingMode:"environment"},
+      {fps:10,qrbox:{width:260,height:260}},
+      decodedText => {
+        processQr(decodedText);
+        stopQrScanner();
+      },
+      () => {}
+    );
+    qrScannerRunning = true;
+  } catch(err) {
+    console.error(err);
+    $("#qrResult").textContent =
+      "No se pudo abrir la cámara. Verificá permisos o usá el ingreso manual.";
+  }
+}
+
+async function stopQrScanner() {
+  if (!qrScanner || !qrScannerRunning) return;
+  try { await qrScanner.stop(); } catch {}
+  try { await qrScanner.clear(); } catch {}
+  qrScannerRunning = false;
+  qrScanner = null;
+}
+
+function openQrOverlay() {
+  $("#qrOverlay").classList.add("open");
+  $("#qrResult").textContent = "Esperando un QR...";
+  $("#qrObjectResult").innerHTML = `<div class="loading">Escaneá un código para comenzar.</div>`;
+  setTimeout(startQrScanner,300);
+}
+
+async function closeQrOverlay() {
+  await stopQrScanner();
+  $("#qrOverlay").classList.remove("open");
+}
+
+/* =========================================================
+   GITHUB / PDF
+   ========================================================= */
+
+async function githubContents(path="") {
+  const encodedPath = path.split("/").filter(Boolean).map(encodeURIComponent).join("/");
+  const url =
+    `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/`+
+    encodedPath+`?ref=${encodeURIComponent(GITHUB_CONFIG.branch)}`;
+
+  const res = await fetch(url,{headers:{"Accept":"application/vnd.github+json"}});
+  if (!res.ok) {
+    const body = await res.text().catch(()=> "");
+    throw new Error(`GitHub ${res.status}: ${body.slice(0,180)}`);
+  }
+  return res.json();
+}
+
+async function fetchPdfTree(path="") {
+  const data = await githubContents(path);
+  if (!Array.isArray(data)) return [];
+
+  const found = [];
+  for (const item of data) {
+    if (item.type==="file" && /\.pdf$/i.test(item.name)) {
+      found.push({
+        name:item.name,path:item.path,
+        url:`https://raw.githubusercontent.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/${GITHUB_CONFIG.branch}/${item.path.split("/").map(encodeURIComponent).join("/")}`
+      });
+    } else if (item.type==="dir") {
+      const children = await fetchPdfTree(item.path);
+      found.push(...children);
+    }
+  }
+  return found;
+}
+
+async function indexOnePdf(file) {
+  try {
+    const pdf = await pdfjsLib.getDocument({
+      url:file.url,
+      disableAutoFetch:false,
+      disableStream:false
+    }).promise;
+
+    const pages = [];
+    for (let p=1;p<=pdf.numPages;p++) {
+      const page = await pdf.getPage(p);
+      const content = await page.getTextContent();
+      pages.push(content.items.map(x=>x.str||"").join(" "));
+    }
+
+    repositoryTexts[file.path] = {
+      original:pages,
+      profile:buildDocumentProfile(pages),
+      name:file.name,path:file.path,url:file.url,error:false
+    };
+    return true;
+  } catch(err) {
+    console.warn("No se pudo indexar:",file.path,err);
+    repositoryTexts[file.path] = {
+      original:[],profile:buildDocumentProfile([]),
+      name:file.name,path:file.path,url:file.url,error:true
+    };
+    return false;
+  }
+}
+
+async function indexAllPdfs() {
+  if (indexingInProgress) return;
+  indexingInProgress = true;
+
+  $("#mainQueryInput").disabled = true;
+  $("#mainSendBtn").disabled = true;
+
+  const total = repositoryFiles.length;
+  let done=0,ok=0;
+  $("#sysState").textContent = `Indexando 0/${total}...`;
+
+  // 3 PDFs en paralelo para evitar que la interfaz parezca trabada.
+  const queue = [...repositoryFiles];
+  async function worker() {
+    while(queue.length) {
+      const file = queue.shift();
+      const good = await indexOnePdf(file);
+      done++;
+      if (good) ok++;
+      $("#sysState").textContent = `Indexando ${done}/${total} · ${ok} correctos`;
+    }
+  }
+
+  await Promise.all([worker(),worker(),worker()]);
+  indexingInProgress=false;
+
+  $("#sysState").textContent = `Sistema listo · ${ok}/${total} PDFs`;
+  $("#mainQueryInput").disabled=false;
+  $("#mainSendBtn").disabled=false;
+
+  addMsg("#mainChatBox",
+    `>> ${ok} manuales indexados. Subcarpetas incluidas. Las relaciones se calculan por contenido, no por carpeta.`,
+    "system");
+
+  if (activeInventoryId) {
+    const item = inventory.find(x=>x.id===activeInventoryId);
+    if (item) updateInventoryMatches(item);
+  }
+}
+
+/* =========================================================
+   BÚSQUEDA + MAPA
+   ========================================================= */
+
+function findBestPages(profile,query) {
+  const words=[...tokenize(query)];
+  if(!words.length) return [];
+  const results=[];
+  profile.pageNormalized.forEach((text,index)=>{
+    let hits=0;
+    for(const word of words) if(text.includes(word)) hits++;
+    if(hits) results.push({page:index+1,hits});
+  });
+  return results.sort((a,b)=>b.hits-a.hits).slice(0,8);
+}
+
+function renderKnowledgeMap(centerPath,relations) {
+  const matrix=document.createElement("div");
+  matrix.className="matrix";
+  const connected=relations.filter(x=>x.relation.connected);
+
+  matrix.innerHTML=`
+    <div class="section-head">
+      <span>🔗 MATRIZ DE CONOCIMIENTO</span>
+      <small>${connected.length} conexión(es) reales</small>
+    </div>`;
+
+  if(!connected.length){
+    matrix.insertAdjacentHTML("beforeend",`
+      <div class="relation-list"><div class="relation">
+        <div><div class="relation-name">Sin conexiones suficientemente fuertes</div>
+        <div class="relation-reason">NEXUS-X descartó relaciones débiles en lugar de inventarlas.</div></div>
+      </div></div>`);
+    return matrix;
+  }
+
+  const list=document.createElement("div");
+  list.className="relation-list";
+  connected.sort((a,b)=>b.relation.score-a.relation.score).forEach(item=>{
+    const r=document.createElement("div");
+    r.className="relation";
+    r.innerHTML=`
+      <div><div class="relation-name">📄 ${escapeHtml(item.doc.name)}</div>
+      <div class="relation-reason">
+        ${escapeHtml(item.relation.reasons.join(" · "))}
+        ${item.relation.sharedFormulas.length
+          ? ` · Fórmulas: ${escapeHtml(item.relation.sharedFormulas.join(", "))}`:""}
+      </div></div><div class="score">${item.relation.score}%</div>`;
+    list.appendChild(r);
+  });
+  matrix.appendChild(list);
+  matrix.appendChild(buildMap(centerPath,connected));
+  return matrix;
+}
+
+function buildMap(centerPath,connected) {
+  const wrap=document.createElement("div");
+  wrap.className="map-wrap";
+  const canvas=document.createElement("div");
+  canvas.className="map-canvas";
+
+  const all=[{
+    path:centerPath,name:repositoryTexts[centerPath]?.name||centerPath,center:true
+  },...connected.map(x=>({path:x.doc.path,name:x.doc.name,score:x.relation.score}))];
+
+  const unique=[];const seen=new Set();
+  for(const x of all) if(!seen.has(x.path)){seen.add(x.path);unique.push(x)}
+
+  const positions=[{x:50,y:48}];
+  const rx=Math.min(37,12+unique.length*4.5);
+  const ry=Math.min(34,12+unique.length*3.5);
+
+  for(let i=1;i<unique.length;i++){
+    const angle=((i-1)/Math.max(1,unique.length-1))*Math.PI*2-Math.PI/2;
+    positions.push({x:50+Math.cos(angle)*rx,y:48+Math.sin(angle)*ry});
+  }
+
+  const svgNS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(svgNS,"svg");
+  svg.classList.add("map-svg");svg.setAttribute("viewBox","0 0 1000 520");svg.preserveAspectRatio="none";
+
+  unique.forEach((node,i)=>{
+    if(i===0)return;
+    const line=document.createElementNS(svgNS,"line");
+    line.classList.add("map-edge");
+    line.setAttribute("x1",positions[0].x*10);line.setAttribute("y1",positions[0].y*5.2);
+    line.setAttribute("x2",positions[i].x*10);line.setAttribute("y2",positions[i].y*5.2);
+    svg.appendChild(line);
+
+    const score=document.createElementNS(svgNS,"text");
+    score.classList.add("map-edge-label");
+    score.setAttribute("x",((positions[0].x+positions[i].x)/2)*10);
+    score.setAttribute("y",((positions[0].y+positions[i].y)/2)*5.2-6);
+    score.textContent=`${node.score}%`;svg.appendChild(score);
+  });
+  canvas.appendChild(svg);
+
+  unique.forEach((node,i)=>{
+    const el=document.createElement("div");
+    el.className="map-node";
+    el.style.left=`${positions[i].x}%`;el.style.top=`${positions[i].y}%`;
+    el.innerHTML=`<strong>${node.center?"🎯":"📄"} ${escapeHtml(node.name)}</strong>
+      <span>${node.center?"DOCUMENTO CONSULTADO":`RELACIÓN ${node.score}%`}</span>`;
+    el.addEventListener("click",()=>loadPdfInModal(node.path,1));
+    canvas.appendChild(el);
+  });
+
+  wrap.appendChild(canvas);return wrap;
+}
+
+function handleMainGlobalQuery() {
+  const val=$("#mainQueryInput").value.trim();
+  if(!val)return;
+
+  addMsg("#mainChatBox",val,"user");
+  $("#mainQueryInput").value="";
+  addMsg("#mainChatBox",`>> Analizando contenido real para: "${val}"...`,"system");
+
+  const queryNorm=normalizeStr(val),queryWords=[...tokenize(val)];
+  const matches=[];
+
+  for(const file of repositoryFiles){
+    const doc=repositoryTexts[file.path];
+    if(!doc||doc.error)continue;
+    const pages=findBestPages(doc.profile,val);
+    const directHits=pages.reduce((n,p)=>n+p.hits,0);
+    if(doc.profile.normalized.includes(queryNorm) ||
+      (queryWords.length&&directHits>=Math.min(2,queryWords.length))){
+      matches.push({doc,pages});
+    }
+  }
+
+  if(!matches.length){
+    addMsg("#mainChatBox",`>> No se encontraron manuales con evidencia suficiente para "${val}".`,"error");
+    return;
+  }
+
+  const aiMsg=addMsg("#mainChatBox",
+    `Se encontraron ${matches.length} manuales relacionados con "${val}":`,"ai");
+
+  for(const item of matches){
+    const doc=item.doc;
+    const card=document.createElement("div");
+    card.className="doc-action-card";
+    const folder=doc.path.includes("/")?doc.path.split("/").slice(0,-1).join("/")+"/":"raíz/";
+
+    card.innerHTML=`
+      <div class="doc-header-row"><div>
+        <div class="doc-action-title">📄 ${escapeHtml(doc.name)}</div>
+        <div class="doc-meta">📁 ${escapeHtml(folder)}</div>
+      </div></div>
+      <div class="doc-meta">Páginas relevantes:
+        ${item.pages.length?item.pages.map(x=>x.page).join(", "):"—"}
+      </div>
+      <div class="actions-row">
+        <button class="action-btn open-file-btn">🔍 ABRIR EN VISOR</button>
+        <a class="action-btn download" href="${doc.url}" target="_blank" rel="noopener">💾 ABRIR PDF</a>
+      </div>`;
+
+    card.querySelector(".open-file-btn").addEventListener("click",()=>{
+      loadPdfInModal(doc.path,item.pages[0]?.page||1);
+    });
+    aiMsg.appendChild(card);
+  }
+
+  const center=matches[0].doc.path;
+  const relationCandidates=[];
+  const centerProfile=repositoryTexts[center]?.profile;
+
+  if(centerProfile){
+    for(const file of repositoryFiles){
+      if(file.path===center)continue;
+      const other=repositoryTexts[file.path];
+      if(!other||other.error)continue;
+      const relation=compareDocuments(centerProfile,other.profile);
+      if(relation.connected)relationCandidates.push({doc:other,relation});
+    }
+  }
+
+  aiMsg.appendChild(renderKnowledgeMap(center,relationCandidates));
+  $("#mainChatBox").scrollTop=$("#mainChatBox").scrollHeight;
+}
+
+/* =========================================================
+   PDF
+   ========================================================= */
+
+async function loadPdfInModal(filePath,targetPage=1){
+  const doc=repositoryTexts[filePath];
+  if(!doc)return;
+
+  activeFileName=filePath;
+  activePagesCache=doc.original||[];
+  $("#modalDocTitle").textContent=`📄 ${doc.name}`;
+  $("#pdfViewerModal").style.display="flex";
+
+  $("#modalChatHistory").innerHTML=`
+    <div class="v-msg bot">Manual "${escapeHtml(doc.name)}" cargado.
+    Podés preguntar por una página, un concepto o pedir un resumen.</div>`;
+
+  try{
+    activePdfDoc=await pdfjsLib.getDocument(doc.url).promise;
+    activePageNum=Math.max(1,Math.min(targetPage,activePdfDoc.numPages));
+    await renderCurrentPage();
+  }catch(e){
+    console.error(e);showToast("No se pudo cargar el PDF.");
+  }
+}
+
+async function renderCurrentPage(){
+  if(!activePdfDoc||isRenderingPage)return;
+  isRenderingPage=true;
+  try{
+    $("#pageIndicator").textContent=`Pág. ${activePageNum} / ${activePdfDoc.numPages}`;
+    $("#prevPageBtn").disabled=activePageNum<=1;
+    $("#nextPageBtn").disabled=activePageNum>=activePdfDoc.numPages;
+
+    const page=await activePdfDoc.getPage(activePageNum);
+    const canvas=$("#pdfCanvas"),ctx=canvas.getContext("2d");
+    const container=document.querySelector(".canvas-container");
+    const base=page.getViewport({scale:1});
+    const available=Math.max(320,(container.clientWidth||800)-30);
+    const scale=Math.max(.9,available/base.width);
+    const viewport=page.getViewport({scale});
+    canvas.width=viewport.width;canvas.height=viewport.height;
+    await page.render({canvasContext:ctx,viewport}).promise;
+  }catch(e){console.error(e)}
+  finally{isRenderingPage=false}
+}
+
+/* =========================================================
+   GEMINI
+   ========================================================= */
+
+async function callGeminiAPI(prompt,key){
+  if(!key)throw new Error("Falta la API Key.");
+
+  let lastError=null;
+
+  for(const model of GEMINI_MODELS){
+    const url=`${GEMINI_API_BASE}${model}:generateContent?key=${encodeURIComponent(key)}`;
+    try{
+      const res=await fetch(url,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          contents:[{role:"user",parts:[{text:prompt}]}],
+          generationConfig:{
+            temperature:.25,
+            maxOutputTokens:2200
+          }
+        })
+      });
+
+      const data=await res.json().catch(()=>({}));
+
+      if(!res.ok){
+        lastError=new Error(data?.error?.message||`HTTP ${res.status}`);
+        // Si el modelo no existe/no está habilitado, probamos el siguiente.
+        if([400,404].includes(res.status))continue;
+        throw lastError;
+      }
+
+      const text=data?.candidates?.[0]?.content?.parts
+        ?.map(p=>p.text||"").join("").trim();
+
+      if(!text)throw new Error("Gemini no devolvió texto.");
+      return text;
+    }catch(err){
+      lastError=err;
+    }
+  }
+
+  throw lastError||new Error("No fue posible consultar Gemini.");
+}
+
+function formatAiText(text){
+  return escapeHtml(text)
+    .replace(/\*\*(.*?)\*\*/g,"$1")
+    .replace(/\n/g,"<br>");
+}
+
+async function handleModalAIQuery(){
+  const val=$("#modalQueryInput").value.trim();
+  if(!val)return;
+
+  const hist=$("#modalChatHistory");
+  const u=document.createElement("div");
+  u.className="v-msg user";u.textContent=val;hist.appendChild(u);
+  $("#modalQueryInput").value="";
+
+  const b=document.createElement("div");
+  b.className="v-msg bot";b.textContent="Analizando el contenido del manual...";hist.appendChild(b);
+  hist.scrollTop=hist.scrollHeight;
+  $("#modalSendBtn").disabled=true;
+
+  const key=localStorage.getItem("nexus_gemini_key")||globalApiKey;
+  if(!key){
+    b.textContent="⚠️ Guardá primero tu API Key arriba.";
+    $("#modalSendBtn").disabled=false;return;
+  }
+
+  try{
+    const pages=activePagesCache||[];
+    const queryWords=[...tokenize(val)];
+
+    const ranked=pages.map((text,index)=>{
+      let hits=0;const n=normalizeStr(text);
+      for(const w of queryWords)if(n.includes(w))hits++;
+      return {text,index,hits};
+    }).sort((a,b)=>b.hits-a.hits);
+
+    const selected=pages.length<=18
+      ?pages.map((text,index)=>({text,index}))
+      :ranked.slice(0,12);
+
+    const context=selected.map(x=>`--- PÁGINA ${x.index+1} ---\n${x.text}`)
+      .join("\n\n").slice(0,80000);
+
+    const prompt=`
+Sos NEXUS-X, asistente técnico de gestión de laboratorio escolar.
+Respondé en español claro, preciso y útil.
+
+DOCUMENTO: ${activeFileName}
+
+CONTENIDO DISPONIBLE:
+${context}
+
+CONSULTA:
+${val}
+
+REGLAS:
+1. Basate principalmente en el contenido proporcionado.
+2. Si usás información de una página, indicá "Página X".
+3. Si el contenido no alcanza, decilo claramente.
+4. No inventes datos del manual.
+5. No des instrucciones peligrosas que no estén justificadas por el material.
+6. No uses LaTeX.
+7. Fórmulas químicas en texto simple: H2O, CO2, NaCl, H2SO4.
+8. Respondé como tutor técnico.
+`;
+
+    const answer=await callGeminiAPI(prompt,key);
+    b.innerHTML=formatAiText(answer);
+  }catch(err){
+    console.error(err);
+    b.textContent=`⚠️ Error al consultar Gemini: ${err.message}`;
+  }finally{
+    $("#modalSendBtn").disabled=false;
+    hist.scrollTop=hist.scrollHeight;
+  }
+}
+
+/* =========================================================
+   EVENTOS
+   ========================================================= */
+
+$("#apiKeyInput").value=globalApiKey;
+
+$("#saveApiKeyBtn").addEventListener("click",()=>{
+  const value=$("#apiKeyInput").value.trim();
+  if(!value){showToast("Pegá una API Key válida.");return}
+  localStorage.setItem("nexus_gemini_key",value);
+  globalApiKey=value;
+  showToast("API Key guardada en este navegador.");
+});
+
+$("#mainSendBtn").addEventListener("click",handleMainGlobalQuery);
+$("#mainQueryInput").addEventListener("keydown",e=>{if(e.key==="Enter")handleMainGlobalQuery()});
+
+$("#openQrBtn").addEventListener("click",openQrOverlay);
+$("#closeQrBtn").addEventListener("click",closeQrOverlay);
+
+$("#manualQrBtn").addEventListener("click",()=>{
+  const val=$("#manualQrInput").value.trim();
+  if(val)processQr(val);
+});
+$("#manualQrInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter")$("#manualQrBtn").click();
+});
+
+$("#openInventoryBtn").addEventListener("click",()=>{
+  $("#inventoryOverlay").classList.add("open");
+  renderInventoryList();
+});
+$("#newInventoryBtn").addEventListener("click",()=>{
+  clearInventoryForm();
+  $("#inventoryOverlay").classList.add("open");
+  $("#invId").focus();
+});
+$("#closeInventoryBtn").addEventListener("click",()=>$("#inventoryOverlay").classList.remove("open"));
+
+$("#saveInventoryBtn").addEventListener("click",saveInventoryItem);
+$("#deleteInventoryBtn").addEventListener("click",deleteInventoryItem);
+$("#clearInventoryBtn").addEventListener("click",clearInventoryForm);
+$("#inventoryFilter").addEventListener("input",renderInventoryList);
+
+$("#refreshRepoBtn").addEventListener("click",async()=>{
+  if(indexingInProgress)return;
+  try{
+    $("#sysState").textContent="Actualizando documentos...";
+    repositoryFiles=await fetchPdfTree("");
+    repositoryFiles.sort((a,b)=>a.path.localeCompare(b.path));
+    addMsg("#mainChatBox",`>> GitHub actualizado: ${repositoryFiles.length} PDFs encontrados.`,"system");
+    await indexAllPdfs();
+  }catch(err){
+    console.error(err);
+    addMsg("#mainChatBox",`>> Error al actualizar GitHub: ${err.message}`,"error");
+  }
+});
+
+$("#modalSendBtn").addEventListener("click",handleModalAIQuery);
+$("#modalQueryInput").addEventListener("keydown",e=>{if(e.key==="Enter")handleModalAIQuery()});
+
+$("#prevPageBtn").addEventListener("click",async()=>{
+  if(activePageNum>1){activePageNum--;await renderCurrentPage()}
+});
+$("#nextPageBtn").addEventListener("click",async()=>{
+  if(activePdfDoc&&activePageNum<activePdfDoc.numPages){activePageNum++;await renderCurrentPage()}
+});
+$("#closeModalBtn").addEventListener("click",()=>$("#pdfViewerModal").style.display="none");
+
+window.addEventListener("resize",()=>{
+  if($("#pdfViewerModal").style.display==="flex")renderCurrentPage();
+});
+
+window.addEventListener("beforeunload",()=>{
+  if(qrScannerRunning)stopQrScanner();
+});
+
+/* =========================================================
+   ARRANQUE
+   ========================================================= */
+
+async function boot(){
+  try{
+    $("#sysState").textContent="Leyendo repositorio...";
+    addMsg("#mainChatBox",">> Conectando con GitHub...","system");
+
+    repositoryFiles=await fetchPdfTree("");
+    repositoryFiles.sort((a,b)=>a.path.localeCompare(b.path));
+
+    if(!repositoryFiles.length){
+      $("#sysState").textContent="Sin PDFs";
+      addMsg("#mainChatBox",">> No encontré PDFs en el repositorio ni en sus subcarpetas.","error");
+      $("#mainQueryInput").disabled=false;
+      $("#mainSendBtn").disabled=false;
+      return;
+    }
+
+    addMsg("#mainChatBox",
+      `>> Encontrados ${repositoryFiles.length} PDFs en todo el árbol. Indexando contenido...`,
+      "system");
+
+    await indexAllPdfs();
+  }catch(err){
+    console.error(err);
+    $("#sysState").textContent="Error de sincronización";
+    addMsg("#mainChatBox",`>> Error al leer GitHub: ${err.message}`,"error");
+    $("#mainQueryInput").disabled=false;
+    $("#mainSendBtn").disabled=false;
+  }
+}
+
+renderInventoryList();
 boot();
+
 })();
 </script>
  </body>
