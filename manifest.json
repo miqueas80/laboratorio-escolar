@@ -1,0 +1,12 @@
+{
+  "background_color": "#7189fb",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Laboratoriodigital",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Laboratorio",
+  "start_url": "/",
+  "theme_color": "#fffab0",
+  "id": "Miqueas "
+}
