@@ -1,15 +1,9 @@
 {
-  "name": "NEXUS-X Laboratorio Escolar",
+  "name": "NEXUS-X // OMEGA ∞",
   "short_name": "NEXUS-X",
-  "description": "Inventario, QR y fichas técnicas del laboratorio escolar",
   "start_url": "./",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#010308",
   "theme_color": "#020611",
-  "lang": "es",
-  "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
-  ]
+  "lang": "es"
 }
