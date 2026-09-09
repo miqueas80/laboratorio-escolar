@@ -1,391 +1,205 @@
 <!doctype html>
 <html lang="es">
- <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#07101a">
-  <meta name="description" content="NEXUS-X // OMEGA — laboratorio digital de conocimiento local-first.">
-  <title>NEXUS-X // OMEGA ∞</title>
-  <link rel="icon" href="favicon.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="manifest" href="manifest.webmanifest">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
-  <script>window.addEventListener("DOMContentLoaded",()=>{if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";});</script>
-  <style>:root{--bg:#07101a;--panel:#0b1724;--panel2:#0e1d2d;--line:#1d3347;--line2:#29465d;--text:#eef6fb;--muted:#91a6b7;--cyan:#32d8ff;--blue:#4f8cff;--green:#37d69a;--violet:#a78bfa;--gold:#f5c45f;--danger:#ff6b7a;--shadow:0 18px 60px rgba(0,0,0,.28);--radius:18px;--mono:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--mono)}body{background:radial-gradient(circle at 45% -10%,rgba(50,216,255,.12),transparent 34%),linear-gradient(135deg,#06101a,#08131f 55%,#07111b);font-size:14px}button,input,select,textarea{font:inherit}button{cursor:pointer}.app-shell{min-height:100vh}.topbar{height:76px;display:flex;align-items:center;gap:28px;padding:0 26px;border-bottom:1px solid var(--line);background:rgba(7,16,26,.9);backdrop-filter:blur(18px);position:sticky;top:0;z-index:100}.brand{display:flex;align-items:center;gap:12px;min-width:300px}.brand-mark{width:40px;height:40px;border:1px solid rgba(50,216,255,.55);border-radius:12px;display:grid;place-items:center;color:var(--cyan);font-size:22px;box-shadow:0 0 22px rgba(50,216,255,.14)}.brand-name{font-weight:800;letter-spacing:4px;font-size:19px}.brand-sub{font-size:9px;letter-spacing:2px;color:var(--cyan);margin-top:3px}.topbar-center{flex:1;color:#9db3c4;font-size:11px;letter-spacing:2px;text-align:center}.top-actions{display:flex;align-items:center;gap:9px}.icon-btn{width:40px;height:40px;border:1px solid var(--line2);background:#0b1724;color:var(--text);border-radius:12px;font-size:23px}.api-mini{display:flex;align-items:center;gap:5px;border:1px solid var(--line);background:#0b1724;border-radius:12px;padding:4px}.api-mini span{font-size:10px;color:var(--cyan);font-weight:800;padding:0 4px}.api-mini input{width:140px;border:0;outline:0;background:transparent;color:var(--text);padding:7px}.api-mini button,.secondary,.ghost,.query-tools button,.examples button,.inventory-actions button,.import-tools button,.small-btn,.page-nav-btn{border:1px solid var(--line2);background:#0e1b2a;color:#dbe9f2;border-radius:10px;padding:9px 12px}.api-mini button{color:var(--cyan);border-color:rgba(50,216,255,.4);padding:7px 10px}.status-pill{display:flex;align-items:center;gap:7px;color:#a9bcc9;font-size:11px;white-space:nowrap}.pulse{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(55,214,154,.8);display:inline-block}.layout{display:grid;grid-template-columns:190px minmax(0,1fr) 220px;min-height:calc(100vh - 76px)}.sidebar{border-right:1px solid var(--line);padding:24px 14px;display:flex;flex-direction:column;gap:4px;background:rgba(6,14,23,.72)}.nav-label,.eyebrow,.overlay-kicker,.viewer-kicker{font-size:9px;letter-spacing:2px;color:#6f8799;font-weight:800}.nav-label{padding:0 10px 10px}.nav-item{width:100%;border:0;background:transparent;color:#a9bdca;display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:11px;text-align:left;font-size:13px}.nav-item span{width:18px;text-align:center;font-size:17px;color:#8ca4b6}.nav-item:hover,.nav-item.active{background:rgba(50,216,255,.08);color:#fff}.nav-item.active{box-shadow:inset 2px 0 var(--cyan)}.nav-item.active span{color:var(--cyan)}.core-card{margin-top:auto;padding:18px 12px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(15,32,48,.9),rgba(7,17,27,.8));text-align:center}.core-orb{width:72px;height:72px;margin:0 auto 12px;border:1px solid rgba(50,216,255,.45);border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-size:30px;box-shadow:0 0 30px rgba(50,216,255,.1)}.core-title{font-size:11px;letter-spacing:2px;font-weight:800}.core-copy{font-size:10px;color:var(--muted);line-height:1.5;margin:6px 0 13px}.core-status{font-size:10px;color:#9bb0bd;display:flex;justify-content:center;align-items:center;gap:7px}.main-content{padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}.welcome-card{min-height:245px;padding:30px 34px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(110deg,rgba(13,30,45,.96),rgba(9,23,35,.82));display:flex;justify-content:space-between;align-items:center;overflow:hidden;position:relative}.welcome-card:after{content:"";position:absolute;inset:auto -10% -70% 30%;height:300px;background:radial-gradient(circle,rgba(50,216,255,.08),transparent 68%);pointer-events:none}.welcome-card h1{font-size:31px;line-height:1.1;margin:9px 0 12px;letter-spacing:-1px;font-weight:500}.welcome-card h1 strong{font-weight:800;color:#fff}.welcome-card p{max-width:650px;color:#9fb2bf;line-height:1.65;margin:0}.welcome-actions{display:flex;gap:9px;margin-top:22px}.primary{border:0;background:linear-gradient(135deg,#35d9ff,#4e8fff);color:#06111a;font-weight:800;border-radius:11px;padding:11px 16px}.primary.big{padding:13px 18px}.ghost{background:transparent}.hero-instrument{width:190px;height:190px;position:relative;display:grid;place-items:center;margin-right:28px;opacity:.95}.ring{position:absolute;border:1px solid rgba(50,216,255,.24);border-radius:50%}.r1{width:80px;height:80px;box-shadow:0 0 45px rgba(50,216,255,.18)}.r2{width:135px;height:135px}.r3{width:185px;height:185px;border-style:dashed;animation:spin 20s linear infinite}.hero-core{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-weight:900;font-size:28px;border:1px solid rgba(50,216,255,.7);background:#0a1c2b;box-shadow:0 0 35px rgba(50,216,255,.2)}@keyframes spin{to{transform:rotate(360deg)}}.research-card,.results-card,.quick-section{border:1px solid var(--line);border-radius:20px;background:rgba(9,22,34,.86);overflow:hidden}.research-card{padding:22px}.section-top{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.section-top.compact{margin-bottom:13px}.section-top h2,.results-head h2{font-size:19px;margin:5px 0 0}.model-select{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:11px}.model-select select{background:#0b1826;border:1px solid var(--line2);color:#dceaf2;border-radius:10px;padding:9px}.query-wrap{display:flex;align-items:center;gap:9px;border:1px solid #31506a;background:#081827;border-radius:14px;padding:8px;margin-top:18px;box-shadow:inset 0 0 30px rgba(50,216,255,.025)}.query-icon{font-size:24px;color:var(--cyan);padding:0 5px}.query-wrap input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--text);height:46px;font-size:15px}.query-wrap input::placeholder{color:#667f91}.btn-action{border:0;border-radius:10px;background:linear-gradient(135deg,#34d9ff,#4f8fff);color:#06111a;font-weight:850;padding:0 20px;height:46px}.btn-action:disabled{opacity:.4;cursor:not-allowed}.query-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.query-tools button{font-size:11px;color:#b9cad4}.query-tools button:hover,.examples button:hover,.secondary:hover,.ghost:hover{border-color:#3d627d}.tool-toggle.active{color:var(--cyan);border-color:rgba(50,216,255,.5);background:rgba(50,216,255,.07)}.examples{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px;color:#71899a;font-size:10px}.examples button{padding:6px 9px;border-radius:20px;font-size:10px;background:#0b1826}.results-head{display:flex;justify-content:space-between;align-items:center;padding:20px 22px 14px;gap:12px}.result-actions{display:flex;gap:7px}.secondary{font-size:11px}.tabs{display:flex;gap:4px;padding:0 18px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:0;background:transparent;color:#7f98a9;padding:11px 12px;font-size:11px;white-space:nowrap;border-bottom:2px solid transparent}.tab.active{color:var(--cyan);border-color:var(--cyan)}.chat-scroll{min-height:300px;max-height:680px;overflow:auto;padding:18px 22px;display:flex;flex-direction:column;gap:10px}.empty-state{min-height:260px;border:1px dashed #27445a;border-radius:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px;color:#8fa5b4}.empty-icon{width:54px;height:54px;border:1px solid rgba(50,216,255,.4);border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-size:22px;margin-bottom:10px}.empty-state h3{color:#dcebf2;margin:5px}.empty-state p{max-width:520px;line-height:1.6;margin:7px}.empty-note{font-size:10px;color:#627a8a;margin-top:8px}.msg{padding:12px 14px;border-radius:12px;line-height:1.65;word-break:break-word}.msg.system{color:#7fe8ff;background:rgba(50,216,255,.045);border:1px solid rgba(50,216,255,.14)}.msg.user{align-self:flex-end;max-width:82%;background:rgba(79,140,255,.1);border:1px solid rgba(79,140,255,.25)}.msg.ai{background:#0c1b2a;border:1px solid var(--line)}.msg.error{background:rgba(255,107,122,.07);border:1px solid rgba(255,107,122,.25);color:#ffc8ce}.doc-action-card{margin-top:10px;padding:13px;border:1px solid #28465c;border-radius:12px;background:#0a1725}.doc-action-title{font-weight:800;color:#dff6ff}.doc-meta{font-size:11px;color:#8199a8;margin-top:5px}.actions-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.action-btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:9px;padding:9px 12px;background:linear-gradient(135deg,#34d9ff,#4f8fff);color:#06111a;font-weight:800;font-size:11px}.action-btn.download{background:linear-gradient(135deg,#37d69a,#39b8ff)}.matrix{margin-top:11px;border:1px solid #28465c;border-radius:12px;overflow:hidden;background:#091827}.section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);color:#bfeaf7;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px}.section-head small{color:#738b9b;text-transform:none;letter-spacing:0;font-weight:500}.relation{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.05)}.relation-name{font-size:12px}.relation-reason{font-size:10px;color:#738b9b;margin-top:4px}.score{color:var(--cyan);font-size:11px;font-weight:800}.map-wrap{height:440px;overflow:auto;background:radial-gradient(circle at 50% 50%,rgba(50,216,255,.08),transparent 55%),linear-gradient(rgba(50,216,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(50,216,255,.03) 1px,transparent 1px);background-size:auto,28px 28px}.map-canvas{position:relative;width:max(100%,850px);min-width:850px;height:100%}.map-svg{position:absolute;inset:0;width:100%;height:100%}.map-edge{stroke:rgba(50,216,255,.55);stroke-width:2}.map-edge-label{fill:#9ed9e7;font-size:10px}.map-node{position:absolute;transform:translate(-50%,-50%);width:165px;min-height:68px;padding:9px;border:1px solid #31566f;border-radius:12px;background:#0a1826;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer;z-index:2}.map-node strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.map-node span{display:block;margin-top:5px;color:#758e9f;font-size:9px}.graph-formula{border-color:rgba(167,139,250,.65)}.graph-protocol{border-color:rgba(55,214,154,.65)}.graph-inventory{border-color:rgba(245,196,95,.65)}.graph-concept{border-color:rgba(79,140,255,.65)}.graph-legend{display:flex;gap:7px;flex-wrap:wrap;padding:10px 12px;color:#7c94a4;font-size:9px}.graph-legend span{padding:5px 7px;border:1px solid var(--line);border-radius:8px}.quick-section{padding:18px 20px}.quick-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.quick-card{border:1px solid var(--line);background:#0b1927;color:var(--text);border-radius:13px;padding:13px;text-align:left;min-height:90px}.quick-card:hover{border-color:#3a5d74;transform:translateY(-1px)}.qicon{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;margin-bottom:9px;background:rgba(255,255,255,.05);font-size:17px}.qicon.cyan{color:var(--cyan)}.qicon.violet{color:var(--violet)}.qicon.blue{color:#70a7ff}.qicon.green{color:var(--green)}.qicon.gold{color:var(--gold)}.quick-card strong{display:block;font-size:11px}.quick-card small{display:block;color:#728b9c;font-size:9px;margin-top:4px}.context-rail{border-left:1px solid var(--line);padding:22px 14px;background:rgba(6,14,23,.58);display:flex;flex-direction:column;gap:12px}.context-card,.tip-card{border:1px solid var(--line);border-radius:15px;background:#0b1927;padding:14px}.card-title{display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:1.5px;color:#7e96a6;margin-bottom:13px}.live{color:var(--green);display:flex;align-items:center;gap:5px}.metric{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:10px;color:#8ca2b0}.metric:last-child{border-bottom:0}.metric b{color:#e8f5fb;font-size:16px}.repo-name{font-size:11px;color:#9eb2bf;line-height:1.5}.repo-name strong{color:#dcecf3}.repo-state{display:flex;align-items:center;gap:7px;color:var(--green);font-size:10px;margin:9px 0}.full{width:100%}.model-name{font-size:13px;font-weight:700}.model-name span{float:right;color:var(--green);font-size:9px}.muted{color:#718999;font-size:10px;line-height:1.55}.recent{min-height:130px}.recent-row{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);align-items:center}.recent-row:last-child{border-bottom:0}.recent-icon{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:#11283a;color:var(--cyan);font-size:11px}.recent-name{font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.recent-path{font-size:8px;color:#6e8695;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tip-card{background:linear-gradient(135deg,rgba(50,216,255,.08),rgba(79,140,255,.04));border-color:rgba(50,216,255,.18)}.tip-icon{color:var(--cyan);font-size:19px}.tip-card strong{font-size:11px}.tip-card p{font-size:9px;color:#8197a6;line-height:1.7;margin:7px 0 0}.panel-overlay{display:none;position:fixed;inset:0;z-index:2000;background:rgba(3,8,14,.96);backdrop-filter:blur(16px);padding:16px}.panel-overlay.open{display:flex;flex-direction:column}.overlay-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--line2);border-radius:15px;background:#0b1724}.overlay-title{display:block;font-size:17px;font-weight:800;margin-top:3px}.close-btn,.danger{border:0;border-radius:9px;background:var(--danger);color:#fff;padding:10px 14px;font-weight:800}.inventory-body{flex:1;min-height:0;display:grid;grid-template-columns:1.25fr .75fr;gap:14px;padding-top:14px;overflow:auto}.inventory-card,.qr-card{border:1px solid var(--line);border-radius:15px;background:#0a1724;padding:15px;min-width:0}.inventory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:9px;letter-spacing:1px;color:#78909f;font-weight:800}.field input,.field select,.field textarea,.filter{width:100%;border:1px solid var(--line2);background:#07121e;color:var(--text);border-radius:9px;padding:9px;outline:0;min-height:40px}.field textarea{min-height:80px;resize:vertical}.inventory-actions,.import-tools,.qr-actions,.file-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.inventory-actions .save{background:linear-gradient(135deg,#35d9ff,#4f8fff);color:#06111a;border:0}.match-box{margin-top:12px;border:1px dashed #31536a;border-radius:10px;padding:10px;color:#7891a1;font-size:10px;line-height:1.5}.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:9px}.stat{padding:9px;border:1px solid var(--line);border-radius:9px}.stat b{display:block;color:var(--cyan);font-size:17px}.stat span{font-size:8px;color:#718999}.inventory-list{display:flex;flex-direction:column;gap:7px;max-height:52vh;overflow:auto;margin-top:9px}.inv-item{padding:10px;border:1px solid var(--line);border-radius:10px;background:#0c1b2a;cursor:pointer}.inv-item:hover{border-color:#3b6079}.inv-item strong{font-size:11px}.inv-meta{font-size:9px;color:#718999;margin-top:4px;line-height:1.5}.badge{display:inline-block;padding:3px 6px;border-radius:20px;font-size:8px;font-weight:800;margin-left:4px}.badge.ok{color:#8af0c5;background:rgba(55,214,154,.1)}.badge.warn{color:#f6d98b;background:rgba(245,196,95,.1)}.badge.danger{color:#ffadb7;background:rgba(255,107,122,.1)}.badge.neutral{color:#b6c7d0;background:rgba(255,255,255,.06)}.file-btn{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:10px;padding:9px 12px;color:#dbeaf2;font-size:10px;cursor:pointer}.qr-body{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-top:14px;overflow:auto}.camera-box{position:relative;aspect-ratio:4/3;border:1px solid var(--line2);border-radius:13px;overflow:hidden;background:#03080e;display:grid;place-items:center}.camera-box video{width:100%;height:100%;object-fit:cover}.scan-frame{position:absolute;width:52%;aspect-ratio:1;border:2px solid var(--cyan);border-radius:16px;box-shadow:0 0 28px rgba(50,216,255,.25)}.scan-line{position:absolute;left:25%;right:25%;height:2px;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation:scan 2s linear infinite}@keyframes scan{0%{top:25%}50%{top:75%}100%{top:25%}}.camera-status{font-size:10px;color:#78909f;margin-top:8px;line-height:1.5}.manual-scan{display:flex;gap:7px;margin-top:10px}.manual-scan input{flex:1;min-width:0;border:1px solid var(--line2);background:#07121e;color:var(--text);border-radius:9px;padding:9px}.manual-scan button{border:0;border-radius:9px;background:var(--cyan);color:#06111a;font-weight:800;padding:9px 12px}.scan-result{margin-top:9px;padding:10px;border:1px solid var(--line);border-radius:9px;font-size:10px}.loading{color:#78909f;font-size:10px;padding:10px}.qr-print-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;padding:15px;overflow:auto}.qr-label{background:#fff;color:#111;padding:12px;border-radius:10px;text-align:center}.qr-label canvas,.qr-label img{width:140px;height:140px;margin:auto;display:block}.qr-label b{display:block;font-size:11px;margin-top:7px}.qr-label small{display:block;font-size:9px;margin-top:4px;color:#445}.small-btn{color:var(--cyan);border-color:rgba(50,216,255,.45)}#pdfViewerModal{display:none;position:fixed;inset:0;z-index:2500;background:#03080e;padding:9px;flex-direction:column}.viewer-top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:52px;padding:7px 10px;border:1px solid var(--line2);background:#0b1724;border-radius:12px 12px 0 0}.viewer-title-text{font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45vw}.viewer-nav-controls{display:flex;align-items:center;gap:7px}.viewer-nav-controls span{font-size:10px;color:var(--cyan)}.viewer-close{border:0;border-radius:9px;background:var(--danger);color:#fff;padding:9px 13px;font-weight:800}.viewer-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 360px;border:1px solid var(--line2);border-top:0;border-radius:0 0 12px 12px;overflow:hidden}.canvas-container{min-width:0;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:14px;background:#08101a}.canvas-container canvas{display:block;background:#fff;box-shadow:0 15px 35px rgba(0,0,0,.35)}.viewer-sidebar-chat{display:flex;flex-direction:column;gap:9px;min-width:0;padding:13px;border-left:1px solid var(--line);background:#0a1724}.v-chat-history{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px}.v-msg{padding:10px;border-radius:9px;font-size:11px;line-height:1.55}.v-msg.bot{background:#0c1b2a;border:1px solid var(--line)}.v-msg.user{align-self:flex-end;background:rgba(79,140,255,.1);border:1px solid rgba(79,140,255,.2)}.v-input-row{display:flex;gap:7px}.v-input-row input{flex:1;min-width:0;border:1px solid var(--line2);background:#07121e;color:var(--text);border-radius:9px;padding:9px}.v-send{border:0;border-radius:9px;background:var(--cyan);color:#06111a;font-weight:800;padding:9px 12px}.toast{display:none;position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:5000;background:#0b1724;border:1px solid #31546b;color:#e4f4fa;padding:11px 15px;border-radius:11px;box-shadow:var(--shadow);font-size:11px}.mobile-nav{display:none}@media(max-width:1200px){.layout{grid-template-columns:190px minmax(0,1fr)}.context-rail{display:none}.quick-grid{grid-template-columns:repeat(3,1fr)}.brand{min-width:250px}.topbar-center{display:none}}@media(max-width:800px){.topbar{height:auto;min-height:66px;padding:10px 13px}.api-mini{display:none}.layout{display:block;min-height:0}.sidebar{display:none}.main-content{padding:12px 10px 75px}.welcome-card{padding:22px;min-height:220px}.welcome-card h1{font-size:25px}.hero-instrument{width:110px;height:110px;margin-right:0}.r3{width:110px;height:110px}.r2{width:82px;height:82px}.r1{width:55px;height:55px}.hero-core{width:48px;height:48px;font-size:20px}.query-wrap{flex-wrap:wrap}.query-wrap input{flex-basis:calc(100% - 45px)}.btn-action{width:100%}.result-actions{display:none}.quick-grid{grid-template-columns:repeat(2,1fr)}.inventory-body,.qr-body{grid-template-columns:1fr}.viewer-body{display:flex;flex-direction:column}.canvas-container{height:57%}.viewer-sidebar-chat{height:43%;border-left:0;border-top:1px solid var(--line)}.inventory-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.stat-row{grid-template-columns:repeat(2,1fr)}.mobile-nav{position:fixed;display:flex;left:8px;right:8px;bottom:8px;height:56px;z-index:1500;background:rgba(8,18,29,.95);border:1px solid var(--line2);border-radius:16px;justify-content:space-around;backdrop-filter:blur(16px)}.mobile-nav button{flex:1;border:0;background:transparent;color:#8fa6b4;font-size:20px}.mobile-nav button:hover{color:var(--cyan)}}@media(max-width:520px){.brand-sub{display:none}.brand-name{font-size:16px}.top-actions .status-pill{display:none}.welcome-card{display:block}.hero-instrument{display:none}.section-top{display:block}.model-select{margin-top:10px}.quick-grid{grid-template-columns:1fr 1fr}.research-card,.results-card,.quick-section{border-radius:15px}}
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07101a">
+<meta name="description" content="NEXUS-X // OMEGA — laboratorio digital de conocimiento local-first.">
+<title>NEXUS-X // OMEGA ∞</title>
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+<script>window.addEventListener("DOMContentLoaded",()=>{if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";});</script>
+<style>:root{--bg:#07101a;--panel:#0b1724;--panel2:#0e1d2d;--line:#1d3347;--line2:#29465d;--text:#eef6fb;--muted:#91a6b7;--cyan:#32d8ff;--blue:#4f8cff;--green:#37d69a;--violet:#a78bfa;--gold:#f5c45f;--danger:#ff6b7a;--shadow:0 18px 60px rgba(0,0,0,.28);--radius:18px;--mono:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--mono)}body{background:radial-gradient(circle at 45% -10%,rgba(50,216,255,.12),transparent 34%),linear-gradient(135deg,#06101a,#08131f 55%,#07111b);font-size:14px}button,input,select,textarea{font:inherit}button{cursor:pointer}.app-shell{min-height:100vh}.topbar{height:76px;display:flex;align-items:center;gap:28px;padding:0 26px;border-bottom:1px solid var(--line);background:rgba(7,16,26,.9);backdrop-filter:blur(18px);position:sticky;top:0;z-index:100}.brand{display:flex;align-items:center;gap:12px;min-width:300px}.brand-mark{width:40px;height:40px;border:1px solid rgba(50,216,255,.55);border-radius:12px;display:grid;place-items:center;color:var(--cyan);font-size:22px;box-shadow:0 0 22px rgba(50,216,255,.14)}.brand-name{font-weight:800;letter-spacing:4px;font-size:19px}.brand-sub{font-size:9px;letter-spacing:2px;color:var(--cyan);margin-top:3px}.topbar-center{flex:1;color:#9db3c4;font-size:11px;letter-spacing:2px;text-align:center}.top-actions{display:flex;align-items:center;gap:9px}.icon-btn{width:40px;height:40px;border:1px solid var(--line2);background:#0b1724;color:var(--text);border-radius:12px;font-size:23px}.api-mini{display:flex;align-items:center;gap:5px;border:1px solid var(--line);background:#0b1724;border-radius:12px;padding:4px}.api-mini span{font-size:10px;color:var(--cyan);font-weight:800;padding:0 4px}.api-mini input{width:110px;border:0;outline:0;background:transparent;color:var(--text);padding:7px}.api-mini button,.secondary,.ghost,.query-tools button,.examples button,.inventory-actions button,.import-tools button,.small-btn,.page-nav-btn{border:1px solid var(--line2);background:#0e1b2a;color:#dbe9f2;border-radius:10px;padding:9px 12px}.api-mini button{color:var(--cyan);border-color:rgba(50,216,255,.4);padding:7px 10px}.status-pill{display:flex;align-items:center;gap:7px;color:#a9bcc9;font-size:11px;white-space:nowrap}.pulse{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(55,214,154,.8);display:inline-block}.layout{display:block;min-height:calc(100vh - 76px)}.sidebar,.context-rail{display:none!important}.nav-label,.eyebrow,.overlay-kicker,.viewer-kicker{font-size:9px;letter-spacing:2px;color:#6f8799;font-weight:800}.nav-label{padding:0 10px 10px}.nav-item{width:100%;border:0;background:transparent;color:#a9bdca;display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:11px;text-align:left;font-size:13px}.nav-item span{width:18px;text-align:center;font-size:17px;color:#8ca4b6}.nav-item:hover,.nav-item.active{background:rgba(50,216,255,.08);color:#fff}.nav-item.active{box-shadow:inset 2px 0 var(--cyan)}.nav-item.active span{color:var(--cyan)}.core-card{margin-top:auto;padding:18px 12px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(15,32,48,.9),rgba(7,17,27,.8));text-align:center}.core-orb{width:72px;height:72px;margin:0 auto 12px;border:1px solid rgba(50,216,255,.45);border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-size:30px;box-shadow:0 0 30px rgba(50,216,255,.1)}.core-title{font-size:11px;letter-spacing:2px;font-weight:800}.core-copy{font-size:10px;color:var(--muted);line-height:1.5;margin:6px 0 13px}.core-status{font-size:10px;color:#9bb0bd;display:flex;justify-content:center;align-items:center;gap:7px}.main-content{width:min(1500px,100%);margin:0 auto;padding:18px 24px 70px;display:flex;flex-direction:column;gap:14px;min-width:0}.welcome-card{min-height:190px;padding:30px 34px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(110deg,rgba(13,30,45,.96),rgba(9,23,35,.82));display:flex;justify-content:space-between;align-items:center;overflow:hidden;position:relative}.welcome-card:after{content:"";position:absolute;inset:auto -10% -70% 30%;height:300px;background:radial-gradient(circle,rgba(50,216,255,.08),transparent 68%);pointer-events:none}.welcome-card h1{font-size:31px;line-height:1.1;margin:9px 0 12px;letter-spacing:-1px;font-weight:500}.welcome-card h1 strong{font-weight:800;color:#fff}.welcome-card p{max-width:650px;color:#9fb2bf;line-height:1.65;margin:0}.welcome-actions{display:flex;gap:9px;margin-top:18px}.primary{border:0;background:linear-gradient(135deg,#35d9ff,#4e8fff);color:#06111a;font-weight:800;border-radius:11px;padding:11px 16px}.primary.big{padding:13px 18px}.ghost{background:transparent}.hero-instrument{width:190px;height:190px;position:relative;display:grid;place-items:center;margin-right:28px;opacity:.95}.ring{position:absolute;border:1px solid rgba(50,216,255,.24);border-radius:50%}.r1{width:80px;height:80px;box-shadow:0 0 45px rgba(50,216,255,.18)}.r2{width:135px;height:135px}.r3{width:185px;height:185px;border-style:dashed;animation:spin 20s linear infinite}.hero-core{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-weight:900;font-size:28px;border:1px solid rgba(50,216,255,.7);background:#0a1c2b;box-shadow:0 0 35px rgba(50,216,255,.2)}@keyframes spin{to{transform:rotate(360deg)}}.research-card,.results-card,.quick-section{border:1px solid var(--line);border-radius:20px;background:rgba(9,22,34,.86);overflow:hidden}.research-card{padding:22px}.section-top{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.section-top.compact{margin-bottom:13px}.section-top h2,.results-head h2{font-size:19px;margin:5px 0 0}.model-select{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:11px}.model-select select{background:#0b1826;border:1px solid var(--line2);color:#dceaf2;border-radius:10px;padding:9px}.query-wrap{display:flex;align-items:center;gap:9px;border:1px solid #31506a;background:#081827;border-radius:14px;padding:8px;margin-top:18px;box-shadow:inset 0 0 30px rgba(50,216,255,.025)}.query-icon{font-size:24px;color:var(--cyan);padding:0 5px}.query-wrap input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--text);height:46px;font-size:15px}.query-wrap input::placeholder{color:#667f91}.btn-action{border:0;border-radius:10px;background:linear-gradient(135deg,#34d9ff,#4f8fff);color:#06111a;font-weight:850;padding:0 20px;height:46px}.btn-action:disabled{opacity:.4;cursor:not-allowed}.query-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.query-tools button{font-size:11px;color:#b9cad4}.query-tools button:hover,.examples button:hover,.secondary:hover,.ghost:hover{border-color:#3d627d}.tool-toggle.active{color:var(--cyan);border-color:rgba(50,216,255,.5);background:rgba(50,216,255,.07)}.examples{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px;color:#71899a;font-size:10px}.examples button{padding:6px 9px;border-radius:20px;font-size:10px;background:#0b1826}.results-head{display:flex;justify-content:space-between;align-items:center;padding:20px 22px 14px;gap:12px}.result-actions{display:flex;gap:7px}.secondary{font-size:11px}.tabs{display:flex;gap:4px;padding:0 18px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:0;background:transparent;color:#7f98a9;padding:11px 12px;font-size:11px;white-space:nowrap;border-bottom:2px solid transparent}.tab.active{color:var(--cyan);border-color:var(--cyan)}.chat-scroll{min-height:420px;max-height:none;overflow:auto;padding:18px 22px;display:flex;flex-direction:column;gap:10px}.empty-state{min-height:260px;border:1px dashed #27445a;border-radius:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px;color:#8fa5b4}.empty-icon{width:54px;height:54px;border:1px solid rgba(50,216,255,.4);border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-size:22px;margin-bottom:10px}.empty-state h3{color:#dcebf2;margin:5px}.empty-state p{max-width:520px;line-height:1.6;margin:7px}.empty-note{font-size:10px;color:#627a8a;margin-top:8px}.msg{padding:12px 14px;border-radius:12px;line-height:1.65;word-break:break-word}.msg.system{color:#7fe8ff;background:rgba(50,216,255,.045);border:1px solid rgba(50,216,255,.14)}.msg.user{align-self:flex-end;max-width:82%;background:rgba(79,140,255,.1);border:1px solid rgba(79,140,255,.25)}.msg.ai{background:#0c1b2a;border:1px solid var(--line)}.msg.error{background:rgba(255,107,122,.07);border:1px solid rgba(255,107,122,.25);color:#ffc8ce}.doc-action-card{margin-top:10px;padding:13px;border:1px solid #28465c;border-radius:12px;background:#0a1725}.doc-action-title{font-weight:800;color:#dff6ff}.doc-meta{font-size:11px;color:#8199a8;margin-top:5px}.actions-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.action-btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:9px;padding:9px 12px;background:linear-gradient(135deg,#34d9ff,#4f8fff);color:#06111a;font-weight:800;font-size:11px}.action-btn.download{background:linear-gradient(135deg,#37d69a,#39b8ff)}.matrix{margin-top:11px;border:1px solid #28465c;border-radius:12px;overflow:hidden;background:#091827}.section-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);color:#bfeaf7;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px}.section-head small{color:#738b9b;text-transform:none;letter-spacing:0;font-weight:500}.relation{display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.05)}.relation-name{font-size:12px}.relation-reason{font-size:10px;color:#738b9b;margin-top:4px}.score{color:var(--cyan);font-size:11px;font-weight:800}.map-wrap{height:440px;overflow:auto;background:radial-gradient(circle at 50% 50%,rgba(50,216,255,.08),transparent 55%),linear-gradient(rgba(50,216,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(50,216,255,.03) 1px,transparent 1px);background-size:auto,28px 28px}.map-canvas{position:relative;width:max(100%,850px);min-width:850px;height:100%}.map-svg{position:absolute;inset:0;width:100%;height:100%}.map-edge{stroke:rgba(50,216,255,.55);stroke-width:2}.map-edge-label{fill:#9ed9e7;font-size:10px}.map-node{position:absolute;transform:translate(-50%,-50%);width:165px;min-height:68px;padding:9px;border:1px solid #31566f;border-radius:12px;background:#0a1826;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer;z-index:2}.map-node strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.map-node span{display:block;margin-top:5px;color:#758e9f;font-size:9px}.graph-formula{border-color:rgba(167,139,250,.65)}.graph-protocol{border-color:rgba(55,214,154,.65)}.graph-inventory{border-color:rgba(245,196,95,.65)}.graph-concept{border-color:rgba(79,140,255,.65)}.graph-legend{display:flex;gap:7px;flex-wrap:wrap;padding:10px 12px;color:#7c94a4;font-size:9px}.graph-legend span{padding:5px 7px;border:1px solid var(--line);border-radius:8px}.quick-section{padding:18px 20px}.quick-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.quick-card{border:1px solid var(--line);background:#0b1927;color:var(--text);border-radius:13px;padding:13px;text-align:left;min-height:90px}.quick-card:hover{border-color:#3a5d74;transform:translateY(-1px)}.qicon{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;margin-bottom:9px;background:rgba(255,255,255,.05);font-size:17px}.qicon.cyan{color:var(--cyan)}.qicon.violet{color:var(--violet)}.qicon.blue{color:#70a7ff}.qicon.green{color:var(--green)}.qicon.gold{color:var(--gold)}.quick-card strong{display:block;font-size:11px}.quick-card small{display:block;color:#728b9c;font-size:9px;margin-top:4px}.context-rail{border-left:1px solid var(--line);padding:22px 14px;background:rgba(6,14,23,.58);display:flex;flex-direction:column;gap:12px}.context-card,.tip-card{border:1px solid var(--line);border-radius:15px;background:#0b1927;padding:14px}.card-title{display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:1.5px;color:#7e96a6;margin-bottom:13px}.live{color:var(--green);display:flex;align-items:center;gap:5px}.metric{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:10px;color:#8ca2b0}.metric:last-child{border-bottom:0}.metric b{color:#e8f5fb;font-size:16px}.repo-name{font-size:11px;color:#9eb2bf;line-height:1.5}.repo-name strong{color:#dcecf3}.repo-state{display:flex;align-items:center;gap:7px;color:var(--green);font-size:10px;margin:9px 0}.full{width:100%}.model-name{font-size:13px;font-weight:700}.model-name span{float:right;color:var(--green);font-size:9px}.muted{color:#718999;font-size:10px;line-height:1.55}.recent{min-height:130px}.recent-row{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);align-items:center}.recent-row:last-child{border-bottom:0}.recent-icon{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:#11283a;color:var(--cyan);font-size:11px}.recent-name{font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.recent-path{font-size:8px;color:#6e8695;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tip-card{background:linear-gradient(135deg,rgba(50,216,255,.08),rgba(79,140,255,.04));border-color:rgba(50,216,255,.18)}.tip-icon{color:var(--cyan);font-size:19px}.tip-card strong{font-size:11px}.tip-card p{font-size:9px;color:#8197a6;line-height:1.7;margin:7px 0 0}.panel-overlay{display:none;position:fixed;inset:0;z-index:2000;background:rgba(3,8,14,.96);backdrop-filter:blur(16px);padding:16px}.panel-overlay.open{display:flex;flex-direction:column}.overlay-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--line2);border-radius:15px;background:#0b1724}.overlay-title{display:block;font-size:17px;font-weight:800;margin-top:3px}.close-btn,.danger{border:0;border-radius:9px;background:var(--danger);color:#fff;padding:10px 14px;font-weight:800}.inventory-body{flex:1;min-height:0;display:grid;grid-template-columns:1.25fr .75fr;gap:14px;padding-top:14px;overflow:auto}.inventory-card,.qr-card{border:1px solid var(--line);border-radius:15px;background:#0a1724;padding:15px;min-width:0}.inventory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:9px;letter-spacing:1px;color:#78909f;font-weight:800}.field input,.field select,.field textarea,.filter{width:100%;border:1px solid var(--line2);background:#07121e;color:var(--text);border-radius:9px;padding:9px;outline:0;min-height:40px}.field textarea{min-height:80px;resize:vertical}.inventory-actions,.import-tools,.qr-actions,.file-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.inventory-actions .save{background:linear-gradient(135deg,#35d9ff,#4f8fff);color:#06111a;border:0}.match-box{margin-top:12px;border:1px dashed #31536a;border-radius:10px;padding:10px;color:#7891a1;font-size:10px;line-height:1.5}.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:9px}.stat{padding:9px;border:1px solid var(--line);border-radius:9px}.stat b{display:block;color:var(--cyan);font-size:17px}.stat span{font-size:8px;color:#718999}.inventory-list{display:flex;flex-direction:column;gap:7px;max-height:52vh;overflow:auto;margin-top:9px}.inv-item{padding:10px;border:1px solid var(--line);border-radius:10px;background:#0c1b2a;cursor:pointer}.inv-item:hover{border-color:#3b6079}.inv-item strong{font-size:11px}.inv-meta{font-size:9px;color:#718999;margin-top:4px;line-height:1.5}.badge{display:inline-block;padding:3px 6px;border-radius:20px;font-size:8px;font-weight:800;margin-left:4px}.badge.ok{color:#8af0c5;background:rgba(55,214,154,.1)}.badge.warn{color:#f6d98b;background:rgba(245,196,95,.1)}.badge.danger{color:#ffadb7;background:rgba(255,107,122,.1)}.badge.neutral{color:#b6c7d0;background:rgba(255,255,255,.06)}.file-btn{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:10px;padding:9px 12px;color:#dbeaf2;font-size:10px;cursor:pointer}.qr-body{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-top:14px;overflow:auto}.camera-box{position:relative;aspect-ratio:4/3;border:1px solid var(--line2);border-radius:13px;overflow:hidden;background:#03080e;display:grid;place-items:center}.camera-box video{width:100%;height:100%;object-fit:cover}.scan-frame{position:absolute;width:52%;aspect-ratio:1;border:2px solid var(--cyan);border-radius:16px;box-shadow:0 0 28px rgba(50,216,255,.25)}.scan-line{position:absolute;left:25%;right:25%;height:2px;background:var(--cyan);box-shadow:0 0 12px var(--cyan);animation:scan 2s linear infinite}@keyframes scan{0%{top:25%}50%{top:75%}100%{top:25%}}.camera-status{font-size:10px;color:#78909f;margin-top:8px;line-height:1.5}.manual-scan{display:flex;gap:7px;margin-top:10px}.manual-scan input{flex:1;min-width:0;border:1px solid var(--line2);background:#07121e;color:var(--text);border-radius:9px;padding:9px}.manual-scan button{border:0;border-radius:9px;background:var(--cyan);color:#06111a;font-weight:800;padding:9px 12px}.scan-result{margin-top:9px;padding:10px;border:1px solid var(--line);border-radius:9px;font-size:10px}.loading{color:#78909f;font-size:10px;padding:10px}.qr-print-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;padding:15px;overflow:auto}.qr-label{background:#fff;color:#111;padding:12px;border-radius:10px;text-align:center}.qr-label canvas,.qr-label img{width:140px;height:140px;margin:auto;display:block}.qr-label b{display:block;font-size:11px;margin-top:7px}.qr-label small{display:block;font-size:9px;margin-top:4px;color:#445}.small-btn{color:var(--cyan);border-color:rgba(50,216,255,.45)}#pdfViewerModal{display:none;position:fixed;inset:0;z-index:2500;background:#03080e;padding:9px;flex-direction:column}.viewer-top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:52px;padding:7px 10px;border:1px solid var(--line2);background:#0b1724;border-radius:12px 12px 0 0}.viewer-title-text{font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:45vw}.viewer-nav-controls{display:flex;align-items:center;gap:7px}.viewer-nav-controls span{font-size:10px;color:var(--cyan)}.viewer-close{border:0;border-radius:9px;background:var(--danger);color:#fff;padding:9px 13px;font-weight:800}.viewer-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 360px;border:1px solid var(--line2);border-top:0;border-radius:0 0 12px 12px;overflow:hidden}.canvas-container{min-width:0;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:14px;background:#08101a}.canvas-container canvas{display:block;background:#fff;box-shadow:0 15px 35px rgba(0,0,0,.35)}.viewer-sidebar-chat{display:flex;flex-direction:column;gap:9px;min-width:0;padding:13px;border-left:1px solid var(--line);background:#0a1724}.v-chat-history{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:8px}.v-msg{padding:10px;border-radius:9px;font-size:11px;line-height:1.55}.v-msg.bot{background:#0c1b2a;border:1px solid var(--line)}.v-msg.user{align-self:flex-end;background:rgba(79,140,255,.1);border:1px solid rgba(79,140,255,.2)}.v-input-row{display:flex;gap:7px}.v-input-row input{flex:1;min-width:0;border:1px solid var(--line2);background:#07121e;color:var(--text);border-radius:9px;padding:9px}.v-send{border:0;border-radius:9px;background:var(--cyan);color:#06111a;font-weight:800;padding:9px 12px}.toast{display:none;position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:5000;background:#0b1724;border:1px solid #31546b;color:#e4f4fa;padding:11px 15px;border-radius:11px;box-shadow:var(--shadow);font-size:11px}.mobile-nav{display:none}@media(max-width:1200px){.layout{grid-template-columns:190px minmax(0,1fr)}.context-rail{display:none}.quick-grid{grid-template-columns:repeat(3,1fr)}.brand{min-width:250px}.topbar-center{display:none}}@media(max-width:800px){.topbar{height:auto;min-height:66px;padding:10px 13px}.api-mini{display:none}.layout{display:block;min-height:0}.sidebar{display:none}.main-content{padding:12px 10px 75px}.welcome-card{padding:22px;min-height:220px}.welcome-card h1{font-size:25px}.hero-instrument{width:110px;height:110px;margin-right:0}.r3{width:110px;height:110px}.r2{width:82px;height:82px}.r1{width:55px;height:55px}.hero-core{width:48px;height:48px;font-size:20px}.query-wrap{flex-wrap:wrap}.query-wrap input{flex-basis:calc(100% - 45px)}.btn-action{width:100%}.result-actions{display:none}.quick-grid{grid-template-columns:repeat(2,1fr)}.inventory-body,.qr-body{grid-template-columns:1fr}.viewer-body{display:flex;flex-direction:column}.canvas-container{height:57%}.viewer-sidebar-chat{height:43%;border-left:0;border-top:1px solid var(--line)}.inventory-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.stat-row{grid-template-columns:repeat(2,1fr)}.mobile-nav{display:none!important;position:fixed;display:flex;left:8px;right:8px;bottom:8px;height:56px;z-index:1500;background:rgba(8,18,29,.95);border:1px solid var(--line2);border-radius:16px;justify-content:space-around;backdrop-filter:blur(16px)}.mobile-nav button{flex:1;border:0;background:transparent;color:#8fa6b4;font-size:20px}.mobile-nav button:hover{color:var(--cyan)}}@media(max-width:520px){.brand-sub{display:none}.brand-name{font-size:16px}.top-actions .status-pill{display:none}.welcome-card{display:block}.hero-instrument{display:none}.section-top{display:block}.model-select{margin-top:10px}.quick-grid{grid-template-columns:1fr 1fr}.research-card,.results-card,.quick-section{border-radius:15px}}
+.utility-bar{display:flex;gap:8px;flex-wrap:wrap;padding:14px 18px}.utility-bar button{border:1px solid var(--line2);background:#0b1826;color:#cfe0e9;border-radius:10px;padding:9px 13px;font-size:11px}.utility-bar button:hover{border-color:#3d627d;color:#fff}.schema-strip{margin-top:10px}.import-tools{display:flex;gap:7px;flex-wrap:wrap}.import-tools button,.import-tools .file-btn{font-size:10px}.excel-preview{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:280px}.excel-preview table{width:100%;border-collapse:collapse;font-size:10px}.excel-preview th,.excel-preview td{padding:7px 9px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;white-space:nowrap}.excel-preview th{color:var(--cyan);position:sticky;top:0;background:#0b1724}.import-report{margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(55,214,154,.06);border:1px solid rgba(55,214,154,.2);font-size:11px;line-height:1.5}.import-report.warn{background:rgba(245,196,95,.06);border-color:rgba(245,196,95,.2)}
 @media print{body *{visibility:hidden}#qrPrintOverlay.open,#qrPrintOverlay.open *{visibility:visible}#qrPrintOverlay{position:static;background:#fff;display:block!important;padding:0}.overlay-top{display:none!important}.qr-print-grid{display:flex;flex-wrap:wrap;gap:8px}.qr-label{border:1px solid #ccc}}
 </style>
- </head>
- <body>
+</head>
+<body>
   <div class="app-shell">
-   <header class="topbar">
-    <div class="brand">
-     <div class="brand-mark">✦</div>
-     <div>
-      <div class="brand-name">NEXUS-X</div>
-      <div class="brand-sub">// OMEGA ∞ · LABORATORIO DE CONOCIMIENTO</div>
-     </div>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">✦</div>
+        <div>
+          <div class="brand-name">NEXUS-X</div>
+          <div class="brand-sub">// OMEGA ∞ · LABORATORIO DE CONOCIMIENTO</div>
+        </div>
+      </div>
+      <div class="topbar-center">INVESTIGÁ · ANALIZÁ · CONECTÁ · DESCUBRÍ</div>
+      <div class="top-actions">
+        <button class="icon-btn" id="focusSearchBtn" title="Ir a investigación">⌕</button>
+        <div class="api-mini"><span>IA</span><input id="apiKeyInput" type="password" placeholder="API Key" autocomplete="off"><button id="saveApiKeyBtn">Guardar</button></div>
+        <div class="status-pill"><i class="pulse"></i><span id="sysState">Iniciando...</span></div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="nav-label">ESPACIO DE TRABAJO</div>
+        <button class="nav-item active" data-action="home"><span>⌂</span> Inicio</button>
+        <button class="nav-item" data-action="research"><span>⌕</span> Investigación</button>
+        <button class="nav-item" data-action="documents"><span>▤</span> Documentos</button>
+        <button class="nav-item" data-action="inventory"><span>⚗</span> Inventario</button>
+        <button class="nav-item" data-action="lab"><span>♧</span> Laboratorio</button>
+        <button class="nav-item" data-action="map"><span>⌘</span> Mapa de conocimiento</button>
+        <button class="nav-item" data-action="models"><span>◈</span> IA / Modelos</button>
+        <button class="nav-item" data-action="qr"><span>▦</span> QR / Escáner</button>
+        <button class="nav-item" data-action="excel"><span>▣</span> Excel</button>
+        <button class="nav-item" data-action="export"><span>⇧</span> Exportar</button>
+        <button class="nav-item" data-action="settings"><span>⚙</span> Configuración</button>
+
+        <div class="core-card">
+          <div class="core-orb"><span>∞</span></div>
+          <div class="core-title">NEXUS CORE</div>
+          <div class="core-copy">Potencia de laboratorio. Experiencia simple.</div>
+          <div class="core-status"><i class="pulse"></i> Sistema operativo</div>
+        </div>
+      </aside>
+
+      <main class="main-content" id="mainWorkspace">
+        <section class="welcome-card">
+          <div>
+            <div class="eyebrow">LABORATORIO INTELIGENTE · LOCAL-FIRST</div>
+            <h1>Convertí información<br><strong>en conocimiento real.</strong></h1>
+            <p>NEXUS-X analiza tus documentos, encuentra evidencia, conecta conceptos y te ayuda a investigar sin obligarte a aprender una interfaz complicada.</p>
+            <div class="welcome-actions">
+              <button class="primary big" id="startResearchBtn">Empezar a investigar →</button>
+              <button class="ghost" id="quickDocsBtn">Ver documentos</button>
+            </div>
+          </div>
+          <div class="hero-instrument" aria-hidden="true"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="hero-core">N</div></div>
+        </section>
+
+        <section class="research-card" id="researchSection">
+          <div class="section-top">
+            <div><div class="eyebrow">PASO 01 · INVESTIGACIÓN</div><h2>¿Qué querés investigar?</h2></div>
+            <div class="model-select"><span>Modelo</span><select id="modelQuick"><option>Gemini · automático</option><option>Motor local · determinista</option></select></div>
+          </div>
+          <div class="query-wrap">
+            <span class="query-icon">⌕</span>
+            <input id="mainQueryInput" type="text" placeholder="Escribí una pregunta, un concepto o un tema..." autocomplete="off" disabled>
+            <button class="btn-action" id="mainSendBtn" disabled>Investigar →</button>
+          </div>
+          <div class="query-tools">
+            <button id="attachPdfBtn">＋ PDF</button><button id="attachExcelBtn">＋ Excel</button><button id="attachImageBtn">＋ Imagen</button>
+            <button class="tool-toggle" id="deepModeBtn">◉ Modo profundo</button>
+            <button class="tool-toggle" id="adversarialBtn">◇ Análisis adversarial</button>
+            <button class="tool-toggle" id="repoModeBtn">⌁ Usar documentos del repositorio</button>
+            <input id="researchFileInput" type="file" accept=".pdf,.txt,.md,.xlsx,.xls,.csv,image/*" hidden>
+          </div>
+          <div class="examples"><span>Probá:</span><button data-query="¿Qué protocolos de seguridad aparecen en los documentos?">protocolos de seguridad</button><button data-query="Relacioná las fórmulas con sus documentos.">relacionar fórmulas</button><button data-query="¿Qué información está respaldada por evidencia?">evidencia</button></div>
+        </section>
+
+        <section class="results-card">
+          <div class="results-head">
+            <div><div class="eyebrow">PASO 02 · RESULTADOS</div><h2>Centro de conocimiento</h2></div>
+            <div class="result-actions"><button class="secondary" id="refreshRepoBtn">↻ Sincronizar repositorio</button><button class="secondary" id="newInventoryBtn">＋ Nuevo registro</button></div>
+          </div>
+          <div class="tabs" id="resultTabs"><button class="tab active" data-tab="answer">Respuesta</button><button class="tab" data-tab="evidence">Evidencia</button><button class="tab" data-tab="claims">Claims</button><button class="tab" data-tab="relations">Relaciones</button><button class="tab" data-tab="graph">Grafo</button><button class="tab" data-tab="audit">Auditoría</button></div>
+          <div class="chat-scroll" id="mainChatBox">
+            <div class="empty-state"><div class="empty-icon">✦</div><h3>NEXUS-X está listo.</h3><p>Escribí una pregunta arriba o abrí un documento. El sistema buscará evidencia antes de responder.</p><div class="empty-note">No necesitás saber cómo funciona el laboratorio. Solo contale qué querés descubrir.</div></div>
+          </div>
+        </section>
+
+        <section class="quick-section" id="documentsSection">
+          <div class="section-top compact"><div><div class="eyebrow">HERRAMIENTAS</div><h2>Herramientas del laboratorio</h2></div></div>
+          <div class="utility-bar">
+            <button id="openQrBtn">▦ Escanear QR</button>
+            <button id="openInventoryBtn">⚗ Inventario</button>
+            <button id="docsQuickAction">▤ Documentos</button>
+            <button id="excelQuickAction">▣ Excel</button>
+            <button id="mapQuickAction">⌘ Mapa</button>
+            <button id="settingsCompactBtn">⚙ Configuración</button>
+          </div>
+        </section>
+      </main>
+
+      <aside class="context-rail">
+        <section class="context-card">
+          <div class="card-title"><span>ESTADO</span><span class="live"><i class="pulse"></i> ONLINE</span></div>
+          <div class="metric"><span>Documentos</span><b id="docCount">—</b></div>
+          <div class="metric"><span>Páginas indexadas</span><b id="pageCount">—</b></div>
+          <div class="metric"><span>Inventario</span><b id="invCount">0</b></div>
+        </section>
+        <section class="context-card">
+          <div class="card-title"><span>REPOSITORIO</span></div>
+          <div class="repo-name">miqueas80/<strong>laboratorio-escolar</strong></div>
+          <div class="repo-state"><i class="pulse"></i><span id="repoState">Conectando...</span></div>
+          <button class="secondary full" id="repoSyncSideBtn">Sincronizar</button>
+        </section>
+        <section class="context-card">
+          <div class="card-title"><span>MODELO IA</span></div>
+          <div class="model-name">Gemini <span id="modelState">listo</span></div>
+          <p class="muted">La IA trabaja sobre el contexto que NEXUS-X encuentra. Si no hay evidencia suficiente, lo indica.</p>
+          <button class="secondary full" id="modelSideBtn">Configurar IA</button>
+        </section>
+        <section class="context-card recent">
+          <div class="card-title"><span>DOCUMENTOS ENCONTRADOS</span><span id="docHint">—</span></div>
+          <div id="recentDocs"><div class="muted">Esperando sincronización...</div></div>
+        </section>
+        <section class="tip-card"><div class="tip-icon">✦</div><strong>Primeros pasos</strong><p>1. Escribí qué querés saber.<br>2. Tocá <b>Investigar</b>.<br>3. Abrí la evidencia que te interese.</p></section>
+      </aside>
     </div>
-    <div class="topbar-center">INVESTIGÁ · ANALIZÁ · CONECTÁ · DESCUBRÍ</div>
-    <div class="top-actions">
-     <button class="icon-btn" id="focusSearchBtn" title="Ir a investigación">⌕</button>
-     <div class="api-mini">
-      <span>IA</span><input id="apiKeyInput" type="password" placeholder="API Key" autocomplete="off">
-      <button id="saveApiKeyBtn">Guardar</button>
-     </div>
-     <div class="status-pill">
-      <i class="pulse"></i><span id="sysState">Iniciando...</span>
-     </div>
-    </div>
-   </header>
-   <div class="layout">
-    <aside class="sidebar">
-     <div class="nav-label">ESPACIO DE TRABAJO</div>
-     <button class="nav-item active" data-action="home"><span>⌂</span> Inicio</button>
-     <button class="nav-item" data-action="research"><span>⌕</span> Investigación</button>
-     <button class="nav-item" data-action="documents"><span>▤</span> Documentos</button>
-     <button class="nav-item" data-action="inventory"><span>⚗</span> Inventario</button>
-     <button class="nav-item" data-action="lab"><span>♧</span> Laboratorio</button>
-     <button class="nav-item" data-action="map"><span>⌘</span> Mapa de conocimiento</button>
-     <button class="nav-item" data-action="models"><span>◈</span> IA / Modelos</button>
-     <button class="nav-item" data-action="qr"><span>▦</span> QR / Escáner</button>
-     <button class="nav-item" data-action="excel"><span>▣</span> Excel</button>
-     <button class="nav-item" data-action="export"><span>⇧</span> Exportar</button>
-     <button class="nav-item" data-action="settings"><span>⚙</span> Configuración</button>
-     <div class="core-card">
-      <div class="core-orb">
-       <span>∞</span>
-      </div>
-      <div class="core-title">NEXUS CORE</div>
-      <div class="core-copy">Potencia de laboratorio. Experiencia simple.</div>
-      <div class="core-status">
-       <i class="pulse"></i> Sistema operativo
-      </div>
-     </div>
-    </aside>
-    <main class="main-content" id="mainWorkspace">
-     <section class="welcome-card">
-      <div>
-       <div class="eyebrow">LABORATORIO INTELIGENTE · LOCAL-FIRST</div>
-       <h1>Convertí información
-        <br>
-        <strong>en conocimiento real.</strong></h1>
-       <p>NEXUS-X analiza tus documentos, encuentra evidencia, conecta conceptos y te ayuda a investigar sin obligarte a aprender una interfaz complicada.</p>
-       <div class="welcome-actions">
-        <button class="primary big" id="startResearchBtn">Empezar a investigar →</button>
-        <button class="ghost" id="quickDocsBtn">Ver documentos</button>
-       </div>
-      </div>
-      <div class="hero-instrument" aria-hidden="true">
-       <div class="ring r1"></div>
-       <div class="ring r2"></div>
-       <div class="ring r3"></div>
-       <div class="hero-core">N</div>
-      </div>
-     </section>
-     <section class="research-card" id="researchSection">
-      <div class="section-top">
-       <div>
-        <div class="eyebrow">PASO 01 · INVESTIGACIÓN</div>
-        <h2>¿Qué querés investigar?</h2>
-       </div>
-       <div class="model-select">
-        <span>Modelo</span><select id="modelQuick"><option>Gemini · automático</option><option>Motor local · determinista</option></select>
-       </div>
-      </div>
-      <div class="query-wrap">
-       <span class="query-icon">⌕</span> <input id="mainQueryInput" type="text" placeholder="Escribí una pregunta, un concepto o un tema..." autocomplete="off" disabled>
-       <button class="btn-action" id="mainSendBtn" disabled>Investigar →</button>
-      </div>
-      <div class="query-tools">
-       <button id="attachPdfBtn">＋ PDF</button>
-       <button id="attachExcelBtn">＋ Excel</button>
-       <button id="attachImageBtn">＋ Imagen</button>
-       <button class="tool-toggle" id="deepModeBtn">◉ Modo profundo</button>
-       <button class="tool-toggle" id="adversarialBtn">◇ Análisis adversarial</button>
-       <button class="tool-toggle" id="repoModeBtn">⌁ Usar documentos del repositorio</button>
-       <input id="researchFileInput" type="file" accept=".pdf,.txt,.md,.xlsx,.xls,.csv,image/*" hidden>
-      </div>
-      <div class="examples">
-       <span>Probá:</span>
-       <button data-query="¿Qué protocolos de seguridad aparecen en los documentos?">protocolos de seguridad</button>
-       <button data-query="Relacioná las fórmulas con sus documentos.">relacionar fórmulas</button>
-       <button data-query="¿Qué información está respaldada por evidencia?">evidencia</button>
-      </div>
-     </section>
-     <section class="results-card">
-      <div class="results-head">
-       <div>
-        <div class="eyebrow">PASO 02 · RESULTADOS</div>
-        <h2>Centro de conocimiento</h2>
-       </div>
-       <div class="result-actions">
-        <button class="secondary" id="refreshRepoBtn">↻ Sincronizar repositorio</button>
-        <button class="secondary" id="newInventoryBtn">＋ Nuevo registro</button>
-       </div>
-      </div>
-      <div class="tabs" id="resultTabs">
-       <button class="tab active" data-tab="answer">Respuesta</button>
-       <button class="tab" data-tab="evidence">Evidencia</button>
-       <button class="tab" data-tab="claims">Claims</button>
-       <button class="tab" data-tab="relations">Relaciones</button>
-       <button class="tab" data-tab="graph">Grafo</button>
-       <button class="tab" data-tab="audit">Auditoría</button>
-      </div>
-      <div class="chat-scroll" id="mainChatBox">
-       <div class="empty-state">
-        <div class="empty-icon">✦</div>
-        <h3>NEXUS-X está listo.</h3>
-        <p>Escribí una pregunta arriba o abrí un documento. El sistema buscará evidencia antes de responder.</p>
-        <div class="empty-note">No necesitás saber cómo funciona el laboratorio. Solo contale qué querés descubrir.</div>
-       </div>
-      </div>
-     </section>
-     <section class="quick-section" id="documentsSection">
-      <div class="section-top compact">
-       <div>
-        <div class="eyebrow">HERRAMIENTAS</div>
-        <h2>Acciones rápidas</h2>
-       </div>
-      </div>
-      <div class="quick-grid">
-       <button class="quick-card" id="openQrBtn"><span class="qicon cyan">▦</span><strong>Escanear QR</strong><small>Cámara, imagen o ID</small></button>
-       <button class="quick-card" id="openInventoryBtn"><span class="qicon violet">⚗</span><strong>Inventario</strong><small>Registros y vencimientos</small></button>
-       <button class="quick-card" id="docsQuickAction"><span class="qicon blue">▤</span><strong>Documentos</strong><small>PDF y conocimiento</small></button>
-       <button class="quick-card" id="excelQuickAction"><span class="qicon green">▣</span><strong>Excel</strong><small>Importar / exportar</small></button>
-       <button class="quick-card" id="mapQuickAction"><span class="qicon gold">⌘</span><strong>Mapa</strong><small>Relaciones semánticas</small></button>
-      </div>
-     </section>
-    </main>
-    <aside class="context-rail">
-     <section class="context-card">
-      <div class="card-title">
-       <span>ESTADO</span><span class="live"><i class="pulse"></i> ONLINE</span>
-      </div>
-      <div class="metric">
-       <span>Documentos</span><b id="docCount">—</b>
-      </div>
-      <div class="metric">
-       <span>Páginas indexadas</span><b id="pageCount">—</b>
-      </div>
-      <div class="metric">
-       <span>Inventario</span><b id="invCount">0</b>
-      </div>
-     </section>
-     <section class="context-card">
-      <div class="card-title">
-       <span>REPOSITORIO</span>
-      </div>
-      <div class="repo-name">
-       miqueas80/<strong>laboratorio-escolar</strong>
-      </div>
-      <div class="repo-state">
-       <i class="pulse"></i><span id="repoState">Conectando...</span>
-      </div>
-      <button class="secondary full" id="repoSyncSideBtn">Sincronizar</button>
-     </section>
-     <section class="context-card">
-      <div class="card-title">
-       <span>MODELO IA</span>
-      </div>
-      <div class="model-name">
-       Gemini <span id="modelState">listo</span>
-      </div>
-      <p class="muted">La IA trabaja sobre el contexto que NEXUS-X encuentra. Si no hay evidencia suficiente, lo indica.</p>
-      <button class="secondary full" id="modelSideBtn">Configurar IA</button>
-     </section>
-     <section class="context-card recent">
-      <div class="card-title">
-       <span>DOCUMENTOS ENCONTRADOS</span><span id="docHint">—</span>
-      </div>
-      <div id="recentDocs">
-       <div class="muted">Esperando sincronización...</div>
-      </div>
-     </section>
-     <section class="tip-card">
-      <div class="tip-icon">✦</div>
-      <strong>Primeros pasos</strong>
-      <p>1. Escribí qué querés saber.
-       <br>
-       2. Tocá <b>Investigar</b>.
-       <br>
-       3. Abrí la evidencia que te interese.</p>
-     </section>
-    </aside>
-   </div>
   </div>
+
   <!-- INVENTARIO -->
   <div class="panel-overlay" id="inventoryOverlay">
-   <div class="overlay-top">
-    <div>
-     <div class="overlay-kicker">NEXUS-X · GESTIÓN</div>
-     <span class="overlay-title">Inventario de laboratorio</span>
+    <div class="overlay-top"><div><div class="overlay-kicker">NEXUS-X · GESTIÓN</div><span class="overlay-title">Inventario de laboratorio</span></div><button class="close-btn" id="closeInventoryBtn">Cerrar</button></div>
+    <div class="inventory-body">
+      <section class="inventory-card form-card">
+        <div class="section-head"><span>Registro</span><small>El ID NEXUS vincula el objeto con la evidencia documental.</small></div>
+        <div class="inventory-grid">
+          <div class="field"><label>ID NEXUS *</label><input id="invId" placeholder="NEXUS:H2SO4-001"></div>
+          <div class="field"><label>NOMBRE *</label><input id="invName" placeholder="Ácido sulfúrico"></div>
+          <div class="field"><label>FÓRMULA / CÓDIGO</label><input id="invFormula" placeholder="H2SO4"></div>
+          <div class="field"><label>CATEGORÍA</label><select id="invCategory"><option>Sustancia</option><option>Material</option><option>Equipo</option><option>Reactivo</option><option>Otro</option></select></div>
+          <div class="field"><label>VENCIMIENTO</label><input id="invExpiry" type="date"></div>
+          <div class="field"><label>CANTIDAD</label><input id="invQuantity" placeholder="500 mL"></div>
+          <div class="field"><label>UBICACIÓN</label><input id="invLocation" placeholder="Armario A-03"></div>
+          <div class="field"><label>FABRICANTE / MARCA</label><input id="invManufacturer" placeholder="Fabricante"></div>
+          <div class="field full"><label>PALABRAS CLAVE</label><input id="invKeywords" placeholder="ácido, sulfúrico, corrosivo, H2SO4"></div>
+          <div class="field full"><label>FICHA TÉCNICA</label><input id="invFicha" placeholder="ruta del repo o URL al PDF"></div>
+          <div class="field full"><label>NOTAS</label><textarea id="invNotes" placeholder="Observaciones del laboratorio..."></textarea></div>
+        </div>
+        <div class="inventory-actions"><button class="save" id="saveInventoryBtn">Guardar registro</button><button id="clearInventoryBtn">Limpiar</button><button id="deleteInventoryBtn">Eliminar</button></div>
+        <div id="inventoryMatchBox" class="match-box">Las relaciones con documentos aparecerán aquí.</div>
+      </section>
+      <section class="inventory-card">
+        <div class="section-head"><span>Registros</span><small>Seleccioná uno para editarlo.</small></div>
+        <div class="stat-row" id="inventoryStats"></div>
+        <input id="inventoryFilter" class="filter" placeholder="Filtrar por nombre, ID, fórmula o ubicación...">
+        <div class="inventory-list" id="inventoryList"></div>
+        <div class="import-tools"><button id="downloadTemplateBtn">Plantilla Excel</button><label class="file-btn" for="excelInput">Importar Excel</label><input id="excelInput" type="file" accept=".xlsx,.xls,.csv" hidden><button id="loadRepoExcelBtn">Excel del repo</button><button id="generateCodesBtn">Generar códigos</button><button id="exportNexusExcelBtn">Exportar Excel NEXUS</button><button id="exportInventoryBtn">Exportar JSON</button><button id="printQrBtn">Imprimir QR</button></div><div class="schema-strip"><div class="schema-head"><strong>IDENTIDAD ESTRUCTURADA DEL EXCEL</strong><span id="schemaSummary">Sin esquema cargado</span></div><div id="schemaGrid" class="schema-grid"><div class="loading">Importá un Excel para asignar códigos persistentes a sus columnas.</div></div><div id="excelPreview" class="excel-preview"></div><div class="identity-note">Cada columna recibe un código <b>NXC</b> estable. Cada material conserva su <b>ID NEXUS</b> y cada dato queda vinculado a su columna, registro y fuente. NEXUS-X no cambia silenciosamente el Excel original.</div></div>
+      </section>
     </div>
-    <button class="close-btn" id="closeInventoryBtn">Cerrar</button>
-   </div>
-   <div class="inventory-body">
-    <section class="inventory-card form-card">
-     <div class="section-head">
-      <span>Registro</span><small>El ID NEXUS vincula el objeto con la evidencia documental.</small>
-     </div>
-     <div class="inventory-grid">
-      <div class="field">
-       <label>ID NEXUS *</label><input id="invId" placeholder="NEXUS:H2SO4-001">
-      </div>
-      <div class="field">
-       <label>NOMBRE *</label><input id="invName" placeholder="Ácido sulfúrico">
-      </div>
-      <div class="field">
-       <label>FÓRMULA / CÓDIGO</label><input id="invFormula" placeholder="H2SO4">
-      </div>
-      <div class="field">
-       <label>CATEGORÍA</label><select id="invCategory"><option>Sustancia</option><option>Material</option><option>Equipo</option><option>Reactivo</option><option>Otro</option></select>
-      </div>
-      <div class="field">
-       <label>VENCIMIENTO</label><input id="invExpiry" type="date">
-      </div>
-      <div class="field">
-       <label>CANTIDAD</label><input id="invQuantity" placeholder="500 mL">
-      </div>
-      <div class="field">
-       <label>UBICACIÓN</label><input id="invLocation" placeholder="Armario A-03">
-      </div>
-      <div class="field">
-       <label>FABRICANTE / MARCA</label><input id="invManufacturer" placeholder="Fabricante">
-      </div>
-      <div class="field full">
-       <label>PALABRAS CLAVE</label><input id="invKeywords" placeholder="ácido, sulfúrico, corrosivo, H2SO4">
-      </div>
-      <div class="field full">
-       <label>FICHA TÉCNICA</label><input id="invFicha" placeholder="ruta del repo o URL al PDF">
-      </div>
-      <div class="field full">
-       <label>NOTAS</label><textarea id="invNotes" placeholder="Observaciones del laboratorio..."></textarea>
-      </div>
-     </div>
-     <div class="inventory-actions">
-      <button class="save" id="saveInventoryBtn">Guardar registro</button>
-      <button id="clearInventoryBtn">Limpiar</button>
-      <button id="deleteInventoryBtn">Eliminar</button>
-     </div>
-     <div id="inventoryMatchBox" class="match-box">Las relaciones con documentos aparecerán aquí.</div>
-    </section>
-    <section class="inventory-card">
-     <div class="section-head">
-      <span>Registros</span><small>Seleccioná uno para editarlo.</small>
-     </div>
-     <div class="stat-row" id="inventoryStats"></div>
-     <input id="inventoryFilter" class="filter" placeholder="Filtrar por nombre, ID, fórmula o ubicación...">
-     <div class="inventory-list" id="inventoryList"></div>
-     <div class="import-tools">
-      <button id="downloadTemplateBtn">Plantilla Excel</button>
-      <label class="file-btn" for="excelInput">Importar Excel</label><input id="excelInput" type="file" accept=".xlsx,.xls,.csv" hidden>
-      <button id="loadRepoExcelBtn">Excel del repo</button>
-      <button id="generateCodesBtn">Generar códigos</button>
-      <button id="exportNexusExcelBtn">Exportar Excel NEXUS</button>
-      <button id="exportInventoryBtn">Exportar JSON</button>
-      <button id="printQrBtn">Imprimir QR</button>
-     </div>
-     <div class="schema-strip">
-      <div class="schema-head">
-       <strong>IDENTIDAD ESTRUCTURADA DEL EXCEL</strong><span id="schemaSummary">Sin esquema cargado</span>
-      </div>
-      <div id="schemaGrid" class="schema-grid">
-       <div class="loading">Importá un Excel para asignar códigos persistentes a sus columnas.</div>
-      </div>
-      <div class="identity-note">
-       Cada columna recibe un código <b>NXC</b> estable. Cada material conserva su <b>ID NEXUS</b> y cada dato queda vinculado a su columna, registro y fuente. NEXUS-X no cambia silenciosamente el Excel original.
-      </div>
-     </div>
-    </section>
-   </div>
   </div>
+
   <!-- QR -->
   <div class="panel-overlay" id="qrOverlay">
-   <div class="overlay-top">
-    <div>
-     <div class="overlay-kicker">NEXUS-X · IDENTIFICACIÓN</div>
-     <span class="overlay-title">Escáner QR</span>
+    <div class="overlay-top"><div><div class="overlay-kicker">NEXUS-X · IDENTIFICACIÓN</div><span class="overlay-title">Escáner QR</span></div><button class="close-btn" id="closeQrBtn">Cerrar</button></div>
+    <div class="qr-body">
+      <section class="qr-card"><div class="camera-box"><video id="qrVideo" autoplay muted playsinline></video><canvas id="qrCanvas"></canvas><div class="scan-frame"></div><div class="scan-line"></div></div><div class="camera-status" id="cameraStatus">Listo para iniciar la cámara.</div><div class="qr-actions"><button class="primary" id="startCameraBtn">Iniciar cámara</button><button class="danger" id="stopCameraBtn">Detener</button></div><div class="manual-scan"><input id="manualQrInput" placeholder="O ingresá NEXUS:H2SO4-001"><button id="manualQrBtn">Leer ID</button></div><div class="file-row"><label class="file-btn" for="qrImageInput">Cargar imagen del QR</label><input id="qrImageInput" type="file" accept="image/*" hidden></div><div class="scan-result" id="qrResult">Esperando un QR...</div></section>
+      <section class="qr-card"><div class="section-head"><span>Resultado</span><small>Inventario + documentos relacionados</small></div><div id="qrObjectResult" class="loading">Escaneá un código para comenzar.</div></section>
     </div>
-    <button class="close-btn" id="closeQrBtn">Cerrar</button>
-   </div>
-   <div class="qr-body">
-    <section class="qr-card">
-     <div class="camera-box">
-      <video id="qrVideo" autoplay muted playsinline></video>
-      <canvas id="qrCanvas"></canvas>
-      <div class="scan-frame"></div>
-      <div class="scan-line"></div>
-     </div>
-     <div class="camera-status" id="cameraStatus">Listo para iniciar la cámara.</div>
-     <div class="qr-actions">
-      <button class="primary" id="startCameraBtn">Iniciar cámara</button>
-      <button class="danger" id="stopCameraBtn">Detener</button>
-     </div>
-     <div class="manual-scan">
-      <input id="manualQrInput" placeholder="O ingresá NEXUS:H2SO4-001">
-      <button id="manualQrBtn">Leer ID</button>
-     </div>
-     <div class="file-row">
-      <label class="file-btn" for="qrImageInput">Cargar imagen del QR</label><input id="qrImageInput" type="file" accept="image/*" hidden>
-     </div>
-     <div class="scan-result" id="qrResult">Esperando un QR...</div>
-    </section>
-    <section class="qr-card">
-     <div class="section-head">
-      <span>Resultado</span><small>Inventario + documentos relacionados</small>
-     </div>
-     <div id="qrObjectResult" class="loading">Escaneá un código para comenzar.</div>
-    </section>
-   </div>
   </div>
+
   <!-- PDF -->
   <div id="pdfViewerModal">
-   <div class="viewer-top">
-    <span class="viewer-title-text" id="modalDocTitle">Lector de documento</span>
-    <div class="viewer-nav-controls">
-     <button class="page-nav-btn" id="prevPageBtn">◀</button>
-     <span id="pageIndicator">Pág. 1 / 1</span>
-     <button class="page-nav-btn" id="nextPageBtn">▶</button>
-    </div>
-    <button class="viewer-close" id="closeModalBtn">Cerrar</button>
-   </div>
-   <div class="viewer-body">
-    <div class="canvas-container">
-     <canvas id="pdfCanvas"></canvas>
-    </div>
-    <aside class="viewer-sidebar-chat">
-     <div class="viewer-kicker">CONSULTA SOBRE ESTE DOCUMENTO</div>
-     <div class="v-chat-history" id="modalChatHistory"></div>
-     <div class="v-input-row">
-      <input id="modalQueryInput" type="text" placeholder="Preguntale a la IA sobre este manual..." autocomplete="off">
-      <button class="v-send" id="modalSendBtn">Preguntar</button>
-     </div>
-    </aside>
-   </div>
+    <div class="viewer-top"><span class="viewer-title-text" id="modalDocTitle">Lector de documento</span><div class="viewer-nav-controls"><button class="page-nav-btn" id="prevPageBtn">◀</button><span id="pageIndicator">Pág. 1 / 1</span><button class="page-nav-btn" id="nextPageBtn">▶</button></div><button class="viewer-close" id="closeModalBtn">Cerrar</button></div>
+    <div class="viewer-body"><div class="canvas-container"><canvas id="pdfCanvas"></canvas></div><aside class="viewer-sidebar-chat"><div class="viewer-kicker">CONSULTA SOBRE ESTE DOCUMENTO</div><div class="v-chat-history" id="modalChatHistory"></div><div class="v-input-row"><input id="modalQueryInput" type="text" placeholder="Preguntale a la IA sobre este manual..." autocomplete="off"><button class="v-send" id="modalSendBtn">Preguntar</button></div></aside></div>
   </div>
+
   <!-- PRINT -->
-  <div class="panel-overlay" id="qrPrintOverlay">
-   <div class="overlay-top">
-    <span class="overlay-title">Etiquetas QR</span>
-    <div>
-     <button class="small-btn" id="doPrintQrBtn">Imprimir</button>
-     <button class="close-btn" id="closeQrPrintBtn">Cerrar</button>
-    </div>
-   </div>
-   <div class="qr-print-grid" id="qrPrintGrid"></div>
-  </div>
+  <div class="panel-overlay" id="qrPrintOverlay"><div class="overlay-top"><span class="overlay-title">Etiquetas QR</span><div><button class="small-btn" id="doPrintQrBtn">Imprimir</button><button class="close-btn" id="closeQrPrintBtn">Cerrar</button></div></div><div class="qr-print-grid" id="qrPrintGrid"></div></div>
   <div class="toast" id="toast"></div>
-  <div class="mobile-nav">
-   <button data-action="research">⌕</button>
-   <button data-action="documents">▤</button>
-   <button data-action="inventory">⚗</button>
-   <button data-action="qr">▦</button>
-   <button data-action="settings">⚙</button>
-  </div>
-  <script>(() => {
+  <div class="mobile-nav"><button data-action="research">⌕</button><button data-action="documents">▤</button><button data-action="inventory">⚗</button><button data-action="qr">▦</button><button data-action="settings">⚙</button></div>
+</body>
+
+<script>(() => {
 "use strict";
 
 /* =========================================================
@@ -1868,80 +1682,132 @@ function categoryPrefix(category,name=""){
   return "LAB";
 }
 function identityFingerprint(raw,headers,occurrence=1){
-  const strong=headers.map(h=>[h,raw[h]]).filter(([h,v])=>{
-    const k=normalizeStr(h); return v!=="" && /(serial|serie|nro.?serie|catalog|cat.?logo|asset|patrimonio|cas|codigo|id)/.test(k);
-  });
-  const stable=headers.map(h=>[h,raw[h]]).filter(([h,v])=>{
-    const k=normalizeStr(h); return v!=="" && /(nombre|material|producto|fabricante|marca|modelo|ubicacion)/.test(k);
-  });
-  const chosen=strong.length?strong:stable.length?stable:[...headers.map(h=>[h,raw[h]]).filter(([,v])=>v!=="")];
-  return `${stableHash(chosen.map(([h,v])=>`${canonicalHeader(h)}=${normalizeStr(v)}`).join("|"))}:${occurrence}`;
+  const pairs=headers.map(h=>[h,raw[h]]).filter(([,v])=>String(v??'').trim()!=='');
+  const strong=pairs.filter(([h])=>/(serial|serie|catalog|catalogo|asset|patrimonio|cas|codigo|código|id)/.test(normalizeStr(h)));
+  const stable=pairs.filter(([h])=>/(nombre|material|producto|fabricante|marca|modelo|ubicacion|ubicación)/.test(normalizeStr(h)));
+  const chosen=strong.length?strong:stable.length?stable:pairs;
+  return `${stableHash(chosen.map(([h,v])=>`${canonicalHeader(h)}=${normalizeStr(v)}`).join('|'))}:${occurrence}`;
 }
 function nextRecordId(prefix){
-  const used=new Set(inventory.map(x=>normalizeQrPayload(x.id).toUpperCase()));
-  let n=1, id=""; do{id=`NEXUS:${prefix}-${String(n).padStart(4,"0")}`;n++;}while(used.has(id)); return id;
+  const used=new Set(inventory.map(x=>normalizeQrPayload(x.id||'').toUpperCase()));
+  let n=1,id='';
+  do{id=`NEXUS:${prefix}-${String(n).padStart(4,'0')}`;n++;}while(used.has(id));
+  return id;
 }
-function enrichInventoryRecord(item, raw, headers, rowNumber){
+function enrichInventoryRecord(item,raw,headers,rowNumber){
   const fieldCodes={};
-  headers.forEach(h=>{const canon=canonicalHeader(h); const schema=nexusSchema.find(x=>x.canonical===canon); if(schema)fieldCodes[canon]=`${schema.code}:R${String(rowNumber).padStart(5,"0")}:${item.id||"UNASSIGNED"}`;});
-  const identity=identityFingerprint(raw,headers);
-  item.source={workbook:lastImportedWorkbook||"local",row:rowNumber,identity,fieldCodes,columns:headers.map(h=>({header:String(h),canonical:canonicalHeader(h),code:nexusSchema.find(x=>x.canonical===canonicalHeader(h))?.code||allocateColumnCode(h)}))};
+  headers.forEach(h=>{
+    const canon=canonicalHeader(h);
+    const schema=nexusSchema.find(x=>x.canonical===canon);
+    if(schema) fieldCodes[canon]=schema.code;
+  });
+  item.source={
+    workbook:lastImportedWorkbook||'local',row:rowNumber,
+    identity:item.source?.identity||identityFingerprint(raw,headers),
+    fieldCodes,
+    columns:headers.map(h=>({header:String(h),canonical:canonicalHeader(h),code:nexusSchema.find(x=>x.canonical===canonicalHeader(h))?.code||allocateColumnCode(h)}))
+  };
   return item;
 }
-function rowToInventory(row,headers=[],rowNumber=1,occurrence=1){
-  const keys={}; Object.entries(row||{}).forEach(([k,v])=>keys[normalizedHeader(k)]=String(v??"").trim());
-  const pick=(...names)=>{for(const n of names){if(keys[normalizedHeader(n)]) return keys[normalizedHeader(n)];}return ""};
-  const raw={}; headers.forEach(h=>raw[h]=String(row?.[h]??"").trim());
+function rowToInventory(row,headers,rowNumber,occurrence=1){
+  const keys={}; headers.forEach(h=>keys[normalizedHeader(h)]=String(row?.[h]??'').trim());
+  const pick=(...names)=>{for(const n of names){const v=keys[normalizedHeader(n)];if(v) return v;}return '';};
+  const raw={};headers.forEach(h=>raw[h]=String(row?.[h]??'').trim());
   const item={
-    id:pick("ID NEXUS","id","nexus id"),
-    name:pick("NOMBRE","name","nombre del producto","material","producto"),
-    formula:pick("FÓRMULA / CÓDIGO","FORMULA","formula","codigo"),
-    category:pick("CATEGORÍA","categoria","category")||"Sustancia",
-    expiry:pick("VENCIMIENTO","expiry","fecha vencimiento"),
-    quantity:pick("CANTIDAD","quantity","stock"),
-    location:pick("UBICACIÓN","ubicacion","location"),
-    manufacturer:pick("FABRICANTE / MARCA","fabricante","marca","manufacturer","proveedor"),
-    keywords:pick("PALABRAS CLAVE","keywords","palabras clave"),
-    ficha:pick("FICHA TÉCNICA","ficha","pdf","sds","msds"),
-    notes:pick("NOTAS","notes"),
+    id:pick('ID NEXUS','NEXUS ID','ID','CODIGO NEXUS','CÓDIGO NEXUS'),
+    name:pick('NOMBRE','NAME','NOMBRE DEL PRODUCTO','MATERIAL','PRODUCTO','DESCRIPCION','DESCRIPCIÓN'),
+    formula:pick('FÓRMULA / CÓDIGO','FORMULA','CÓDIGO','CODIGO','FORMULA QUIMICA','FÓRMULA QUÍMICA'),
+    category:pick('CATEGORÍA','CATEGORIA','CATEGORY','TIPO','CLASE')||'Material',
+    expiry:pick('VENCIMIENTO','FECHA VENCIMIENTO','EXPIRY','CADUCIDAD'),
+    quantity:pick('CANTIDAD','QUANTITY','STOCK','EXISTENCIA'),
+    location:pick('UBICACIÓN','UBICACION','LOCATION','ESTANTE','ARMARIO'),
+    manufacturer:pick('FABRICANTE / MARCA','FABRICANTE','MARCA','MANUFACTURER','PROVEEDOR'),
+    keywords:pick('PALABRAS CLAVE','KEYWORDS','TAGS','ETIQUETAS'),
+    ficha:pick('FICHA TÉCNICA','FICHA TECNICA','FICHA','PDF','SDS','MSDS','MANUAL'),
+    notes:pick('NOTAS','NOTA','OBSERVACIONES','COMMENTS','COMENTARIOS'),
     rawData:raw
   };
-  if(!item.id){
-    const fp=identityFingerprint(raw,headers,occurrence);
-    const prior=inventory.find(x=>x.source?.identity===fp && x.id);
-    item.id=prior?.id||nextRecordId(categoryPrefix(item.category,item.name));
-  }else item.id=normalizeQrPayload(item.id);
+  const fp=identityFingerprint(raw,headers,occurrence);
+  if(!item.id){const prior=inventory.find(x=>x.source?.identity===fp&&x.id);item.id=prior?.id||nextRecordId(categoryPrefix(item.category,item.name));}
+  item.id=normalizeQrPayload(item.id);
+  item.source={identity:fp};
   return enrichInventoryRecord(item,raw,headers,rowNumber);
 }
+function detectHeaderRow(rows){
+  let best=0,bestScore=-1;
+  rows.slice(0,12).forEach((r,i)=>{
+    const vals=(r||[]).map(v=>String(v??'').trim()).filter(Boolean);
+    if(!vals.length)return;
+    const text=vals.map(normalizeStr).join(' ');
+    const known=/(nombre|material|producto|categoria|categoría|ubicacion|ubicación|fabricante|marca|cantidad|stock|vencimiento|formula|fórmula|codigo|código|ficha|id)/.test(text);
+    const score=vals.length+(known?8:0)-(i*0.15);
+    if(score>bestScore){bestScore=score;best=i;}
+  });
+  return best;
+}
+function makeExcelIndexText(workbookName,sheets){
+  const blocks=[];
+  for(const sh of sheets){
+    const lines=sh.rows.map((row,i)=>{
+      const pairs=sh.headers.map(h=>`${h}: ${row[h]??''}`).filter(x=>!/:\s*$/.test(x));
+      return `Fila ${i+2} | ${pairs.join(' | ')}`;
+    });
+    blocks.push(`HOJA: ${sh.name}\nCOLUMNAS: ${sh.headers.join(' | ')}\n${lines.join('\n')}`);
+  }
+  return `INVENTARIO EXCEL: ${workbookName}\n${blocks.join('\n\n')}`;
+}
 async function importInventoryWorkbook(file){
-  if(!window.XLSX){showToast("El motor Excel todavía está cargando.");return;}
+  if(!window.XLSX){showToast('El motor Excel todavía está cargando.');return;}
   try{
     const data=await file.arrayBuffer();
-    const wb=XLSX.read(data,{type:"array",cellDates:false,raw:false});
-    const sheet=wb.Sheets[wb.SheetNames[0]];
-    if(!sheet) throw new Error("El libro no contiene hojas.");
-    const rows=XLSX.utils.sheet_to_json(sheet,{defval:"",raw:false});
-    if(!rows.length) throw new Error("La primera hoja no contiene registros.");
-    const headers=Object.keys(rows[0]);
-    if(!headers.length) throw new Error("No se detectaron columnas.");
-    lastImportedWorkbook=file.name||"inventario.xlsx";
-    buildSchemaFromHeaders(headers); saveNexusSchema(); renderNexusSchema(headers);
-    let added=0, generated=0, updated=0, skipped=0;
-    const occurrences=new Map();
-    rows.forEach((row,i)=>{
-      const raw=Object.fromEntries(headers.map(h=>[h,String(row?.[h]??"").trim()]));
-      const baseFp=identityFingerprint(raw,headers,1).split(":")[0];
-      const occurrence=(occurrences.get(baseFp)||0)+1; occurrences.set(baseFp,occurrence);
-      const item=rowToInventory(row,headers,i+2,occurrence);
-      if(!item.name && !item.formula && !item.id){skipped++;return;}
-      const hadId=Boolean(item.rawData && Object.entries(item.rawData).some(([h,v])=>/^(id\s*nexus|nexus\s*id|id)$/i.test(String(h).trim()) && String(v).trim()));
-      if(!hadId)generated++;
-      const idx=inventory.findIndex(x=>normalizeQrPayload(x.id).toLowerCase()===item.id.toLowerCase());
-      if(idx>=0){inventory[idx]={...inventory[idx],...item};updated++;}else{inventory.push(item);added++;}
-    });
-    saveInventoryStore(); renderInventoryList(); renderOverview();
-    showToast(`Excel procesado: ${added} nuevos · ${updated} actualizados · ${generated} IDs NEXUS generados · ${skipped} filas vacías.`);
-  }catch(err){console.error(err);showToast(`No se pudo leer ${file.name}: ${err.message||"formato inválido"}`);}
+    const wb=XLSX.read(data,{type:'array',cellDates:true,raw:false,defval:''});
+    if(!wb.SheetNames.length)throw new Error('El libro no contiene hojas.');
+    lastImportedWorkbook=file.name||'inventario.xlsx';
+    const sheets=[];let totalRows=0,skipped=0,generated=0,added=0,updated=0;
+    for(const sheetName of wb.SheetNames){
+      const ws=wb.Sheets[sheetName];
+      const matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false,blankrows:false});
+      if(!matrix.length)continue;
+      const headerIndex=detectHeaderRow(matrix);
+      const rawHeaders=(matrix[headerIndex]||[]).map((v,i)=>String(v??'').trim()||`CAMPO_${i+1}`);
+      const headers=[];const seen=new Map();
+      rawHeaders.forEach(h=>{const base=h;const n=(seen.get(base)||0)+1;seen.set(base,n);headers.push(n===1?base:`${base}_${n}`);});
+      buildSchemaFromHeaders(headers);
+      const rows=matrix.slice(headerIndex+1).filter(r=>r.some(v=>String(v??'').trim()!==''));
+      const objects=rows.map(r=>Object.fromEntries(headers.map((h,i)=>[h,String(r?.[i]??'').trim()])));
+      const occurrences=new Map();
+      for(let i=0;i<objects.length;i++){
+        const raw=objects[i];const baseFp=identityFingerprint(raw,headers,1).split(':')[0];
+        const occ=(occurrences.get(baseFp)||0)+1;occurrences.set(baseFp,occ);
+        const item=rowToInventory(raw,headers,headerIndex+i+2,occ);
+        if(!item.name&&!item.formula&&!item.id){skipped++;continue;}
+        const hadId=/^(id\s*nexus|nexus\s*id|id|codigo\s*nexus|código\s*nexus)$/i.test(Object.keys(raw).find(h=>String(raw[h]).trim()===item.id)||'') && !!item.id;
+        if(!hadId)generated++;
+        const idx=inventory.findIndex(x=>normalizeQrPayload(x.id||'').toLowerCase()===item.id.toLowerCase());
+        if(idx>=0){inventory[idx]={...inventory[idx],...item};updated++;}else{inventory.push(item);added++;}
+        totalRows++;
+      }
+      sheets.push({name:sheetName,headers,rows:objects});
+    }
+    if(!sheets.length)throw new Error('No se encontraron hojas con datos.');
+    // Index the Excel itself so research/search can find its contents.
+    const indexPath=`excel/${lastImportedWorkbook}`;
+    const indexText=makeExcelIndexText(lastImportedWorkbook,sheets);
+    repositoryTexts[indexPath]={name:lastImportedWorkbook,path:indexPath,url:'',original:[indexText],profile:buildDocumentProfile([indexText]),type:'excel',sheets:sheets.map(s=>({name:s.name,headers:s.headers,rows:s.rows.length}))};
+    if(!repositoryFiles.some(x=>x.path===indexPath))repositoryFiles.unshift({name:lastImportedWorkbook,path:indexPath,url:'',type:'excel'});
+    localStorage.setItem('nexus_last_excel',indexPath);
+    saveInventoryStore();saveNexusSchema();renderInventoryList();renderNexusSchema();renderOverview();
+    renderExcelPreview(sheets);
+    const report=`Excel indexado correctamente · ${totalRows} registros · ${sheets.length} hojas · ${generated} IDs nuevos · ${updated} actualizados · ${nexusSchema.length} columnas codificadas.`;
+    addMsg('#mainChatBox',`>> ${report}`,'system');
+    showToast(report);
+  }catch(err){console.error(err);showToast(`No se pudo leer ${file.name}: ${err.message||'formato inválido'}`);}
+}
+function renderExcelPreview(sheets){
+  const host=$('#excelPreview');if(!host)return;
+  const s=sheets[0];if(!s){host.innerHTML='';return;}
+  const rows=s.rows.slice(0,8);
+  host.innerHTML=`<table><thead><tr>${s.headers.map(h=>`<th>${escapeHtml(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${s.headers.map(h=>`<td>${escapeHtml(r[h]??'')}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 }
 function generateMissingCodes(){
   let count=0; const headers=[];
@@ -2045,6 +1911,7 @@ $("#modelSideBtn")?.addEventListener("click",()=>handleNav("models"));
 $("#docsQuickAction")?.addEventListener("click",()=>handleNav("documents"));
 $("#excelQuickAction")?.addEventListener("click",()=>handleNav("excel"));
 $("#mapQuickAction")?.addEventListener("click",()=>handleNav("map"));
+$("#settingsCompactBtn")?.addEventListener("click",()=>handleNav("settings"));
 $("#attachPdfBtn")?.addEventListener("click",()=>{const i=$("#researchFileInput");i.accept=".pdf,.txt,.md";i.click()});
 $("#attachExcelBtn")?.addEventListener("click",()=>{const i=$("#researchFileInput");i.accept=".xlsx,.xls,.csv";i.click()});
 $("#attachImageBtn")?.addEventListener("click",()=>{const i=$("#researchFileInput");i.accept="image/*";i.click()});
@@ -2195,5 +2062,4 @@ boot();
 
 })();
 </script>
- </body>
 </html>
