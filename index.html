@@ -5,8 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#020611">
   <title>NEXUS-X // QUANTUM CORE</title>
+  <link rel="icon" href="favicon.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
   <script>
   window.addEventListener("DOMContentLoaded", () => {
     if (window.pdfjsLib) {
@@ -107,6 +112,20 @@ header{
 .viewer-body{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 400px;overflow:hidden;border:1px solid var(--stroke);border-top:0;border-radius:0 0 8px 8px;background:#040812}.canvas-container{min-width:0;min-height:0;overflow:auto;display:flex;justify-content:center;align-items:flex-start;padding:13px;background:#080d1a}canvas{display:block;max-width:none;height:auto;background:#fff;box-shadow:0 0 22px rgba(0,0,0,.9)}
 .viewer-sidebar-chat{min-width:0;min-height:0;display:flex;flex-direction:column;gap:9px;padding:13px;border-left:1px solid var(--stroke);background:rgba(3,7,14,.98)}.v-chat-history{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:9px;padding-right:4px}.v-msg{padding:11px 12px;border-radius:7px;font-size:13px;line-height:1.55;white-space:pre-line;word-break:break-word}.v-msg.bot{color:#dbeafe;background:rgba(0,242,254,.055);border:1px solid rgba(0,242,254,.20)}.v-msg.user{align-self:flex-end;color:#fff;background:rgba(79,172,254,.12);border:1px solid rgba(79,172,254,.30)}.v-input-row{display:flex;gap:7px}.v-input-row input{flex:1;min-width:0;height:46px;padding:8px 10px;color:var(--text);background:#02050a;border:1px solid var(--stroke);border-radius:6px;outline:0;font-size:13px}.v-send{min-width:100px;border:0;border-radius:6px;background:var(--accent);color:#000;font-size:12px;font-weight:900}
 .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:5000;max-width:min(92vw,760px);padding:12px 15px;border:1px solid var(--accent);border-radius:8px;background:rgba(2,8,18,.98);color:#dffcff;box-shadow:0 0 24px rgba(0,242,254,.18);font-size:12px;display:none}.loading{color:var(--muted);font-size:12px;padding:10px}.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}.stat{padding:11px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.025)}.stat b{display:block;font-size:19px;color:var(--accent)}.stat span{font-size:10px;color:var(--muted)}
+.qr-print-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;padding:16px;overflow:auto}
+.qr-label{background:#fff;color:#111;padding:12px;border-radius:10px;text-align:center;break-inside:avoid}
+.qr-label canvas,.qr-label img{width:148px;height:148px;margin:0 auto;display:block}
+.qr-label b{display:block;margin-top:8px;font-size:12px;line-height:1.35}
+.qr-label small{display:block;margin-top:4px;font-size:10px;color:#334155;word-break:break-all}
+.help-box{margin-top:12px;padding:12px;border:1px dashed rgba(0,242,254,.35);border-radius:8px;color:var(--muted);font-size:12px;line-height:1.6}
+@media print{
+  body *{visibility:hidden}
+  #qrPrintOverlay.open,#qrPrintOverlay.open *{visibility:visible}
+  #qrPrintOverlay{position:static;background:#fff;display:block!important;padding:0}
+  #qrPrintOverlay .overlay-top,.no-print{display:none!important}
+  .qr-print-grid{display:flex;flex-wrap:wrap;gap:8px}
+  .qr-label{border:1px solid #ccc}
+}
 @media(max-width:950px){.inventory-body,.qr-body{grid-template-columns:1fr}.viewer-body{display:flex;flex-direction:column}.viewer-sidebar-chat{height:43%;border-left:0;border-top:1px solid var(--stroke)}.canvas-container{height:57%}}
 @media(max-width:650px){body{font-size:14px}header{padding:10px 11px}.workspace{width:100vw;margin:0}.main-panel{border-radius:0;min-height:calc(100vh - 70px)}.api-config-bar input{width:125px}.status-pill{display:none}.inventory-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.stat-row{grid-template-columns:repeat(2,1fr)}.input-box-area{padding:9px}.btn-action{min-width:95px;padding:0 11px}.map-canvas{min-width:800px}.map-node{width:160px}.viewer-title-text{max-width:58vw}}
 </style>
@@ -182,6 +201,10 @@ header{
        <label>PALABRAS CLAVE PARA RELACIONAR DOCUMENTOS</label><input id="invKeywords" placeholder="ácido, sulfúrico, corrosivo, H2SO4">
       </div>
       <div class="field full">
+       <label>FICHA TÉCNICA (PDF, ruta del repo o URL)</label>
+       <input id="invFicha" placeholder="protocolos/2-LABORATORIO SEGURO.pdf">
+      </div>
+      <div class="field full">
        <label>NOTAS</label><textarea id="invNotes" placeholder="Observaciones del laboratorio..."></textarea>
       </div>
      </div>
@@ -189,6 +212,18 @@ header{
       <button class="save" id="saveInventoryBtn">💾 GUARDAR REGISTRO</button>
       <button id="clearInventoryBtn">LIMPIAR</button>
       <button id="deleteInventoryBtn">ELIMINAR</button>
+      <button id="downloadTemplateBtn">⬇ PLANTILLA EXCEL</button>
+      <label class="file-btn" for="excelInput" style="min-height:43px">📗 IMPORTAR EXCEL</label>
+      <input id="excelInput" type="file" accept=".xlsx,.xls,.csv" hidden>
+      <button id="loadRepoExcelBtn">☁ EXCEL DEL REPO</button>
+      <button id="exportInventoryBtn">📤 EXPORTAR JSON</button>
+      <button id="printQrBtn">▦ IMPRIMIR QR</button>
+     </div>
+     <div class="help-box">
+      El Excel puede tener columnas como <b>id</b>, <b>nombre</b>, <b>ficha_tecnica</b>.
+      Cada fila se convierte en un registro; el QR lleva el ID (ej. <b>NEXUS:H2SO4-001</b>)
+      y al escanearlo se abre la ficha técnica. Subí el archivo
+      <b>inventario.xlsx</b> a la raíz del repositorio si querés cargarlo en todos los equipos.
      </div>
      <div id="inventoryMatchBox" class="doc-meta" style="margin-top:11px"></div>
     </section>
@@ -265,6 +300,16 @@ header{
     </div>
    </div>
   </div>
+  <div class="panel-overlay" id="qrPrintOverlay">
+   <div class="overlay-top no-print">
+    <span class="overlay-title">▦ ETIQUETAS QR PARA IMPRIMIR</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+     <button class="small-btn" id="doPrintQrBtn">🖨 IMPRIMIR</button>
+     <button class="close-btn" id="closeQrPrintBtn">CERRAR [X]</button>
+    </div>
+   </div>
+   <div class="qr-print-grid" id="qrPrintGrid"></div>
+  </div>
   <div class="toast" id="toast"></div>
   <script>
 (() => {
@@ -278,6 +323,25 @@ const GITHUB_CONFIG = {
   repo: "laboratorio-escolar",
   branch: "main"
 };
+const DOC_EXT = /\.(pdf|md|txt)$/i;
+const EXCEL_REPO_FILES = ["inventario.xlsx","inventario.xls","inventario.csv","data/inventario.xlsx"];
+
+function pagesBase() {
+  const path = location.pathname.replace(/index\.html$/i, "");
+  const dir = path.endsWith("/") ? path : path.slice(0, path.lastIndexOf("/") + 1);
+  return `${location.origin}${dir}`;
+}
+function encodeRepoPath(path) {
+  return String(path || "").split("/").filter(Boolean).map(encodeURIComponent).join("/");
+}
+function candidateFileUrls(path) {
+  const encoded = encodeRepoPath(path);
+  return [...new Set([
+    `${pagesBase()}${encoded}`,
+    `https://${GITHUB_CONFIG.owner}.github.io/${GITHUB_CONFIG.repo}/${encoded}`,
+    `https://cdn.jsdelivr.net/gh/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}@${GITHUB_CONFIG.branch}/${encoded}`
+  ])];
+}
 
 /*
  * Gemini:
@@ -293,7 +357,9 @@ const GEMINI_INTERACTIONS_URL =
 const GEMINI_MODELS = [
   "gemini-3.8-flash",
   "gemini-3.7-flash",
-  "gemini-3.6-flash"
+  "gemini-3.6-flash",
+  "gemini-2.5-flash",
+  "gemini-2.0-flash"
 ];
 const GEMINI_GENERATE_BASE =
   "https://generativelanguage.googleapis.com/v1beta/models/";
@@ -465,7 +531,7 @@ function inventoryStatus(item) {
   return {key:"ok",label:`VIGENTE · ${days} d`};
 }
 function clearInventoryForm() {
-  ["invId","invName","invFormula","invExpiry","invQuantity","invLocation","invManufacturer","invKeywords","invNotes"]
+  ["invId","invName","invFormula","invExpiry","invQuantity","invLocation","invManufacturer","invKeywords","invFicha","invNotes"]
     .forEach(id => $("#"+id).value = "");
   $("#invCategory").value = "Sustancia";
   activeInventoryId = "";
@@ -482,6 +548,7 @@ function getInventoryForm() {
     location:$("#invLocation").value.trim(),
     manufacturer:$("#invManufacturer").value.trim(),
     keywords:$("#invKeywords").value.trim(),
+    ficha:$("#invFicha").value.trim(),
     notes:$("#invNotes").value.trim(),
     updatedAt:new Date().toISOString()
   };
@@ -498,6 +565,7 @@ function fillInventoryForm(item) {
   $("#invLocation").value=item.location||"";
   $("#invManufacturer").value=item.manufacturer||"";
   $("#invKeywords").value=item.keywords||"";
+  $("#invFicha").value=item.ficha||"";
   $("#invNotes").value=item.notes||"";
   renderInventoryList();
   updateInventoryMatches(item);
@@ -527,11 +595,22 @@ function deleteInventoryItem() {
     showToast("Seleccioná primero un registro.");
     return;
   }
-  inventory = inventory.filter(x => x.id !== activeInventoryId);
+  const target = normalizeQrPayload(activeInventoryId).toLowerCase();
+  inventory = inventory.filter(x => normalizeQrPayload(x.id).toLowerCase() !== target);
   saveInventoryStore();
   clearInventoryForm();
   renderInventoryList();
   showToast("Registro eliminado.");
+}
+function upsertInventoryItem(item, {quiet=false}={}) {
+  if (!item?.id || !item?.name) return false;
+  item.id = normalizeQrPayload(item.id);
+  if (!/^NEXUS:[A-Z0-9._:-]+$/.test(item.id)) return false;
+  const idx = inventory.findIndex(x => normalizeQrPayload(x.id).toLowerCase() === item.id.toLowerCase());
+  if (idx >= 0) inventory[idx] = {...inventory[idx],...item,updatedAt:new Date().toISOString()};
+  else inventory.push({...item,updatedAt:new Date().toISOString()});
+  if (!quiet) saveInventoryStore();
+  return true;
 }
 function renderInventoryList() {
   const list = $("#inventoryList");
@@ -617,6 +696,34 @@ function updateInventoryMatches(item) {
   }
   box.innerHTML = `📚 <b>${matches.length} documento(s) relacionado(s):</b> ` +
     matches.slice(0,5).map(x=>`${escapeHtml(x.doc.name)} (${x.score}%)`).join(" · ");
+}
+
+function resolveFichaRef(raw) {
+  const value = String(raw || "").trim();
+  if (!value) return null;
+  if (/^https?:\/\//i.test(value)) {
+    return { name: decodeURIComponent(value.split("/").pop() || "ficha"), path: value, url: value, external: true };
+  }
+  const clean = value.replace(/\\/g,"/");
+  const needle = normalizeStr(clean);
+  const file = repositoryFiles.find(f =>
+    normalizeStr(f.path) === needle ||
+    normalizeStr(f.name) === needle ||
+    normalizeStr(f.path).endsWith(needle) ||
+    normalizeStr(f.name) === normalizeStr(clean.split("/").pop())
+  );
+  if (file) return file;
+  return { name: clean.split("/").pop(), path: clean, url: candidateFileUrls(clean)[0] };
+}
+
+async function openFicha(raw, page=1) {
+  const file = resolveFichaRef(raw);
+  if (!file) { showToast("Este registro no tiene ficha técnica."); return; }
+  if (file.external && !/\.pdf($|\?)/i.test(file.url)) {
+    window.open(file.url, "_blank", "noopener");
+    return;
+  }
+  await loadPdfInModal(file.path, page, file);
 }
 
 /* =========================================================

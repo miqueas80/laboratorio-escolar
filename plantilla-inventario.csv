@@ -1,0 +1,3 @@
+id,nombre,formula,categoria,vencimiento,cantidad,ubicacion,fabricante,palabras_clave,notas,ficha_tecnica
+NEXUS:H2SO4-001,Ácido sulfúrico,H2SO4,Reactivo,,500 mL,Armario A-03,,ácido sulfúrico corrosivo,Ejemplo — reemplazar por tus datos,protocolos/2-LABORATORIO SEGURO.pdf
+NEXUS:H2O-001,Agua destilada,H2O,Sustancia,,1 L,Estante B-01,,,Ejemplo,materiales/Estructura Atòmica.pdf
