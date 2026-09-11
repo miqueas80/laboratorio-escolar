@@ -1,25 +1,27 @@
-# NEXUS-X // OMEGA ∞
+# NEXUS-X V2.2 — Document Fabric / Graph / AI
 
-## Inventario con identidad persistente
+Versión experimental para repositorios de prueba.
 
-Esta versión agrega una capa de identidad estructurada para inventarios Excel.
+## Cambios de esta versión
+- API Gemini: solo se introduce la API Key. NEXUS-X la guarda localmente, prueba la conexión y selecciona automáticamente un modelo compatible; no requiere endpoint, modelo ni parámetros manuales.
+- Modelo gratuito preferido: Gemini 3.7 Flash; fallback automático.
+- La búsqueda web sigue siendo independiente de Gemini, por lo que puede continuar aunque la API de Gemini tenga cuota agotada.
+- Evidencia documental agrupada por archivo: un documento aparece una sola vez aunque contenga muchas coincidencias internas.
+- Claims documentales deduplicados.
+- Grafo visual SVG interactivo: nodos de documentos y materiales, arrastre, zoom y clic para abrir el documento o ficha correspondiente.
+- Relaciones documentales filtradas para evitar coincidencias genéricas de baja calidad.
+- Se conserva la base de 111 registros y la identidad única NEXUS-X.
 
-### Flujo
-1. Importá un `.xlsx`, `.xls` o `.csv`.
-2. NEXUS-X detecta las columnas y asigna códigos `NXC:C####` persistentes a cada columna.
-3. Si un registro no tiene ID NEXUS, se genera uno (`NEXUS:REA-0001`, `NEXUS:INS-0001`, etc.) y se conserva en el almacenamiento local.
-4. Cada registro guarda la fuente, fila, identidad y códigos de sus atributos.
-5. `Exportar Excel NEXUS` crea un libro enriquecido con `Inventario NEXUS`, `NEXUS CODES` y `NEXUS META`.
-6. Los QR se generan usando el ID NEXUS del objeto físico.
 
-### Regla de identidad
-Los IDs existentes se conservan. Para registros sin ID se intenta encontrar una identidad estable mediante identificadores fuertes (serie, patrimonio, catálogo, CAS, código) y, si no existen, mediante datos estables del material. Los duplicados idénticos se distinguen por ocurrencia.
+## Persistencia documental en GitHub
 
-### Columnas
-Cada columna recibe un código único `NXC:C####`. Los valores se vinculan como `NXC:C####:R#####:<ID_NEXUS>`. Esto permite rastrear un dato hasta su columna y material.
+Los archivos que el usuario carga desde **Indexar archivo**, **Cargar PDF** o **Cargar Word maestro** se indexan localmente y, si hay un token de escritura de GitHub guardado, se suben automáticamente a `documentos/` del repositorio detectado. En el siguiente arranque, la sincronización del repositorio vuelve a descargarlos e indexarlos.
 
-### Seguridad
-La API key de Gemini no se incluye en el código. Para producción, usá un backend/proxy.
+### Configuración única de GitHub
+1. En Ajustes, pegar un token de GitHub con permiso de escritura sobre el contenido del repositorio.
+2. Guardarlo una sola vez.
+3. A partir de ese momento, cada documento cargado se sincroniza automáticamente.
 
-### Dependencias
-PDF.js, jsQR, SheetJS/XLSX y QRCode se cargan desde CDN.
+El token se guarda únicamente en el navegador y **no se escribe en el repositorio**. Si no se configura, NEXUS-X conserva el documento en IndexedDB local y avisa que todavía no está respaldado en GitHub.
+
+> Para una instalación pública multiusuario, una clave/token en el navegador no es un secreto fuerte; para producción conviene un backend/proxy con autenticación.

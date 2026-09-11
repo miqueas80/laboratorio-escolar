@@ -1,10 +1,1 @@
-{
-  "name":"NEXUS-X // OMEGA ∞",
-  "short_name":"NEXUS-X",
-  "start_url":"./",
-  "display":"standalone",
-  "background_color":"#07101a",
-  "theme_color":"#07101a",
-  "lang":"es",
-  "description":"Laboratorio digital de conocimiento local-first."
-}
+{"name":"NEXUS-X — Gestión de Laboratorio","short_name":"NEXUS-X","start_url":"./","display":"standalone","background_color":"#eef3f6","theme_color":"#0b5368","lang":"es","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
